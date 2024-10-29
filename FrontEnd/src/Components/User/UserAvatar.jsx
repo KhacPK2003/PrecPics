@@ -20,7 +20,7 @@ function UserAvatar(){
     return (
         <>
             <Box sx={{ flexGrow: 0 }}>
-                <Tooltip title="Open settings">
+                <Tooltip title="Mở thanh cài đặt">
                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                     <Avatar alt="Remy Sharp" src="" />
                 </IconButton>

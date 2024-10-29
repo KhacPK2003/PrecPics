@@ -1,20 +1,20 @@
-import Navbar from "./Components/Navbar/Navbar";
-import FilterMain from "./Components/FilterMain/FilterMain";
-import SearchBar from "./Components/SearchBar/SearchBar";
-import SectionImage from "./Components/SectionImage/SectionImage";
-import Footer from "./Components/Footer/Footer";
-import Login from "./Components/sign-in/Login"
-import SignUp from "./Components/sign-up/SignUp";
+import { Route , Routes } from "react-router-dom";
+import Login from "./pages/Login";
+import Home from "./pages/Home";
+import SignUp from "./pages/Regist";
+import Upload from "./Components/Upload/upload";
+import Main from "./Components/Main/Main";
 function App(){
       return (
         <>
-          {/* <Navbar/>
-          <FilterMain/>
-          <SearchBar/>
-          <SectionImage/>
-          <Footer/> */}
-          {/* <Login/> */}
-          <SignUp/>
+            <Routes>
+                <Route path="/" element={<Home/>}>
+                    <Route index element={<Main/>}/>
+                     <Route path="/Upload" element={<Upload/>}/>
+                </Route>
+                <Route path="/Login" element={<Login/>}/>
+                <Route path="/SignUp" element={<SignUp/>}/>
+            </Routes>
         </>
       )
 }

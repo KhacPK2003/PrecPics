@@ -11,21 +11,36 @@ import Container from '@mui/material/Container';
 import Button from '@mui/material/Button';
 import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
+import PropTypes from 'prop-types'
+import { useNavigate } from 'react-router-dom';
 
-const pages = ['Trang trủ', 'Upload', 'Liên hệ'];
+const pages = [
+    { name: 'Trang chủ', path: '/' },
+    { name: 'Upload', path: '/Upload' },
+    { name: 'Liên hệ', path: '/Contact' },
+];
 
-
-function Navbar(){
+function Navbar({isLoggedIn = false}){
     const [anchorElNav, setAnchorElNav] = React.useState(null);
-  
+    const navigate = useNavigate();
+
     const handleOpenNavMenu = (event) => {
       setAnchorElNav(event.currentTarget);
     };
   
-    const handleCloseNavMenu = () => {
-      setAnchorElNav(null);
-    };
+    function handleCloseNavMenu(page) {
+    //   setAnchorElNav(null);
+       navigate(page.path);
+    }
   
+    const handlSignIn = () =>{
+        navigate('Login');   
+    }
+
+    const handlSignUp = () =>{
+        navigate('SignUp');
+    }
+
     return (
         <>
             <div>
@@ -79,8 +94,8 @@ function Navbar(){
                         sx={{ display: { xs: 'block', md: 'none' } }}
                         >
                         {pages.map((page) => (
-                            <MenuItem key={page} onClick={handleCloseNavMenu}>
-                            <Typography sx={{ textAlign: 'center' }}>{page}</Typography>
+                            <MenuItem key={page.name}>
+                            <Typography sx={{ textAlign: 'center' }}>{page.name}</Typography>
                             </MenuItem>
                         ))}
                         </Menu>
@@ -107,15 +122,33 @@ function Navbar(){
                     <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
                         {pages.map((page) => (
                         <Button
-                            key={page}
-                            onClick={handleCloseNavMenu}
+                            key={page.name}
+                            onClick={() => {handleCloseNavMenu(page)}}
                             sx={{ my: 2, color: 'white', display: 'block' }}
                         >
-                            {page}
+                            {page.name}
                         </Button>
                         ))}
                     </Box>
-                    <UserAvatar/>
+                    {isLoggedIn ? (
+                            <UserAvatar />
+                        ) : (
+                            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                                <Button
+                                    color="inherit"
+                                    sx={{ mr: 2 }}
+                                    onClick = {handlSignIn}
+                                >
+                                    Đăng nhập
+                                </Button>
+                                <Button
+                                    color="inherit"
+                                    onClick={handlSignUp}
+                                >
+                                    Đăng ký
+                                </Button>
+                            </Box>
+                        )}
                     </Toolbar>
                 </Container>
                 </AppBar>
@@ -123,5 +156,4 @@ function Navbar(){
         </>
     )
 }
-
 export default Navbar;
