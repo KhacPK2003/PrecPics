@@ -86,7 +86,7 @@
                 user = User.builder()
                         .id(decodedToken.getUid())
                         .userName(extractUsername(decodedToken.getEmail()))
-                        .firstName(decodedToken.getName())
+                        .fullName(decodedToken.getName())
                         .email(decodedToken.getEmail())
                         .avatarUrl(decodedToken.getPicture())
                         .build();

@@ -3,8 +3,7 @@ create table if not exists "user"
     id            varchar(450) not null
     primary key,
     user_name     varchar(255),
-    first_name    varchar(255),
-    last_name     varchar(255),
+    full_name    varchar(255),
     email         varchar(255),
     password_hash varchar(450),
     description   varchar(1000),
@@ -49,7 +48,8 @@ create table if not exists content
     constraint gallery_user_id_fkey
     references "user",
     thumbnail_url varchar(255),
-    video_url     varchar(255)
+    video_url     varchar(255,
+    type boolean
     );
 
 alter table content

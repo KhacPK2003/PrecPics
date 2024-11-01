@@ -58,7 +58,7 @@ public class Content implements Serializable {
     private int wide;
 
     @Column(name = "height")
-    @JsonView(value = {ContentView.Gallery.class, ContentView.Video.class})
+    @JsonView(value = {ContentView.Video.class})
     private int height;
 
     @Column(name = "image_url")
@@ -72,6 +72,11 @@ public class Content implements Serializable {
     @Column(name = "thumbnail_url")
     @JsonView(value = {ContentView.Video.class})
     private String thumbnailUrl;
+
+    //type true la gallery, false la video
+    @Column(name = "type")
+    @JsonView(value = {ContentView.Gallery.class, ContentView.Video.class})
+    private boolean type;
 
     @Column(name = "is_public")
     @JsonView(value = {ContentView.Gallery.class, ContentView.Video.class})
