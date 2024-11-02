@@ -42,12 +42,13 @@ create table if not exists content
     views       integer,
     height      integer,
     wide        integer,
-    image_url   bytea,
+    image_data  bytea,
     is_public   boolean,
     user_id     varchar(450)
     constraint gallery_user_id_fkey
     references "user",
-    type        boolean
+    type        boolean,
+    video_data  varchar
     );
 
 alter table content

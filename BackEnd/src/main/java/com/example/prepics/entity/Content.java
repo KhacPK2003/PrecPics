@@ -61,17 +61,13 @@ public class Content implements Serializable {
     @JsonView(value = {ContentView.Video.class})
     private int height;
 
-    @Column(name = "image_url")
+    @Column(name = "image_data")
     @JsonView(value = {ContentView.Gallery.class})
-    private String imageUrl;
+    private byte[] imageData;
 
-    @Column(name = "video_url")
+    @Column(name = "video_data")
     @JsonView(value = {ContentView.Video.class})
-    private String videoUrl;
-
-    @Column(name = "thumbnail_url")
-    @JsonView(value = {ContentView.Video.class})
-    private String thumbnailUrl;
+    private String videoData;
 
     //type true la gallery, false la video
     @Column(name = "type")
