@@ -22,41 +22,39 @@ public class InColsRepository implements CRUDInterface<InCols, Long> {
 
     @Override
     @Transactional("masterTransactionManager")
-    public List<InCols> findAll(Class<InCols> clazz, boolean isActive) throws ChangeSetPersister.NotFoundException {
-        Optional<List<InCols>> result = Optional.ofNullable(masterEntityManager
+    public Optional<List<InCols>> findAll(Class<InCols> clazz) throws ChangeSetPersister.NotFoundException {
+        return Optional.ofNullable(masterEntityManager
                 .createQuery("SELECT a FROM InCols a", InCols.class).getResultList());
-        return result.orElse(null);
     }
 
     @Override
     @Transactional("slaveTransactionManager")
-    public InCols findById(Class<InCols> clazz, Long id) throws ChangeSetPersister.NotFoundException {
-        Optional<InCols> result = Optional.ofNullable(slaveEntityManager.find(clazz, id));
-        return result.orElse(null);
+    public Optional<InCols> findById(Class<InCols> clazz, Long id) throws ChangeSetPersister.NotFoundException {
+        return Optional.ofNullable(slaveEntityManager.find(clazz, id));
     }
 
     @Override
     @Transactional("masterTransactionManager")
-    public InCols create(InCols entity) {
+    public Optional<InCols> create(InCols entity) {
         masterEntityManager.persist(entity);
-        return entity;
+        return Optional.ofNullable(entity);
     }
 
     @Override
     @Transactional("masterTransactionManager")
-    public InCols update(InCols entity) {
-        return masterEntityManager.merge(entity);
+    public Optional<InCols> update(InCols entity) {
+        return Optional.ofNullable(masterEntityManager.merge(entity));
     }
 
     @Override
     @Transactional("masterTransactionManager")
-    public InCols delete(Long id) throws ChangeSetPersister.NotFoundException {
+    public Optional<InCols> delete(Long id) throws ChangeSetPersister.NotFoundException {
         Optional<InCols> result = Optional.ofNullable(slaveEntityManager.find(InCols.class, id));
         if (result.isEmpty()) {
-            throw new ChangeSetPersister.NotFoundException();
+            return Optional.empty();
         }
         masterEntityManager.remove(masterEntityManager.contains(result.get()) ? result.get()
                 : masterEntityManager.merge(result.get()));
-        return result.get();
+        return result;
     }
 }

@@ -3,7 +3,7 @@ create table if not exists "user"
     id            varchar(450) not null
     primary key,
     user_name     varchar(255),
-    full_name    varchar(255),
+    full_name     varchar(255),
     email         varchar(255),
     password_hash varchar(450),
     description   varchar(1000),
@@ -14,7 +14,7 @@ create table if not exists "user"
     role_id       integer,
     is_active     boolean,
     is_admin      boolean,
-    avatar_url    varchar(255)
+    avatar_url    bytea
     );
 
 alter table "user"
@@ -32,24 +32,22 @@ alter table tag
 
 create table if not exists content
 (
-    id            varchar(450) not null
+    id          varchar(450) not null
     constraint gallery_pkey
     primary key,
-    location      varchar(255),
-    date_upload   bigint,
-    liked         integer,
-    downloads     integer,
-    views         integer,
-    height        integer,
-    wide          integer,
-    image_url     varchar(255),
-    is_public     boolean,
-    user_id       varchar(450)
+    location    varchar(255),
+    date_upload bigint,
+    liked       integer,
+    downloads   integer,
+    views       integer,
+    height      integer,
+    wide        integer,
+    image_url   bytea,
+    is_public   boolean,
+    user_id     varchar(450)
     constraint gallery_user_id_fkey
     references "user",
-    thumbnail_url varchar(255),
-    video_url     varchar(255,
-    type boolean
+    type        boolean
     );
 
 alter table content

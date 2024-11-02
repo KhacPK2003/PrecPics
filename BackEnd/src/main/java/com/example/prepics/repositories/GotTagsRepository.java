@@ -22,41 +22,39 @@ public class GotTagsRepository implements CRUDInterface<GotTags, Long> {
 
     @Override
     @Transactional("masterTransactionManager")
-    public List<GotTags> findAll(Class<GotTags> clazz, boolean isActive) throws ChangeSetPersister.NotFoundException {
-        Optional<List<GotTags>> result = Optional.ofNullable(masterEntityManager
+    public Optional<List<GotTags>> findAll(Class<GotTags> clazz) throws ChangeSetPersister.NotFoundException {
+        return Optional.ofNullable(masterEntityManager
                 .createQuery("SELECT a FROM GotTags a", GotTags.class).getResultList());
-        return result.orElse(null);
     }
 
     @Override
     @Transactional("slaveTransactionManager")
-    public GotTags findById(Class<GotTags> clazz, Long id) throws ChangeSetPersister.NotFoundException {
-        Optional<GotTags> result = Optional.ofNullable(slaveEntityManager.find(clazz, id));
-        return result.orElse(null);
+    public Optional<GotTags> findById(Class<GotTags> clazz, Long id) throws ChangeSetPersister.NotFoundException {
+        return Optional.ofNullable(slaveEntityManager.find(clazz, id));
     }
 
     @Override
     @Transactional("masterTransactionManager")
-    public GotTags create(GotTags entity) {
+    public Optional<GotTags> create(GotTags entity) {
         masterEntityManager.persist(entity);
-        return entity;
+        return Optional.ofNullable(entity);
     }
 
     @Override
     @Transactional("masterTransactionManager")
-    public GotTags update(GotTags entity) {
-        return masterEntityManager.merge(entity);
+    public Optional<GotTags> update(GotTags entity) {
+        return Optional.ofNullable(masterEntityManager.merge(entity));
     }
 
     @Override
     @Transactional("masterTransactionManager")
-    public GotTags delete(Long id) throws ChangeSetPersister.NotFoundException {
+    public Optional<GotTags> delete(Long id) throws ChangeSetPersister.NotFoundException {
         Optional<GotTags> result = Optional.ofNullable(slaveEntityManager.find(GotTags.class, id));
         if (result.isEmpty()) {
-            throw new ChangeSetPersister.NotFoundException();
+            return Optional.empty();
         }
         masterEntityManager.remove(masterEntityManager.contains(result.get()) ? result.get()
                 : masterEntityManager.merge(result.get()));
-        return result.get();
+        return result;
     }
 }

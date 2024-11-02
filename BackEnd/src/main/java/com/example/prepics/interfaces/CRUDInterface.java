@@ -4,17 +4,18 @@ import jakarta.persistence.EntityExistsException;
 import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface CRUDInterface<Type, Id> {
 
-	Type delete(Id id) throws NotFoundException;
+	Optional<Type> delete(Id id) throws NotFoundException;
 
-	Type update(Type entity);
+	Optional<Type> update(Type entity);
 
-	Type create(Type entity) throws EntityExistsException, NotFoundException;
+	Optional<Type> create(Type entity) throws EntityExistsException, NotFoundException;
 
-	Type findById(Class<Type> clazz, Id id) throws NotFoundException;
+	Optional<Type> findById(Class<Type> clazz, Id id) throws NotFoundException;
 
-	List<Type> findAll(Class<Type> clazz, boolean isDelete) throws NotFoundException;
+	Optional<List<Type>> findAll(Class<Type> clazz) throws NotFoundException;
 
 }

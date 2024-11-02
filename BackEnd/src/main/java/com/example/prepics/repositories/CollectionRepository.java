@@ -22,41 +22,39 @@ public class CollectionRepository implements CRUDInterface<Collection, Long> {
 
     @Override
     @Transactional("masterTransactionManager")
-    public List<Collection> findAll(Class<Collection> clazz, boolean isActive) throws ChangeSetPersister.NotFoundException {
-        Optional<List<Collection>> result = Optional.ofNullable(masterEntityManager
+    public Optional<List<Collection>> findAll(Class<Collection> clazz) throws ChangeSetPersister.NotFoundException {
+        return Optional.ofNullable(masterEntityManager
                 .createQuery("SELECT a FROM Collection a", Collection.class).getResultList());
-        return result.orElse(null);
     }
 
     @Override
     @Transactional("slaveTransactionManager")
-    public Collection findById(Class<Collection> clazz, Long id) throws ChangeSetPersister.NotFoundException {
-        Optional<Collection> result = Optional.ofNullable(slaveEntityManager.find(clazz, id));
-        return result.orElse(null);
+    public Optional<Collection> findById(Class<Collection> clazz, Long id) throws ChangeSetPersister.NotFoundException {
+        return Optional.ofNullable(slaveEntityManager.find(clazz, id));
     }
 
     @Override
     @Transactional("masterTransactionManager")
-    public Collection create(Collection entity) {
+    public Optional<Collection> create(Collection entity) {
         masterEntityManager.persist(entity);
-        return entity;
+        return Optional.ofNullable(entity);
     }
 
     @Override
     @Transactional("masterTransactionManager")
-    public Collection update(Collection entity) {
-        return masterEntityManager.merge(entity);
+    public Optional<Collection> update(Collection entity) {
+        return Optional.ofNullable(masterEntityManager.merge(entity));
     }
 
     @Override
     @Transactional("masterTransactionManager")
-    public Collection delete(Long id) throws ChangeSetPersister.NotFoundException {
+    public Optional<Collection> delete(Long id) throws ChangeSetPersister.NotFoundException {
         Optional<Collection> result = Optional.ofNullable(slaveEntityManager.find(Collection.class, id));
         if (result.isEmpty()) {
-            throw new ChangeSetPersister.NotFoundException();
+           return Optional.empty();
         }
         masterEntityManager.remove(masterEntityManager.contains(result.get()) ? result.get()
                 : masterEntityManager.merge(result.get()));
-        return result.get();
+        return result;
     }
 }

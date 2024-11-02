@@ -25,61 +25,41 @@ public class UserRepository implements CRUDInterface<User, String> {
 
     @Override
     @Transactional("masterTransactionManager")
-    public List<User> findAll(Class<User> clazz, boolean isActive) throws ChangeSetPersister.NotFoundException {
-        Optional<List<User>> result = Optional.ofNullable(masterEntityManager
+    public Optional<List<User>> findAll(Class<User> clazz) throws ChangeSetPersister.NotFoundException {
+        return Optional.ofNullable(masterEntityManager
                 .createQuery("SELECT a FROM User a", User.class).getResultList());
-        if (result.isEmpty()) {
-            throw new ChangeSetPersister.NotFoundException();
-        }
-        return result.orElse(null);
     }
 
     @Override
     @Transactional("slaveTransactionManager")
-    public User findById(Class<User> clazz, String id) throws ChangeSetPersister.NotFoundException {
-        Optional<User> result = Optional.ofNullable(slaveEntityManager.find(clazz, id));
-        if (result.isEmpty()) {
-            throw new ChangeSetPersister.NotFoundException();
-        }
-        return result.orElse(null);
+    public Optional<User> findById(Class<User> clazz, String id) throws ChangeSetPersister.NotFoundException {
+        return Optional.ofNullable(slaveEntityManager.find(clazz, id));
     }
 
     @Override
     @Transactional("masterTransactionManager")
-    public User create(User entity) {
+    public Optional<User> create(User entity) {
         entity.setIsAdmin(false);
         entity.setIsActive(true);
         masterEntityManager.persist(entity);
-        return entity;
+        return Optional.of(entity);
     }
 
     @Override
     @Transactional("masterTransactionManager")
-    public User update(User entity) {
-        return masterEntityManager.merge(entity);
+    public Optional<User> update(User entity) {
+        return Optional.ofNullable(masterEntityManager.merge(entity));
     }
 
     @Override
     @Transactional("masterTransactionManager")
-    public User delete(String id) throws ChangeSetPersister.NotFoundException {
+    public Optional<User> delete(String id) throws ChangeSetPersister.NotFoundException {
         Optional<User> result = Optional.ofNullable(slaveEntityManager.find(User.class, id));
         if (result.isEmpty()) {
-            throw new ChangeSetPersister.NotFoundException();
+            return Optional.empty();
         }
         masterEntityManager.remove(masterEntityManager.contains(result.get()) ? result.get()
                 : masterEntityManager.merge(result.get()));
-        return result.get();
-    }
-
-    @Transactional("masterTransactionManager")
-    public User findByEmail(Class<User> clazz, String email) {
-        TypedQuery<User> typedQuery = slaveEntityManager.createQuery("SELECT a FROM User a WHERE a.email = :email", clazz);
-        typedQuery.setParameter("email", email);
-        Optional<List<User>> result = Optional.ofNullable(typedQuery.getResultList());
-        if (result.isPresent() && !result.get().isEmpty()) {
-            return result.get().get(0);
-        } else {
-            return null;
-        }
+        return result;
     }
 }

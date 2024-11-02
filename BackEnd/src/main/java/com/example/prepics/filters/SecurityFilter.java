@@ -5,6 +5,7 @@
     import com.example.prepics.models.SecurityProperties;
     import com.example.prepics.services.secrurities.SecurityService;
     import com.example.prepics.utils.CookieUtil;
+    import com.google.api.client.util.Base64;
     import com.google.firebase.auth.FirebaseAuth;
     import com.google.firebase.auth.FirebaseAuthException;
     import com.google.firebase.auth.FirebaseToken;
@@ -22,7 +23,11 @@
     import org.springframework.stereotype.Component;
     import org.springframework.web.filter.OncePerRequestFilter;
 
+    import java.io.ByteArrayOutputStream;
     import java.io.IOException;
+    import java.io.InputStream;
+    import java.net.URL;
+    import java.net.URLConnection;
 
     @Component
     @Slf4j
@@ -88,7 +93,7 @@
                         .userName(extractUsername(decodedToken.getEmail()))
                         .fullName(decodedToken.getName())
                         .email(decodedToken.getEmail())
-                        .avatarUrl(decodedToken.getPicture())
+                        .avatarUrl(getByteArrayFromImageURL(decodedToken.getPicture()))
                         .build();
             }
             return user;
@@ -100,6 +105,29 @@
             } catch (Exception e) {
                 throw new IllegalArgumentException("Email do not have the extension @example.com");
             }
+        }
+
+        private byte[] getByteArrayFromImageURL(String url) {
+            try {
+                URL imageUrl = new URL(url);
+                URLConnection ucon = imageUrl.openConnection();
+
+                try (InputStream is = ucon.getInputStream();
+                     ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+
+                    byte[] buffer = new byte[1024];
+                    int read;
+                    while ((read = is.read(buffer)) != -1) {
+                        baos.write(buffer, 0, read);
+                    }
+
+                    baos.flush();
+                    return Base64.encodeBase64(baos.toByteArray());
+                }
+            } catch (Exception e) {
+                log.error(e.toString());
+            }
+            return null;
         }
 
     }
