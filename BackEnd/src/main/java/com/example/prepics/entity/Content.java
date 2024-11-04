@@ -2,7 +2,6 @@ package com.example.prepics.entity;
 
 import com.example.prepics.views.ContentView;
 import com.fasterxml.jackson.annotation.JsonView;
-import com.google.firebase.database.core.view.View;
 import jakarta.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -10,11 +9,10 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.awt.*;
+import java.io.File;
 import java.io.Serial;
 import java.io.Serializable;
 import java.math.BigInteger;
-import java.sql.Date;
 import java.util.Set;
 
 @Entity
@@ -68,6 +66,10 @@ public class Content implements Serializable {
     @Column(name = "video_data")
     @JsonView(value = {ContentView.Video.class})
     private String videoData;
+
+    @Transient
+    @JsonView(value = {ContentView.Video.class})
+    private File videoFile;
 
     //type true la gallery, false la video
     @Column(name = "type")

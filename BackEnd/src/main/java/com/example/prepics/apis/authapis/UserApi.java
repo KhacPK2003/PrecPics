@@ -1,6 +1,5 @@
-package com.example.prepics.apis.privateapis;
+package com.example.prepics.apis.authapis;
 
-import com.example.prepics.entity.User;
 import com.example.prepics.services.api.UserApiService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
