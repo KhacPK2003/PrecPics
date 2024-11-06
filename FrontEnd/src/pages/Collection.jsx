@@ -1,6 +1,8 @@
 import React from 'react';
 import Navbar from "../Components/Navbar/Navbar";
 import SearchBar from "../Components/SearchBar/SearchBar";
+import SectionImage from '../Components/SectionImage/SectionImage';
+import Main from '../Components/Main/Main';
 const Collection = () => {
 
 
@@ -24,13 +26,13 @@ const Collection = () => {
         // Thêm nhiều URL khác nếu bạn muốn
     ];
     return (
-        <div className='bg-[#379d7d] min-h-screen'>
+        <div className='bg-white min-h-screen'>
         <Navbar></Navbar>
         <SearchBar></SearchBar>
             {/* Phần trên - Tiêu đề */}
             <div className="container mx-auto px-4 py-4 mt-[60px]">
                 <h1 className="text-center text-[70px] font-semibold">
-                    Nội dung tải xuống của bạn
+                    Bộ sưu tập của bạn
                 </h1>
             </div>
 
@@ -53,14 +55,15 @@ const Collection = () => {
                 </div>
             </div>
             <div>
-            <div className='grid grid-cols-4 gap-5 p-5' >    
-            {imageUrls.map((url, index) => (
+            {/* <div className='grid grid-cols-4 gap-5 p-5' >     */}
+            {/* {imageUrls.map((url, index) => (
                 <div key={index} className='p-3 bg-white shadow-md rounded-lg'>
                     <img src={url} alt='' className='w-full h-full object-cover rounded-lg' />
                 </div>
-            ))}
+            ))} */}
+            <Main></Main>
                   
-    </div>
+    {/* </div> */}
             </div>
         </div>
     );
