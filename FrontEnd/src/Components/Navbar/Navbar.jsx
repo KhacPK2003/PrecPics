@@ -18,9 +18,11 @@ const pages = [
     { name: 'Trang chủ', path: '/' },
     { name: 'Upload', path: '/Upload' },
     { name: 'Liên hệ', path: '/Contact' },
+    { name : 'Video' , path: '/'},
+    { name : 'Ảnh' , path: '/'},
 ];
 
-function Navbar({isLoggedIn = false}){
+function Navbar({isLoggedIn , onClickVideo }){
     const [anchorElNav, setAnchorElNav] = React.useState(null);
     const navigate = useNavigate();
 
@@ -29,7 +31,12 @@ function Navbar({isLoggedIn = false}){
     };
   
     function handleCloseNavMenu(page) {
-    //   setAnchorElNav(null);
+       if(page.name === 'Video'){
+            onClickVideo();
+       }
+       if(page.name === 'Ảnh'){
+            onClickVideo();
+       }
        navigate(page.path);
     }
   

@@ -3,14 +3,18 @@ import Footer from "../Components/Footer/Footer";
 import Navbar from "../Components/Navbar/Navbar";
 import SearchBar from "../Components/SearchBar/SearchBar";
 import Main from "../Components/Main/Main";
-import { Outlet } from "react-router-dom";
+import React, { useState } from 'react';
 function Home(){
+    const [showVideo, setShowVideo] = useState(false);
+    const handleVideoClick = () => {
+        setShowVideo((prevState) => !prevState); // Khi click vào button video, sẽ set showVideo = true
+    };
     return (
         <>
-            <Navbar isLoggedIn={false}/>
+            <Navbar isLoggedIn={false} onClickVideo = {handleVideoClick} />
             <FilterMain/>
             <SearchBar/>
-            <Outlet/>
+            <Main showvideo = {showVideo}/>
             <Footer/>
         </>
     );
