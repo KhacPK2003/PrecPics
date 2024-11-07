@@ -32,10 +32,10 @@ function Navbar({isLoggedIn , onClickVideo }){
   
     function handleCloseNavMenu(page) {
        if(page.name === 'Video'){
-            onClickVideo();
+            onClickVideo(page.name);
        }
        if(page.name === 'Ảnh'){
-            onClickVideo();
+            onClickVideo(page.name);
        }
        navigate(page.path);
     }

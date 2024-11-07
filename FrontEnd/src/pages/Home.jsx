@@ -6,8 +6,9 @@ import Main from "../Components/Main/Main";
 import React, { useState } from 'react';
 function Home(){
     const [showVideo, setShowVideo] = useState(false);
-    const handleVideoClick = () => {
-        setShowVideo((prevState) => !prevState); // Khi click vào button video, sẽ set showVideo = true
+    const handleVideoClick = (name) => {
+        if(name == 'Video' && !showVideo) setShowVideo(true); // Khi click vào button video, sẽ set showVideo = true
+        if(name == 'Ảnh' && showVideo) setShowVideo(false); // Khi click vào button video, sẽ set showVideo = true
     };
     return (
         <>
