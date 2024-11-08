@@ -2,6 +2,7 @@ import { AiFillHeart, AiOutlineHeart } from 'react-icons/ai';
 import React, { useState , useEffect } from 'react';
 import { FaComment } from "react-icons/fa";
 import Comment from '../Comment/Comment';
+import DropdownButton from '../DropdownButton/DropdownButton';
 const comments = [
     {
       user: { name: 'Nguyen Van A', avatar: 'https://example.com/avatar1.jpg' },
@@ -75,6 +76,9 @@ function DetailGallery(){
                     <FaComment />
                     <input type="text" placeholder="Thêm bình luận..." className="flex-grow ml-2 p-2 border border-border rounded-lg bg-input text-foreground" />
                     <button className="bg-blue-500 text-primary-foreground hover:bg-primary/80 py-1 px-3 rounded ml-2">Đăng</button>
+                </div>
+                <div className='mt-3 ml-[150px]'>
+                    <DropdownButton></DropdownButton>
                 </div>
              </div>
 
