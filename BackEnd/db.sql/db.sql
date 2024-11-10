@@ -1,7 +1,7 @@
 create table if not exists "user"
 (
     id            varchar(450) not null
-    primary key,
+        primary key,
     user_name     varchar(255),
     full_name     varchar(255),
     email         varchar(255),
@@ -15,7 +15,7 @@ create table if not exists "user"
     is_active     boolean,
     is_admin      boolean,
     avatar_url    bytea
-    );
+);
 
 alter table "user"
     owner to postgres;
@@ -23,9 +23,9 @@ alter table "user"
 create table if not exists tag
 (
     id   serial
-    primary key,
+        primary key,
     name varchar(255)
-    );
+);
 
 alter table tag
     owner to postgres;
@@ -33,23 +33,24 @@ alter table tag
 create table if not exists content
 (
     id          varchar(450) not null
-    constraint gallery_pkey
-    primary key,
-    location    varchar(255),
+        constraint gallery_pkey
+            primary key,
+    name        varchar,
     date_upload bigint,
     liked       integer,
     downloads   integer,
     views       integer,
     height      integer,
-    wide        integer,
-    image_data  bytea,
+    width       integer,
+    data_url    varchar,
     is_public   boolean,
     user_id     varchar(450)
-    constraint gallery_user_id_fkey
-    references "user",
+        constraint gallery_user_id_fkey
+            references "user"
+            on delete cascade,
     type        boolean,
-    video_data  varchar
-    );
+    asset_id    varchar
+);
 
 alter table content
     owner to postgres;
@@ -57,13 +58,14 @@ alter table content
 create table if not exists collection
 (
     id          serial
-    primary key,
+        primary key,
     name        varchar(255),
     user_id     varchar(450)
-    references "user",
+        references "user"
+            on delete cascade,
     date_create bigint,
     is_public   boolean
-    );
+);
 
 alter table collection
     owner to postgres;
@@ -71,12 +73,14 @@ alter table collection
 create table if not exists incols
 (
     id            serial
-    primary key,
+        primary key,
     content_id    varchar(450)
-    references content,
+        references content
+            on delete cascade,
     collection_id bigint
-    references collection
-    );
+        references collection
+            on delete cascade
+);
 
 alter table incols
     owner to postgres;
@@ -84,14 +88,32 @@ alter table incols
 create table if not exists gottags
 (
     id         serial
-    primary key,
+        primary key,
     content_id varchar(450)
-    constraint gottags_gallery_id_fkey
-    references content,
+        constraint gottags_gallery_id_fkey
+            references content
+            on delete cascade,
     tag_id     bigint
-    references tag
-    );
+        references tag
+            on delete cascade
+);
 
 alter table gottags
+    owner to postgres;
+
+create table if not exists follows
+(
+    id          serial
+        primary key,
+    follower_id varchar(450) not null
+        references "user"
+            on delete cascade,
+    followee_id varchar(450) not null
+        references "user"
+            on delete cascade,
+    unique (follower_id, followee_id)
+);
+
+alter table follows
     owner to postgres;
 

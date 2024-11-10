@@ -4,24 +4,25 @@ import com.example.prepics.entity.Content;
 import com.example.prepics.models.ContentElasticSearch;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ContentElasticSearchService {
 
-    ContentElasticSearch insertContent(Content entity);
+    Optional<ContentElasticSearch> insertContent(Content entity);
 
-    ContentElasticSearch insertContent(ContentElasticSearch entity);
+    Optional<ContentElasticSearch> insertContent(ContentElasticSearch entity);
 
-    Iterable<ContentElasticSearch> getContent();
+    Optional<Iterable<ContentElasticSearch>> getContent();
 
-    Iterable<ContentElasticSearch> getContent(boolean  type);
+    Optional<Iterable<ContentElasticSearch>> getContent(boolean  type);
 
-    Iterable<ContentElasticSearch> saveAll(List<Content> Contents);
+    Optional<Iterable<ContentElasticSearch>> saveAll(List<Content> Contents);
 
-    Iterable<ContentElasticSearch> deleteAll();
+    Optional<Iterable<ContentElasticSearch>> deleteAll();
 
-    Iterable<ContentElasticSearch> deleteAll(List<Content> Contents);
+    Optional<Iterable<ContentElasticSearch>> deleteAll(List<Content> Contents);
 
-    ContentElasticSearch delete(ContentElasticSearch entity);
+    Optional<ContentElasticSearch> delete(ContentElasticSearch entity);
 
-    ContentElasticSearch delete(Content entity);
+    Optional<ContentElasticSearch> delete(Content entity);
 }

@@ -57,4 +57,15 @@ public class GotTagsRepository implements CRUDInterface<GotTags, Long> {
                 : masterEntityManager.merge(result.get()));
         return result;
     }
+
+    @Transactional("slaveTransactionManager")
+    public Optional<GotTags> findByContentIdAndTagId(String contentId, Long tagId) {
+        String query = "SELECT g FROM GotTags g WHERE g.contentId = :contentId AND g.tagId = :tagId";
+        return slaveEntityManager.createQuery(query, GotTags.class)
+                .setParameter("contentId", contentId)
+                .setParameter("tagId", tagId)
+                .getResultStream()
+                .findFirst();
+    }
+
 }

@@ -40,7 +40,7 @@ public class GotTags implements Serializable {
     private Content content;
 
     @Column(name = "tag_id", insertable=false, updatable=false)
-    private String tagId;
+    private Long tagId;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JsonIgnoreProperties(

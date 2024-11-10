@@ -55,4 +55,14 @@ public class TagRepository implements CRUDInterface<Tag, Long> {
                 : masterEntityManager.merge(result.get()));
         return result;
     }
+
+    @Transactional("slaveTransactionManager")
+    public Optional<Tag> findByNameIgnoreCase(String name) {
+        String query = "SELECT t FROM Tag t WHERE LOWER(t.name) = LOWER(:name)";
+        return slaveEntityManager.createQuery(query, Tag.class)
+                .setParameter("name", name)
+                .getResultStream()
+                .findFirst();
+    }
+
 }

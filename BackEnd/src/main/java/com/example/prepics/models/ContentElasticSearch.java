@@ -6,6 +6,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.elasticsearch.annotations.Document;
 
+import java.util.Objects;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
@@ -18,4 +20,12 @@ public class ContentElasticSearch {
     String tags;
 
     boolean type;
+
+    @Override
+    public boolean equals(Object o) {
+        return o instanceof ContentElasticSearch c &&
+                Objects.equals(id, c.id) &&
+                Objects.equals(tags, c.tags) &&
+                type == c.type;
+    }
 }

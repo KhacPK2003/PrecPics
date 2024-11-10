@@ -19,10 +19,7 @@ public class UserServiceImpl implements UserService  {
 
     @Override
     public Optional<User> findByEmail(Class<User> clazz, String email) throws ChangeSetPersister.NotFoundException {
-        return userRepository.findAll(clazz).get()
-                .stream()
-                .filter(user -> user.getEmail().equals(email))
-                .findFirst();
+        return userRepository.findByEmail(email);
     }
 
     @Override

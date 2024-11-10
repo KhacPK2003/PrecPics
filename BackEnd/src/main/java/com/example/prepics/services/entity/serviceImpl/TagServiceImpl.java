@@ -33,6 +33,13 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
+    public Optional<Tag> create(String tagName) throws EntityExistsException, ChangeSetPersister.NotFoundException {
+        Tag tag = new Tag();
+        tag.setName(tagName);
+        return tagRepository.create(tag);
+    }
+
+    @Override
     public Optional<Tag> findById(Class<Tag> clazz, Long aLong) throws ChangeSetPersister.NotFoundException {
         return tagRepository.findById(clazz, aLong);
     }
@@ -40,5 +47,16 @@ public class TagServiceImpl implements TagService {
     @Override
     public Optional<List<Tag>> findAll(Class<Tag> clazz) throws ChangeSetPersister.NotFoundException {
         return tagRepository.findAll(clazz);
+    }
+
+    @Override
+    public Optional<Tag> findByName(Class<Tag> clazz, String name) throws ChangeSetPersister.NotFoundException {
+        Optional<Tag> tag = tagRepository.findByNameIgnoreCase(name);
+
+        if (tag.isPresent()) {
+            return tag;
+        }
+
+        return create(name);
     }
 }

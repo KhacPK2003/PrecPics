@@ -1,7 +1,5 @@
 package com.example.prepics.entity;
 
-import com.example.prepics.views.ContentView;
-import com.fasterxml.jackson.annotation.JsonView;
 import jakarta.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -9,7 +7,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.io.File;
 import java.io.Serial;
 import java.io.Serializable;
 import java.math.BigInteger;
@@ -27,64 +24,48 @@ public class Content implements Serializable {
 
     @Id
     @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @JsonView(value = {ContentView.Gallery.class, ContentView.Video.class})
-    private Long id;
+    private String id;
 
-    @Column(name = "location")
-    @JsonView(value = {ContentView.Gallery.class, ContentView.Video.class})
-    private String location;
+    @Column(name = "name")
+    private String name;
+
+    @Column(name = "asset_id")
+    private String assetId;
 
     @Column(name = "date_upload")
-    @JsonView(value = {ContentView.Gallery.class, ContentView.Video.class})
     private BigInteger dateUpload;
 
     @Column(name = "liked")
-    @JsonView(value = {ContentView.Gallery.class, ContentView.Video.class})
     private int liked;
 
     @Column(name = "downloads")
-    @JsonView(value = {ContentView.Gallery.class, ContentView.Video.class})
     private int downloads;
 
     @Column(name = "views")
-    @JsonView(value = {ContentView.Gallery.class, ContentView.Video.class})
     private int views;
 
-    @Column(name = "wide")
-    @JsonView(value = {ContentView.Gallery.class, ContentView.Video.class})
-    private int wide;
+    @Column(name = "width")
+    private int width;
 
     @Column(name = "height")
-    @JsonView(value = {ContentView.Video.class})
     private int height;
 
-    @Column(name = "image_data")
-    @JsonView(value = {ContentView.Gallery.class})
-    private byte[] imageData;
-
-    @Column(name = "video_data")
-    @JsonView(value = {ContentView.Video.class})
-    private String videoData;
-
-    @Transient
-    @JsonView(value = {ContentView.Video.class})
-    private File videoFile;
+    @Column(name = "data_url")
+    private String dataUrl;
 
     //type true la gallery, false la video
     @Column(name = "type")
-    @JsonView(value = {ContentView.Gallery.class, ContentView.Video.class})
     private boolean type;
 
+    @Transient
+    private String tags;
+
     @Column(name = "is_public")
-    @JsonView(value = {ContentView.Gallery.class, ContentView.Video.class})
     private boolean isPublic;
 
     @Column(name = "user_id", insertable=false, updatable=false)
-    @JsonView(value = {ContentView.Gallery.class, ContentView.Video.class})
     private String userId;
 
-    @JsonView(value = {ContentView.Gallery.class, ContentView.Video.class})
     @OneToMany(mappedBy = "contentId", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JsonIgnoreProperties(
             value = {
@@ -95,7 +76,6 @@ public class Content implements Serializable {
     )
     Set<InCols> inCols;
 
-    @JsonView(value = {ContentView.Gallery.class, ContentView.Video.class})
     @OneToMany(mappedBy = "contentId", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JsonIgnoreProperties(
             value = {
@@ -107,7 +87,6 @@ public class Content implements Serializable {
     Set<GotTags> gotTags;
 
     @ManyToOne()
-    @JsonView(value = {ContentView.Gallery.class, ContentView.Video.class})
     @JsonIgnoreProperties(
             value = {
                     "applications",

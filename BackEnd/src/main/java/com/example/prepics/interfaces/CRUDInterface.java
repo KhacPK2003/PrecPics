@@ -10,7 +10,7 @@ public interface CRUDInterface<Type, Id> {
 
 	Optional<Type> delete(Id id) throws NotFoundException;
 
-	Optional<Type> update(Type entity);
+	Optional<Type> update(Type entity) throws NotFoundException;
 
 	Optional<Type> create(Type entity) throws EntityExistsException, NotFoundException;
 
