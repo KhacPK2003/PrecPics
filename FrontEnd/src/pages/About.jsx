@@ -14,7 +14,7 @@ const About = ({image}) => {
         <Navbar></Navbar>
     <PersonalPage></PersonalPage>
     <div className='flex justify-center mt-[100px] mr-[900px]'>
-            <Button props ='Mục nổi bật' textcolor='text-white' bgcolor='bg-black' onClick={() => navigate('/')}></Button>
+            <Button props ='Mục nổi bật' textcolor='text-white' bgcolor='bg-black' onClick={() => navigate('/main')}></Button>
             <Button props ='Bộ sưu tập ' onClick={() => navigate('/aboutcollection')}></Button>
             <Button props ='Số liệu thống kê ' onClick={() => navigate('/aboutdata')} ></Button>
             <Button props ='Người theo dõi ' onClick={() => navigate('/aboutfollower')}></Button>

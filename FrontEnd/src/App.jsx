@@ -9,7 +9,6 @@ import AboutData from "./pages/AboutData";
 import AboutFollower from "./pages/AboutFollower";
 import AboutCollection from "./pages/AboutCollection";
 import Collection from "./pages/Collection";
-import GallerySingle from "./Components/GallerySingle/GallerySingle";
 import AboutWatching from "./pages/AboutWatching";
 import Sidebar from "./Components/Administrator/Sidebar";
 import Footer from "./Components/Administrator/Footer";
@@ -24,13 +23,10 @@ function App(){
             <Routes>
                 <Route path="/" element={<Home/>}/>
                 <Route path="/Upload" element={<Upload/>}/>
-                <Route path="/" element={<Home/>}>
-                    <Route index element={<Main/>}/>
-                     <Route path="/Upload" element={<Upload/>}/>
-                </Route>
+                <Route path="/main" element={<Main/>}/>
                 <Route path="/Login" element={<Login/>}/>
                 <Route path="/SignUp" element={<SignUp/>}/>
-                <Route path="/" element={<About/>}/>
+                <Route path="/about" element={<About/>}/>
                 <Route path="/aboutdata" element={<AboutData/>}/>
                 <Route path="/aboutfollower" element={<AboutFollower/>}/>
                 <Route path="/aboutcollection" element={<AboutCollection/>}/>

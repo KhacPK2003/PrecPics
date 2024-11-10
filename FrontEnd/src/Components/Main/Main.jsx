@@ -16,7 +16,7 @@ const imageSections = [
     <SectionVideo key={4} />,
     <SectionVideo key={5} />,
   ];
-function Main({showvideo}){
+function Main({showvideo = false}){
     return (
         <>
             <section id="gallery" className="gallery">
