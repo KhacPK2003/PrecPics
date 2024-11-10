@@ -34,15 +34,17 @@ create table if not exists content
     id          varchar(450) not null
         constraint gallery_pkey
             primary key,
+    name        varchar,
     location    varchar(255),
     date_upload bigint,
     liked       integer,
     downloads   integer,
     views       integer,
     height      integer,
-    wide        integer,
+    width        integer,
     data_url    varchar,
     is_public   boolean,
+    asset_id    varchar,
     user_id     varchar(450)
         constraint gallery_user_id_fkey
             references "user"
