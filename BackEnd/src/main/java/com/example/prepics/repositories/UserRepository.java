@@ -62,4 +62,13 @@ public class UserRepository implements CRUDInterface<User, String> {
                 : masterEntityManager.merge(result.get()));
         return result;
     }
+
+    @Transactional("slaveTransactionManager")
+    public Optional<User> findByEmail(String email) {
+        String query = "SELECT u FROM User u WHERE u.email = :email";
+        return slaveEntityManager.createQuery(query, User.class)
+                .setParameter("email", email)
+                .getResultStream()
+                .findFirst();
+    }
 }
