@@ -3,9 +3,7 @@ package com.example.prepics.entity;
 import jakarta.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -13,9 +11,10 @@ import java.math.BigInteger;
 import java.util.Set;
 
 @Entity
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
 @Table(name = "content", schema = "public")
 public class Content implements Serializable {
 
@@ -86,12 +85,13 @@ public class Content implements Serializable {
     )
     Set<GotTags> gotTags;
 
-    @ManyToOne()
+    @ManyToOne(fetch = FetchType.EAGER)
     @JsonIgnoreProperties(
             value = {
                     "applications",
                     "contents",
-                    "collections"
+                    "collections",
+                    "user"
             }
     )
     private User user;

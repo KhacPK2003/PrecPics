@@ -15,7 +15,7 @@ import java.util.Objects;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ContentElasticSearch {
 
-    Long id;
+    String id;
 
     String tags;
 
