@@ -36,9 +36,6 @@ public class User implements Serializable {
     @Column(name = "email")
     private String email;
 
-    @Column(name = "password_hash")
-    private String passwordHash;
-
     @Column(name = "description")
     private String description;
 
