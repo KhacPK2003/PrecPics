@@ -3,7 +3,6 @@
     import com.example.prepics.entity.User;
     import com.example.prepics.models.CredentialFirebase;
     import com.example.prepics.models.SecurityProperties;
-    import com.example.prepics.services.entity.ContentService;
     import com.example.prepics.services.secrurities.SecurityService;
     import com.example.prepics.utils.CookieUtil;
     import com.google.firebase.auth.FirebaseAuth;
@@ -41,9 +40,6 @@
 
         @Autowired
         SecurityProperties securityProps;
-
-        @Autowired
-        ContentService contentService;
 
         @Override
         protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
@@ -92,7 +88,7 @@
                         .userName(extractUsername(decodedToken.getEmail()))
                         .fullName(decodedToken.getName())
                         .email(decodedToken.getEmail())
-                        .avatarUrl(contentService.getByteArrayFromImageURL(decodedToken.getPicture()).get())
+                        .avatarUrl(decodedToken.getPicture())
                         .build();
             }
             return user;

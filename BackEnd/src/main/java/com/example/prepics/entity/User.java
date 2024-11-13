@@ -28,7 +28,7 @@ public class User implements Serializable {
     private String userName;
 
     @Column(name = "avatar_url")
-    private byte[] avatarUrl;
+    private String avatarUrl;
 
     @Column(name = "full_name")
     private String fullName;
@@ -77,4 +77,22 @@ public class User implements Serializable {
             }
     )
     private Set<Content> contents;
+
+    @OneToMany(mappedBy = "userId", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JsonIgnoreProperties(
+            value = {
+                    "applications",
+                    "user"
+            }
+    )
+    private Set<Followees> followees;
+
+    @OneToMany(mappedBy = "userId", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JsonIgnoreProperties(
+            value = {
+                    "applications",
+                    "user"
+            }
+    )
+    private Set<Followers> followers;
 }

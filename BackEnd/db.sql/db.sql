@@ -1,3 +1,8 @@
+create sequence follows_id_seq
+    as integer;
+
+alter sequence follows_id_seq owner to postgres;
+
 create table if not exists "user"
 (
     id            varchar(450) not null
@@ -13,7 +18,7 @@ create table if not exists "user"
     role_id       integer,
     is_active     boolean,
     is_admin      boolean,
-    avatar_url    bytea
+    avatar_url    varchar
 );
 
 alter table "user"
@@ -41,7 +46,7 @@ create table if not exists content
     downloads   integer,
     views       integer,
     height      integer,
-    width        integer,
+    width       integer,
     data_url    varchar,
     is_public   boolean,
     asset_id    varchar,
@@ -101,20 +106,39 @@ create table if not exists gottags
 alter table gottags
     owner to postgres;
 
-create table if not exists follows
+create table if not exists followers
 (
-    id          serial
-        primary key,
-    follower_id varchar(450) not null
-        references "user"
+    id          integer default nextval('follows_id_seq'::regclass) not null
+        constraint follows_pkey
+            primary key,
+    follower_id varchar(450)                                        not null
+        constraint follows_follower_id_fkey
+            references "user"
             on delete cascade,
-    followee_id varchar(450) not null
-        references "user"
-            on delete cascade,
-    unique (follower_id, followee_id)
+    user_id     varchar
+        constraint followers_user_id_fk
+            references "user"
 );
 
-alter table follows
+alter table followers
+    owner to postgres;
+
+alter sequence follows_id_seq owned by followers.id;
+
+create table if not exists followees
+(
+    id          serial
+        constraint followees_pk
+            primary key,
+    user_id     varchar
+        constraint followees_user_id_fk
+            references "user",
+    followee_id varchar
+        constraint followees_user_id_fk_2
+            references "user"
+);
+
+alter table followees
     owner to postgres;
 
 -- temp data

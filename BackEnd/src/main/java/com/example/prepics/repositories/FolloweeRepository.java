@@ -1,20 +1,17 @@
 package com.example.prepics.repositories;
 
-import com.example.prepics.entity.User;
+import com.example.prepics.entity.Followees;
 import com.example.prepics.interfaces.CRUDInterface;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.PersistenceContextType;
 import org.springframework.data.crossstore.ChangeSetPersister;
-import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-
 
 import java.util.List;
 import java.util.Optional;
 
-@Repository
-public class UserRepository implements CRUDInterface<User, String> {
+public class FolloweeRepository implements CRUDInterface<Followees, Long> {
 
     @PersistenceContext(unitName = "masterEntityManagerFactory", type = PersistenceContextType.TRANSACTION)
     private EntityManager masterEntityManager;
@@ -24,36 +21,34 @@ public class UserRepository implements CRUDInterface<User, String> {
 
     @Override
     @Transactional("masterTransactionManager")
-    public Optional<List<User>> findAll(Class<User> clazz) throws ChangeSetPersister.NotFoundException {
+    public Optional<List<Followees>> findAll(Class<Followees> clazz) throws ChangeSetPersister.NotFoundException {
         return Optional.ofNullable(masterEntityManager
-                .createQuery("SELECT a FROM User a", User.class).getResultList());
+                .createQuery("SELECT a FROM Followees a", Followees.class).getResultList());
     }
 
     @Override
     @Transactional("slaveTransactionManager")
-    public Optional<User> findById(Class<User> clazz, String id) throws ChangeSetPersister.NotFoundException {
+    public Optional<Followees> findById(Class<Followees> clazz, Long id) throws ChangeSetPersister.NotFoundException {
         return Optional.ofNullable(slaveEntityManager.find(clazz, id));
     }
 
     @Override
     @Transactional("masterTransactionManager")
-    public Optional<User> create(User entity) {
-        entity.setIsAdmin(false);
-        entity.setIsActive(true);
+    public Optional<Followees> create(Followees entity) {
         masterEntityManager.persist(entity);
-        return Optional.of(entity);
+        return Optional.ofNullable(entity);
     }
 
     @Override
     @Transactional("masterTransactionManager")
-    public Optional<User> update(User entity) {
+    public Optional<Followees> update(Followees entity) {
         return Optional.ofNullable(masterEntityManager.merge(entity));
     }
 
     @Override
     @Transactional("masterTransactionManager")
-    public Optional<User> delete(String id) throws ChangeSetPersister.NotFoundException {
-        Optional<User> result = Optional.ofNullable(slaveEntityManager.find(User.class, id));
+    public Optional<Followees> delete(Long id) throws ChangeSetPersister.NotFoundException {
+        Optional<Followees> result = Optional.ofNullable(slaveEntityManager.find(Followees.class, id));
         if (result.isEmpty()) {
             return Optional.empty();
         }
@@ -63,10 +58,12 @@ public class UserRepository implements CRUDInterface<User, String> {
     }
 
     @Transactional("slaveTransactionManager")
-    public Optional<User> findByEmail(String email) {
-        String query = "SELECT u FROM User u WHERE u.email = :email";
-        return slaveEntityManager.createQuery(query, User.class)
-                .setParameter("email", email)
+    public Optional<Followees> findByUserIdAndFolloweeId(Class<Followees> clazz, String userId, String followeeId)
+            throws ChangeSetPersister.NotFoundException {
+        String query = "SELECT a FROM Followees a WHERE a.userId = :userId and a.followeeId = :followeeId";
+        return slaveEntityManager.createQuery(query, Followees.class)
+                .setParameter("userId", userId)
+                .setParameter("followeeId", followeeId)
                 .getResultStream()
                 .findFirst();
     }

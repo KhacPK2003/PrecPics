@@ -1,12 +1,12 @@
 package com.example.prepics.services.entity;
 
-import com.example.prepics.entity.InCols;
+import com.example.prepics.entity.Followees;
 import com.example.prepics.interfaces.CRUDInterface;
 import org.springframework.data.crossstore.ChangeSetPersister;
 
 import java.util.Optional;
 
-public interface InColsService extends CRUDInterface<InCols, Long> {
-    Optional<InCols> findByContentIdAndCollectionId(String contentId, Long collectionId)
+public interface FolloweeService extends CRUDInterface<Followees, Long> {
+    Optional<Followees> findByUserIdAndFolloweeId(Class<Followees> clazz, String userId, String followeeId)
             throws ChangeSetPersister.NotFoundException;
 }

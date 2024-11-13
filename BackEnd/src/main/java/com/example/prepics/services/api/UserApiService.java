@@ -1,6 +1,11 @@
 package com.example.prepics.services.api;
 
+import com.example.prepics.entity.Followees;
+import com.example.prepics.entity.Followers;
 import com.example.prepics.entity.User;
+import com.example.prepics.models.ResponseProperties;
+import com.example.prepics.services.entity.FolloweeService;
+import com.example.prepics.services.entity.FollowerService;
 import com.example.prepics.services.entity.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,10 +13,8 @@ import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 @Service
 public class UserApiService {
@@ -22,86 +25,129 @@ public class UserApiService {
     @Autowired
     private ModelMapper modelMapper;
 
+    @Autowired
+    private FollowerService followerService;
+
+    @Autowired
+    private FolloweeService followeeService;
+
     public Map<String, Object> loginUserWithGoogle(Authentication authentication)
             throws ChangeSetPersister.NotFoundException {
-
+        // Lấy thông tin người dùng từ Authentication
         User userDecode = (User) authentication.getPrincipal();
-        Optional<User> resultUser = userService.findByEmail(User.class, userDecode.getEmail());
 
+        // Tìm kiếm hoặc tạo người dùng nếu chưa tồn tại
+        User user = userService.findByEmail(User.class, userDecode.getEmail())
+                .orElseGet(() -> {
+                    try {
+                        return userService.create(userDecode)
+                                .orElseThrow(() -> new RuntimeException("Failed to create user"));
+                    } catch (ChangeSetPersister.NotFoundException e) {
+                        throw new RuntimeException(e);
+                    }
+                });
 
-        if (resultUser.isEmpty()) {
-            Optional<User> UserCreated = userService.create(userDecode);
-
-            Map<String, Object> response = new HashMap<>();
-            response.put("status", 200);
-            response.put("message", "Success");
-            response.put("payload", UserCreated);
-
-            return response;
-        }
-
-        Map<String, Object> response = new HashMap<>();
-        response.put("status", 200);
-        response.put("message", "Success");
-        response.put("payload", resultUser);
-
-        return response;
+        // Trả phản hồi
+        return ResponseProperties.createResponse(200, "Success", user);
     }
 
-    public Map<String, Object> findAll(Authentication authentication)
-            throws ChangeSetPersister.NotFoundException {
-
+    public Map<String, Object> findAll(Authentication authentication) throws ChangeSetPersister.NotFoundException {
+        // Lấy thông tin người dùng hiện tại
         User userDecode = (User) authentication.getPrincipal();
-        Optional<User> resultUser = userService.findByEmail(User.class, userDecode.getEmail());
-        if (resultUser.isEmpty() || !resultUser.get().getIsAdmin()) {
-            throw new ChangeSetPersister.NotFoundException();
+        User currentUser = userService.findByEmail(User.class, userDecode.getEmail())
+                .orElseThrow(ChangeSetPersister.NotFoundException::new);
+
+        // Kiểm tra quyền admin
+        if (!currentUser.getIsAdmin()) {
+            return ResponseProperties.createResponse(403, "Forbidden", null);
         }
 
-        Optional<List<User>> result = userService.findAll(User.class);
+        // Tìm tất cả người dùng
+        List<User> users = userService.findAll(User.class)
+                .orElseThrow(ChangeSetPersister.NotFoundException::new);
 
-        Map<String, Object> response = new HashMap<>();
-        response.put("status", 200);
-        response.put("message", "Success");
-        response.put("payload", result);
-
-        return response;
+        // Trả phản hồi
+        return ResponseProperties.createResponse(200, "Success", users);
     }
 
     public Map<String, Object> findById(String id) throws ChangeSetPersister.NotFoundException {
-        Optional<User> result = userService.findById(User.class, id);
+        // Tìm người dùng theo ID
+        User user = userService.findById(User.class, id)
+                .orElseThrow(ChangeSetPersister.NotFoundException::new);
 
-        if (result.isEmpty()) {
-            throw new ChangeSetPersister.NotFoundException();
-        }
-
-        Map<String, Object> response = new HashMap<>();
-        response.put("status", 200);
-        response.put("message", "Success");
-        response.put("payload", result);
-
-        return response;
+        // Trả phản hồi
+        return ResponseProperties.createResponse(200, "Success", user);
     }
 
-    public Map<String, Object> update(Authentication authentication , User entity)
+    public Map<String, Object> update(Authentication authentication, User entity)
             throws ChangeSetPersister.NotFoundException {
-
+        // Lấy thông tin người dùng hiện tại
         User userDecode = (User) authentication.getPrincipal();
-        Optional<User> result = userService.findByEmail(User.class, userDecode.getEmail());
-        if (result.isEmpty() || !result.get().getId().equals(entity.getId())) {
-            throw new ChangeSetPersister.NotFoundException();
+        User currentUser = userService.findByEmail(User.class, userDecode.getEmail())
+                .orElseThrow(ChangeSetPersister.NotFoundException::new);
+
+        // Kiểm tra quyền cập nhật
+        if (!currentUser.getId().equals(entity.getId())) {
+            return ResponseProperties.createResponse(403, "Forbidden", null);
         }
-        modelMapper.map(entity, result.get());
-        userService.update(result.get());
 
-        Map<String, Object> response = new HashMap<>();
-        response.put("status", 200);
-        response.put("message", "Success");
-        response.put("payload", result);
+        // Cập nhật thông tin người dùng
+        modelMapper.map(entity, currentUser);
+        userService.update(currentUser);
 
-        return response;
+        // Trả phản hồi
+        return ResponseProperties.createResponse(200, "Success", currentUser);
     }
 
 
+    public Map<String, Object> delete(String id) throws ChangeSetPersister.NotFoundException {
+        User result = userService.findById(User.class, id).orElseThrow(ChangeSetPersister.NotFoundException::new);
 
+        userService.delete(id);
+        return ResponseProperties.createResponse(200, "Success", result);
+    }
+
+    public Map<String, Object> doFollowUser(Authentication authentication, String userId)
+            throws ChangeSetPersister.NotFoundException {
+        User userDecode = (User) authentication.getPrincipal();
+        User currentUser = userService.findByEmail(User.class, userDecode.getEmail())
+                .orElseThrow(ChangeSetPersister.NotFoundException::new);
+
+        User targetUser = userService.findById(User.class, userId)
+                .orElseThrow(ChangeSetPersister.NotFoundException::new);
+
+        //tao followee cho user
+        Followees followees = new Followees();
+        followees.setFolloweeId(userId);
+        followees.setUserId(userDecode.getId());
+
+        followeeService.create(followees);
+
+        //tao follower cho user duoc follow
+        Followers followers = new Followers();
+        followers.setFollowerId(userDecode.getId());
+        followers.setUserId(userId);
+
+        followerService.create(followers);
+
+        return ResponseProperties.createResponse(200, "Success", true);
+    }
+
+    public Map<String, Object> doUnfollowUser(Authentication authentication, String followeeId, String followerId)
+            throws ChangeSetPersister.NotFoundException {
+        User userDecode = (User) authentication.getPrincipal();
+        User currentUser = userService.findByEmail(User.class, userDecode.getEmail())
+                .orElseThrow(ChangeSetPersister.NotFoundException::new);
+
+        Followees followee = followeeService.findByUserIdAndFolloweeId(Followees.class, followerId, followeeId)
+                .orElseThrow(ChangeSetPersister.NotFoundException::new);
+        followeeService.delete(followee.getId());
+
+        Followers follower = followerService.findByUserIdAndFollowerId(Followers.class, followeeId, followerId)
+                .orElseThrow(ChangeSetPersister.NotFoundException::new);
+        followerService.delete(follower.getId());
+
+        return ResponseProperties.createResponse(200, "Success", true);
+    }
 
 }

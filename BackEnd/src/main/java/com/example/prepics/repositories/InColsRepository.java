@@ -57,4 +57,15 @@ public class InColsRepository implements CRUDInterface<InCols, Long> {
                 : masterEntityManager.merge(result.get()));
         return result;
     }
+
+    @Transactional("slaveTransactionManager")
+    public Optional<InCols> findByContentIdAndCollectionId(String contentId, Long collectionId)
+            throws ChangeSetPersister.NotFoundException {
+        String query = "SELECT c FROM InCols c WHERE c.contentId = :contentId AND c.collectionId = :collectionId";
+        return slaveEntityManager.createQuery(query, InCols.class)
+                .setParameter("contentId", contentId)
+                .setParameter("collectionId", collectionId)
+                .getResultStream()
+                .findFirst();
+    }
 }

@@ -103,13 +103,12 @@ public class ContentServiceImpl implements ContentService {
 
 
     @Override
-    public Optional<File> changeResolutionForImage(String content, int width, int height) throws IOException {
-
-        String pathToDst = "../resources/prepics-"
-                + BigInteger.valueOf(System.currentTimeMillis()) + ".jpg";
+    public Optional<File> changeResolutionForImage(String contentUrl, int width, int height) throws IOException {
+        String tempDir = System.getProperty("java.io.tmpdir");
+        String pathToDst = tempDir + "/output.jpg";
 
         FFmpeg.atPath()
-                .addInput(UrlInput.fromUrl(content))
+                .addInput(UrlInput.fromUrl(contentUrl))
                 .setFilter(StreamType.VIDEO, "scale=" + width + ":" + height)
                 .setOverwriteOutput(true)
                 .addArguments("-q:v", "2")
@@ -122,21 +121,22 @@ public class ContentServiceImpl implements ContentService {
     }
 
     @Override
-    public Optional<File> changeResolutionForVideo(String content, int width, int height) throws IOException {
+    public Optional<File> changeResolutionForVideo(String contentUrl, int width, int height) throws IOException {
+        String tempDir = System.getProperty("java.io.tmpdir");
+        String pathToDst = tempDir + "/output.mp4";
 
-        String pathToDst = "../resources/prepics-"
-                + BigInteger.valueOf(System.currentTimeMillis()) + ".mp4";
         FFmpeg.atPath()
-            .addInput(
-                    UrlInput.fromUrl(content)
-            )
-            .setFilter(StreamType.VIDEO, "scale=" + width + ":" + height)
-            .setOverwriteOutput(true)
-            .addArguments("-movflags", "faststart")
-            .addOutput(
-                    UrlOutput.toUrl(pathToDst)
-            )
-            .execute();
+                .addInput(
+                        UrlInput.fromUrl(contentUrl)
+                )
+                .setFilter(StreamType.VIDEO, "scale=" + width + ":" + height)
+                .setOverwriteOutput(true)
+                .addArguments("-movflags", "faststart")
+                .addOutput(
+                        UrlOutput.toUrl(pathToDst)
+                )
+                .execute();
+
         File result = new File(pathToDst);
         result.deleteOnExit();
         return Optional.of(result);

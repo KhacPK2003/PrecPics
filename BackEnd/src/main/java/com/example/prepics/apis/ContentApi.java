@@ -5,6 +5,8 @@ import com.example.prepics.services.entity.ContentService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.crossstore.ChangeSetPersister;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -17,80 +19,202 @@ import java.util.Map;
 @RestController
 @RequestMapping("/public/api/contents")
 public class ContentApi {
+
     @Autowired
     ContentService contentService;
 
     @Autowired
     ContentApiService contentApiService;
 
-    @PostMapping("/content/upload")
-    public ResponseEntity<?> uploadContent(Authentication authentication, @RequestParam("file") MultipartFile file
-            , @RequestBody Map<String, Object> model) throws ChangeSetPersister.NotFoundException, IOException {
+    /**
+     * Upload content (image/video)
+     *
+     * API này cho phép người dùng tải lên các nội dung (hình ảnh hoặc video) và lưu trữ vào hệ thống.
+     *
+     * Các tham số trong model:
+     * - "type": Loại nội dung (0 - ảnh, 1 - video).
+     * - "tags": Các thẻ của nội dung, các thẻ cách nhau bằng dấu phẩy.
+     *
+     * Quy trình xử lý:
+     * - Tải lên file (ảnh hoặc video) và lưu thông tin vào cơ sở dữ liệu.
+     * - Tạo mới đối tượng `Content` và lưu thông tin về file đã tải lên (ví dụ: ID, tên, chiều cao, chiều rộng, URL).
+     * - Thêm các thẻ (tags) vào nội dung.
+     * - Lưu thông tin vào Elasticsearch để hỗ trợ tìm kiếm.
+     *
+     * @param authentication: Thông tin người dùng đã đăng nhập (sử dụng Spring Security).
+     * @param file: File tải lên (ảnh hoặc video).
+     * @param model: Map chứa các tham số mô tả nội dung:
+     *               - "type": Loại file (0 cho ảnh, 1 cho video).
+     *               - "tags": Các thẻ của nội dung, được phân tách bằng dấu phẩy.
+     * @return ResponseEntity: Trả về phản hồi chứa thông tin về nội dung đã tải lên.
+     * @throws IOException: Nếu có lỗi khi tải lên file.
+     * @throws ChangeSetPersister.NotFoundException: Nếu không tìm thấy dữ liệu yêu cầu.
+     */
+    @PostMapping("/upload")
+    public ResponseEntity<?> uploadContent(
+            Authentication authentication,
+            @RequestParam("file") MultipartFile file,
+            @RequestBody Map<String, Object> model) throws IOException, ChangeSetPersister.NotFoundException {
         return ResponseEntity.ok(contentApiService.uploadContent(authentication, file, model));
     }
 
-    @DeleteMapping("/content/{id}")
-    public ResponseEntity<?> deleteContent(Authentication authentication, @PathVariable("id") String id)
-            throws ChangeSetPersister.NotFoundException, IOException {
+    /**
+     * Delete content by ID
+     *
+     * API này cho phép người dùng xóa nội dung dựa trên ID.
+     * Quy trình xử lý:
+     * - Kiểm tra xem người dùng có quyền xóa nội dung hay không.
+     * - Xóa nội dung trong hệ thống cơ sở dữ liệu và Elasticsearch.
+     *
+     * @param authentication: Thông tin người dùng đã đăng nhập.
+     * @param id: ID của nội dung cần xóa.
+     * @return ResponseEntity: Trả về phản hồi cho việc xóa nội dung.
+     * @throws IOException: Nếu có lỗi khi thao tác với file.
+     * @throws ChangeSetPersister.NotFoundException: Nếu không tìm thấy nội dung.
+     */
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<?> deleteContent(
+            Authentication authentication,
+            @PathVariable("id") String id) throws IOException, ChangeSetPersister.NotFoundException {
         return ResponseEntity.ok(contentApiService.deleteContent(authentication, id));
     }
 
-    @PostMapping("/{id}/{tags}")
-    public ResponseEntity<?> updateTags(Authentication authentication, @PathVariable("id") String contenId
-            , @PathVariable("tags") String tags) throws ChangeSetPersister.NotFoundException {
-        return ResponseEntity.ok(contentApiService.updateTags(authentication, contenId, tags));
+    /**
+     * Update tags of a content
+     *
+     * API này cho phép người dùng cập nhật thẻ (tags) của một nội dung.
+     * Quy trình xử lý:
+     * - Kiểm tra xem người dùng có quyền cập nhật thẻ của nội dung đó hay không.
+     * - Cập nhật các thẻ của nội dung trong hệ thống.
+     *
+     * @param authentication: Thông tin người dùng đã đăng nhập.
+     * @param contentId: ID của nội dung cần cập nhật thẻ.
+     * @param tags: Các thẻ mới cho nội dung, phân tách bằng dấu phẩy.
+     * @return ResponseEntity: Trả về phản hồi cho việc cập nhật thẻ.
+     * @throws ChangeSetPersister.NotFoundException: Nếu không tìm thấy nội dung hoặc người dùng.
+     */
+    @PutMapping("/update-tags/{contentId}")
+    public ResponseEntity<?> updateTags(
+            Authentication authentication,
+            @PathVariable("contentId") String contentId,
+            @RequestParam("tags") String tags) throws ChangeSetPersister.NotFoundException {
+        return ResponseEntity.ok(contentApiService.updateTags(authentication, contentId, tags));
     }
 
-    @GetMapping
-    public ResponseEntity<?> findAllContents() throws ChangeSetPersister.NotFoundException {
+    /**
+     * Get all content
+     *
+     * API này trả về tất cả các nội dung có trong hệ thống.
+     *
+     * @return ResponseEntity: Trả về danh sách tất cả nội dung.
+     * @throws ChangeSetPersister.NotFoundException: Nếu không tìm thấy nội dung.
+     */
+    @GetMapping("/all")
+    public ResponseEntity<?> findAllContent() throws ChangeSetPersister.NotFoundException {
         return ResponseEntity.ok(contentApiService.findAllContent());
     }
 
-    @GetMapping("/type/{type}")
-    public ResponseEntity<?> findAllByType(@PathVariable("type") String type)
-            throws ChangeSetPersister.NotFoundException {
-        return ResponseEntity.ok(contentApiService.findAllByType((Integer.parseInt(type)==0)));
+    /**
+     * Get content by type (image/video) (0/1)
+     *
+     * API này trả về các nội dung có loại (hình ảnh hoặc video) dựa trên tham số truyền vào.
+     *
+     * @param type: Loại nội dung (0 - hình ảnh, 1 - video).
+     * @return ResponseEntity: Trả về các nội dung với loại đã chọn.
+     * @throws ChangeSetPersister.NotFoundException: Nếu không tìm thấy nội dung với loại đã chỉ định.
+     */
+    @GetMapping("/by-type")
+    public ResponseEntity<?> findAllByType(
+            @RequestParam("type") int type) throws ChangeSetPersister.NotFoundException {
+        return ResponseEntity.ok(contentApiService.findAllByType((type == 0)));
     }
 
-    @GetMapping("/tags/{tags}")
-    public ResponseEntity<?> findAllByTag(@PathVariable("tags") String tags)
-            throws ChangeSetPersister.NotFoundException {
+    /**
+     * Get content by tags
+     *
+     * API này trả về các nội dung có thẻ (tags) phù hợp với các thẻ được chỉ định.
+     *
+     * @param tags: Các thẻ cần tìm kiếm, phân tách bằng dấu phẩy.
+     * @return ResponseEntity: Trả về các nội dung với thẻ phù hợp.
+     * @throws ChangeSetPersister.NotFoundException: Nếu không tìm thấy nội dung với các thẻ đã chỉ định.
+     */
+    @GetMapping("/by-tags")
+    public ResponseEntity<?> findAllByTags(
+            @RequestParam("tags") String tags) throws ChangeSetPersister.NotFoundException {
         return ResponseEntity.ok(contentApiService.findAllByTags(tags));
     }
 
-    @GetMapping("/content/{id}")
-    public ResponseEntity<?> findById(@PathVariable("id") String id) throws ChangeSetPersister.NotFoundException {
+    /**
+     * Get content by ID
+     *
+     * API này cho phép người dùng lấy nội dung dựa trên ID của nó.
+     *
+     * @param id: ID của nội dung cần tìm kiếm.
+     * @return ResponseEntity: Trả về nội dung với ID tương ứng.
+     * @throws ChangeSetPersister.NotFoundException: Nếu không tìm thấy nội dung.
+     */
+    @GetMapping("/{id}")
+    public ResponseEntity<?> findContentById(
+            @PathVariable("id") String id) throws ChangeSetPersister.NotFoundException {
         return ResponseEntity.ok(contentApiService.findContentById(id));
     }
 
-    @GetMapping("/content/0/download") // 0 is image
-    public ResponseEntity<?> getImageWithSize(Authentication authentication, @RequestBody Map<String, Object> model)
-            throws IOException, ChangeSetPersister.NotFoundException {
-        return ResponseEntity.ok(contentApiService.getImageWithSize(authentication, model));
+    /**
+     * Get image with specified size
+     *
+     * API này cho phép người dùng lấy ảnh đã thay đổi kích thước dựa trên các tham số chiều rộng và chiều cao.
+     *
+     * @param authentication: Thông tin người dùng đã đăng nhập.
+     * @param model: Map chứa thông tin cần thiết để thay đổi kích thước ảnh, bao gồm:
+     *               - "content": Thông tin của nội dung ảnh (Content) cần thay đổi kích thước.
+     *               - "width": Chiều rộng mới của ảnh.
+     *               - "height": Chiều cao mới của ảnh.
+     * @return ResponseEntity<byte[]>: Dữ liệu ảnh đã thay đổi kích thước dưới dạng mảng byte, trả về với kiểu `image/jpeg`.
+     */
+    @GetMapping(value = "/image/resize", produces = MediaType.IMAGE_JPEG_VALUE)
+    public ResponseEntity<byte[]> getImageWithSize(
+            Authentication authentication,
+            @RequestBody Map<String, Object> model) throws IOException, ChangeSetPersister.NotFoundException {
+
+        // Gọi service để lấy ảnh đã thay đổi kích thước
+        byte[] image = contentApiService.getImageWithSize(authentication, model);
+
+        // Kiểm tra xem ảnh có tồn tại hay không
+        if (image == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);  // Trả về lỗi 404 nếu không tìm thấy ảnh
+        }
+
+        // Trả về dữ liệu ảnh với định dạng image/jpeg
+        return ResponseEntity.ok(image);
     }
 
-    @GetMapping("/content/1/download") //1 is video
-    public ResponseEntity<?> getVideoWithSize(Authentication authentication, @RequestBody Map<String, Object> model)
-            throws IOException, ChangeSetPersister.NotFoundException {
-        return ResponseEntity.ok(contentApiService.getVideoWithSize(authentication,model));
-    }
+    /**
+     * Get video with specified size
+     *
+     * API này cho phép người dùng lấy video đã thay đổi kích thước dựa trên các tham số chiều rộng và chiều cao.
+     *
+     * @param authentication: Thông tin người dùng đã đăng nhập.
+     * @param model: Map chứa thông tin cần thiết để thay đổi kích thước video, bao gồm:
+     *               - "content": Thông tin của nội dung video (Content) cần thay đổi kích thước.
+     *               - "width": Chiều rộng mới của video.
+     *               - "height": Chiều cao mới của video.
+     * @return ResponseEntity<byte[]>: Dữ liệu video đã thay đổi kích thước dưới dạng mảng byte, trả về với kiểu `video/mp4`.
+     */
+    @GetMapping(value = "/video/resize", produces = "video/mp4")
+    public ResponseEntity<byte[]> getVideoWithSize(
+            Authentication authentication,
+            @RequestBody Map<String, Object> model) throws IOException, ChangeSetPersister.NotFoundException {
 
-    //indexName is name of class (contents); fieldName is name of property (tags)
-    @GetMapping("/search/{indexName}/{fieldName}/{approximateTagNames}")
-    public ResponseEntity<?> doSearchWithFuzzy(@PathVariable("indexName") String indexName,
-                                               @PathVariable("fieldName") String fieldName,
-                                               @PathVariable("approximateTagNames") String approximateTagNames)
-            throws IOException {
-        return ResponseEntity.ok(contentApiService.doSearchWithFuzzy(indexName, fieldName, approximateTagNames));
-    }
+        // Gọi service để lấy video đã thay đổi kích thước
+        byte[] video = contentApiService.getVideoWithSize(authentication, model);
 
-    @PostMapping("/elasticsearch")
-    public ResponseEntity<?> doInsertContentsIntoElastic(Authentication authentication) throws ChangeSetPersister.NotFoundException {
-        return ResponseEntity.ok(contentApiService.doInsertContentsIntoElastic(authentication));
-    }
+        // Kiểm tra xem video có tồn tại hay không
+        if (video == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);  // Trả về lỗi 404 nếu không tìm thấy video
+        }
 
-    @DeleteMapping("/elasticsearch")
-    public ResponseEntity<?> doDeleteContentsInElastic(Authentication authentication) throws ChangeSetPersister.NotFoundException {
-        return ResponseEntity.ok(contentApiService.doDeleteContentsInElastic(authentication));
+        // Trả về dữ liệu video với định dạng video/mp4
+        return ResponseEntity.ok(video);
     }
 }
+
