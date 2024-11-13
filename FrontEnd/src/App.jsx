@@ -5,15 +5,12 @@ import Home from "./pages/Home";
 import SignUp from "./pages/Regist";
 import Upload from "./Components/Upload/upload";
 import Main from "./Components/Main/Main";
-import About from "./pages/About";
-import AboutData from "./pages/AboutData";
 import Collection from "./pages/Collection";
 import Dashboard from "./Components/ContentAdmin/Dashboard";
 import Index from "./Admin/Index";
 import UserManager from "./Admin/UserManager";
 import CollectionManager from "./Admin/CollectionManager";
 import InCollectionManager from "./Admin/InCollectionManager";
-import TagManager from "./Admin/TagManager";
 import GalleryManager from "./Admin/GalleryManager";
 import GotTagManager from "./Admin/GotTagManager";
 function App(){
@@ -36,26 +33,6 @@ function App(){
                 <Route path="/aboutprofile" element={<EditProfile/>}/>
                 <Route path="/aboutnotification" element={<EditNotification/>}/>
             </Routes> */}
-            {/* <Sidebar></Sidebar> */}
-           {/* <Test></Test> */}
-           {/* <Topbar></Topbar> */}
-           {/* <Header></Header> */} 
-           {/* <Dashboard></Dashboard>    */}
-
-
-           {/* <div id="wrapper" className="flex h-screen" >
-                <Sidebar></Sidebar> 
-                <div className="flex-1">
-                    <Topbar />
-                    <Dashboard /> 
-                </div>   
-            </div> */}
-            {/* <Index></Index> */}
-            {/* <UserManager></UserManager> */}
-            {/* <InCollectionManager></InCollectionManager> */}
-            {/* <TagManager></TagManager> */}
-            {/* <GalleryManager></GalleryManager> */}
-            {/* <GotTagManager></GotTagManager> */}
             <Routes>
                 <Route path="/" element={<Index/>}/>
                 <Route path="/usermanager" element={<UserManager/>}/>
