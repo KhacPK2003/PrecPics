@@ -1,8 +1,11 @@
 import React from 'react';
+import Dashboard from '../ContentAdmin/Dashboard';
 
 const Topbar = () => {
     return (
-        <div>
+      <div>
+       {/* <div id="content-wrapper" className="d-flex flex-column">
+         <div id='content'> */}
            <nav className="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
       {/* Sidebar Toggle (Topbar) */}
       <button id="sidebarToggleTop" className="btn btn-link d-md-none rounded-circle mr-3">
@@ -138,7 +141,7 @@ const Topbar = () => {
             <h6 className="dropdown-header">Message Center</h6>
             <a className="dropdown-item d-flex align-items-center" href="#">
               <div className="dropdown-list-image mr-3">
-                <img className="rounded-circle" src="img/undraw_profile_1.svg" alt="..." />
+                <img className="rounded-circle" src="/src/assets/images/undraw_profile_1.svg" alt="..." />
                 <div className="status-indicator bg-success"></div>
               </div>
               <div className="font-weight-bold">
@@ -148,7 +151,7 @@ const Topbar = () => {
             </a>
             <a className="dropdown-item d-flex align-items-center" href="#">
               <div className="dropdown-list-image mr-3">
-                <img className="rounded-circle" src="img/undraw_profile_2.svg" alt="..." />
+                <img className="rounded-circle" src="/src/assets/images/undraw_profile_2.svg" alt="..." />
                 <div className="status-indicator"></div>
               </div>
               <div>
@@ -158,7 +161,7 @@ const Topbar = () => {
             </a>
             <a className="dropdown-item d-flex align-items-center" href="#">
               <div className="dropdown-list-image mr-3">
-                <img className="rounded-circle" src="img/undraw_profile_3.svg" alt="..." />
+                <img className="rounded-circle" src="/src/assets/images/undraw_profile_3.svg" alt="..." />
                 <div className="status-indicator bg-warning"></div>
               </div>
               <div>
@@ -168,7 +171,7 @@ const Topbar = () => {
             </a>
             <a className="dropdown-item d-flex align-items-center" href="#">
               <div className="dropdown-list-image mr-3">
-                <img className="rounded-circle" src="https://source.unsplash.com/Mv9hjnEUHR4/60x60" alt="..." />
+                <img className="rounded-circle" src="/src/assets/images/person_4.jpg" alt="..." />
                 <div className="status-indicator bg-success"></div>
               </div>
               <div>
@@ -194,7 +197,7 @@ const Topbar = () => {
             aria-expanded="false"
           >
             <span className="mr-2 d-none d-lg-inline text-gray-600 small">Douglas McGee</span>
-            <img className="img-profile rounded-circle" src="img/undraw_profile.svg" alt="Profile" />
+            <img className="img-profile rounded-circle" src="/src/assets/images/person_1.jpg" alt="Profile" />
           </a>
           {/* Dropdown - User Information */}
           <div className="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
@@ -219,6 +222,9 @@ const Topbar = () => {
         </li>
       </ul>
     </nav>
+    {/* <Dashboard></Dashboard> */}
+         {/* </div>
+         </div> */}
         </div>
     );
 };
