@@ -7,19 +7,7 @@ import Upload from "./Components/Upload/upload";
 import Main from "./Components/Main/Main";
 import About from "./pages/About";
 import AboutData from "./pages/AboutData";
-import AboutFollower from "./pages/AboutFollower";
-import AboutCollection from "./pages/AboutCollection";
 import Collection from "./pages/Collection";
-import GallerySingle from "./Components/GallerySingle/GallerySingle";
-import AboutWatching from "./pages/AboutWatching";
-import Sidebar from "./Components/Administrator/Sidebar";
-import Footer from "./Components/Administrator/Footer";
-import Topbar from "./Components/Administrator/Topbar";
-import EditProfile from "./pages/EditProfile";
-import FormAbout from "./Components/Form/FormAbout";
-import FormNotification from "./Components/Form/FormNotification";
-import EditNotification from "./pages/EditNotification";
-import MyLineChartAdmin from "./Components/Chart/LineChartAdmin";
 import Dashboard from "./Components/ContentAdmin/Dashboard";
 import Index from "./Admin/Index";
 import UserManager from "./Admin/UserManager";
@@ -72,7 +60,7 @@ function App(){
                 <Route path="/" element={<Index/>}/>
                 <Route path="/usermanager" element={<UserManager/>}/>
                 <Route path="/collectionmanager" element={<CollectionManager/>}/>
-                <Route path="/tagmanager" element={<TagManager/>}/>
+                <Route path="/gottagmanager" element={<GotTagManager/>}/>
                 <Route path="/gallerymanager" element={<GalleryManager/>}/>
                 <Route path="/incollectionmanager" element={<InCollectionManager/>}/>
             </Routes>

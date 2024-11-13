@@ -139,7 +139,7 @@ const Sidebar = () => {
               <div className="bg-white text-white p-3 rounded-b-lg w-[90%] mx-auto">
                 <ul>
                   <li>
-                    <Link to="/tagmanager" className="text-lg no-underline font-serif text-black">
+                    <Link to="/gottagmanager" className="text-lg no-underline font-serif text-black">
                       Danh sách
                     </Link>
                   </li>
