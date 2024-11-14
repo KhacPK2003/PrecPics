@@ -3,15 +3,12 @@ import UserAvatar from '../User/UserAvatar';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
-import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import Menu from '@mui/material/Menu';
-import MenuIcon from '@mui/icons-material/Menu';
 import Container from '@mui/material/Container';
 import Button from '@mui/material/Button';
 import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
-import PropTypes from 'prop-types'
 import { useNavigate } from 'react-router-dom';
 
 const pages = [
@@ -22,7 +19,7 @@ const pages = [
     { name : 'Ảnh' , path: '/'},
 ];
 
-function Navbar({isLoggedIn , onClickVideo }){
+function Navbar({UserInfo , onClickVideo , handleLogOut , isLogin}){
     const [anchorElNav, setAnchorElNav] = React.useState(null);
     const navigate = useNavigate();
 
@@ -36,6 +33,10 @@ function Navbar({isLoggedIn , onClickVideo }){
        }
        if(page.name === 'Ảnh'){
             onClickVideo(page.name);
+       }
+       if(page.name === 'Upload' && !isLogin){
+            navigate('/Login');
+            return;
        }
        navigate(page.path);
     }
@@ -127,8 +128,8 @@ function Navbar({isLoggedIn , onClickVideo }){
                         </Button>
                         ))}
                     </Box>
-                    {isLoggedIn ? (
-                            <UserAvatar />
+                    {(UserInfo != null) ? (
+                            <UserAvatar User = {UserInfo} Logout = {handleLogOut}/>
                         ) : (
                             <Box sx={{ display: 'flex', alignItems: 'center' }}>
                                 <Button

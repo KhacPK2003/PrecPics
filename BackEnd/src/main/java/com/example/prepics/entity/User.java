@@ -28,7 +28,7 @@ public class User implements Serializable {
     private String userName;
 
     @Column(name = "avatar_url")
-    private byte[] avatarUrl;
+    private String avatarUrl;
 
     @Column(name = "full_name")
     private String fullName;

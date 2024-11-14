@@ -1,4 +1,5 @@
-import * as React from 'react';
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Checkbox from '@mui/material/Checkbox';
@@ -14,7 +15,9 @@ import MuiCard from '@mui/material/Card';
 import { styled } from '@mui/material/styles';
 import ForgotPassword from '../sign-in/ForgotPassword';
 import { GoogleIcon, FacebookIcon, SitemarkIcon } from '../sign-in/CustomIcons';
+import { auth, googleProvider, signInWithPopup } from '../../firebaseconfig';
 import AdbIcon from '@mui/icons-material/Adb';
+import axios from "axios";
 const Card = styled(MuiCard)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
@@ -59,11 +62,45 @@ const SignInContainer = styled(Stack)(({ theme }) => ({
 }));
 
 export default function SignIn(props) {
+
+  const navigate = useNavigate();
+
   const [emailError, setEmailError] = React.useState(false);
   const [emailErrorMessage, setEmailErrorMessage] = React.useState('');
   const [passwordError, setPasswordError] = React.useState(false);
   const [passwordErrorMessage, setPasswordErrorMessage] = React.useState('');
   const [open, setOpen] = React.useState(false);
+
+
+  const handleLogin = async () => {
+    try {
+      const result = await signInWithPopup(auth, googleProvider);
+      const user = result.user;
+      const idToken = await user.getIdToken();
+
+      console.log("User Info:", user);
+      console.log("ID Token:", idToken);
+
+      fetch('http://localhost:8080/public/api/users/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${idToken}`,
+        },
+      })
+        .then(response => response.json())
+        .then(data => {
+          console.log("Backend Response:", data)
+          navigate("/");
+        })
+        .catch(error => console.error("Error:", error));
+        
+
+    } catch (error) {
+      console.error("Login failed", error);
+    }
+  };
+
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -217,7 +254,7 @@ export default function SignIn(props) {
             <Button
               fullWidth
               variant="outlined"
-              onClick={() => alert('Sign in with Google')}
+              onClick={handleLogin}
               startIcon={<GoogleIcon />}
             >
               Đăng nhập bằng Google

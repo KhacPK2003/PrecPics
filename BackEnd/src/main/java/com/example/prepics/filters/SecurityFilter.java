@@ -42,9 +42,6 @@
         @Autowired
         SecurityProperties securityProps;
 
-        @Autowired
-        ContentService contentService;
-
         @Override
         protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
                 throws ServletException, IOException {
@@ -92,7 +89,7 @@
                         .userName(extractUsername(decodedToken.getEmail()))
                         .fullName(decodedToken.getName())
                         .email(decodedToken.getEmail())
-                        .avatarUrl(contentService.getByteArrayFromImageURL(decodedToken.getPicture()).get())
+                        .avatarUrl(decodedToken.getPicture())
                         .build();
             }
             return user;

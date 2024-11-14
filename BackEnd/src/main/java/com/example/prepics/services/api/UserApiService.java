@@ -43,7 +43,7 @@ public class UserApiService {
         Map<String, Object> response = new HashMap<>();
         response.put("status", 200);
         response.put("message", "Success");
-        response.put("payload", resultUser);
+        response.put("payload", resultUser.get());
 
         return response;
     }
