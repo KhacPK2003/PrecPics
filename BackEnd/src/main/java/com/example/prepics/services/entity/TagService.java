@@ -5,7 +5,6 @@ import com.example.prepics.interfaces.CRUDInterface;
 import jakarta.persistence.EntityExistsException;
 import org.springframework.data.crossstore.ChangeSetPersister;
 
-import java.util.List;
 import java.util.Optional;
 
 public interface TagService extends CRUDInterface<Tag, Long> {

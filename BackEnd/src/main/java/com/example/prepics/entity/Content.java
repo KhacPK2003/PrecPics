@@ -91,7 +91,9 @@ public class Content implements Serializable {
                     "applications",
                     "contents",
                     "collections",
-                    "user"
+                    "user",
+                    "followers",
+                    "followees"
             }
     )
     private User user;

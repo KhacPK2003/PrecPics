@@ -57,4 +57,24 @@ public class CollectionRepository implements CRUDInterface<Collection, Long> {
                 : masterEntityManager.merge(result.get()));
         return result;
     }
+
+    @Transactional("slaveTransactionManager")
+    public Optional<List<Collection>> getUserCollection(String userId) throws ChangeSetPersister.NotFoundException {
+        String query = "SELECT c FROM Collection c WHERE c.userId = :userId";
+        List<Collection> result = slaveEntityManager.createQuery(query, Collection.class)
+                .setParameter("userId", userId)
+                .getResultList();
+        return Optional.of(result);
+    }
+
+    @Transactional("slaveTransactionManager")
+    public Optional<Collection> getUserCollectionByName(String userId, String collectionName)
+            throws ChangeSetPersister.NotFoundException {
+        String query = "SELECT c FROM Collection c WHERE c.userId = :userId and c.name = :collectionName";
+        return slaveEntityManager.createQuery(query, Collection.class)
+                .setParameter("userId", userId)
+                .setParameter("collectionName", collectionName)
+                .getResultStream()
+                .findFirst();
+    }
 }

@@ -28,7 +28,8 @@ public class CollectionServiceImpl implements CollectionService {
     }
 
     @Override
-    public Optional<Collection> create(Collection entity) throws EntityExistsException, ChangeSetPersister.NotFoundException {
+    public Optional<Collection> create(Collection entity)
+            throws EntityExistsException, ChangeSetPersister.NotFoundException {
         return collectionRepository.create(entity);
     }
 
@@ -40,5 +41,16 @@ public class CollectionServiceImpl implements CollectionService {
     @Override
     public Optional<List<Collection>> findAll(Class<Collection> clazz) throws ChangeSetPersister.NotFoundException {
         return collectionRepository.findAll(clazz);
+    }
+
+    @Override
+    public Optional<List<Collection>> getUserCollection(String userId) throws ChangeSetPersister.NotFoundException {
+        return collectionRepository.getUserCollection(userId);
+    }
+
+    @Override
+    public Optional<Collection> getUserCollectionByName(String userId, String collectionName)
+            throws ChangeSetPersister.NotFoundException {
+        return collectionRepository.getUserCollectionByName(userId, collectionName);
     }
 }

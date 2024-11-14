@@ -53,7 +53,9 @@ public class Collection implements Serializable {
             value = {
                     "applications",
                     "contents",
-                    "collections"
+                    "collections",
+                    "followers",
+                    "followees"
             }
     )
     private User user;

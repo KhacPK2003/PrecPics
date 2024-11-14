@@ -7,7 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.Collections;
 import java.util.Map;
 
@@ -20,6 +22,11 @@ public class CloudinaryServiceImpl implements CloudinaryService {
     @Override
     public Map<String, Object> uploadFile(MultipartFile file) throws IOException {
         return cloudinary.uploader().upload(file.getBytes(), ObjectUtils.emptyMap());
+    }
+
+    @Override
+    public Map<String, Object> uploadFile(File file) throws IOException {
+        return cloudinary.uploader().upload(Files.readAllBytes(file.toPath()), ObjectUtils.emptyMap());
     }
 
     public Map<String, Object> uploadVideo(MultipartFile file) throws IOException {

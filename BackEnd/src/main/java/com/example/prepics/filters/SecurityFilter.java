@@ -3,7 +3,6 @@
     import com.example.prepics.entity.User;
     import com.example.prepics.models.CredentialFirebase;
     import com.example.prepics.models.SecurityProperties;
-    import com.example.prepics.services.entity.ContentService;
     import com.example.prepics.services.secrurities.SecurityService;
     import com.example.prepics.utils.CookieUtil;
     import com.google.firebase.auth.FirebaseAuth;

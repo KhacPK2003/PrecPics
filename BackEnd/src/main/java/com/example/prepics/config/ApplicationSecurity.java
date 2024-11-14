@@ -7,7 +7,6 @@ import java.util.Map;
 
 import com.example.prepics.filters.SecurityFilter;
 import com.example.prepics.models.SecurityProperties;
-import com.google.api.Http;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

@@ -1,6 +1,5 @@
 package com.example.prepics.entity;
 
-
 import jakarta.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;

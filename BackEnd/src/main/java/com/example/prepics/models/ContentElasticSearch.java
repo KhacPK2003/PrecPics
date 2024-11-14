@@ -1,16 +1,15 @@
 package com.example.prepics.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.data.elasticsearch.annotations.Document;
 
 import java.util.Objects;
 
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
+@Getter
+@Setter
 @Document(indexName = "contents")
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ContentElasticSearch {
