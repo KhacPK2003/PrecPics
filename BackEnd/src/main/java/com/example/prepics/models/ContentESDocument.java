@@ -12,7 +12,7 @@ import java.util.Objects;
 @Setter
 @Document(indexName = "contents")
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class ContentElasticSearch {
+public class ContentESDocument {
 
     String id;
 
@@ -22,7 +22,7 @@ public class ContentElasticSearch {
 
     @Override
     public boolean equals(Object o) {
-        return o instanceof ContentElasticSearch c &&
+        return o instanceof ContentESDocument c &&
                 Objects.equals(id, c.id) &&
                 Objects.equals(tags, c.tags) &&
                 type == c.type;

@@ -1,5 +1,7 @@
 package com.example.prepics.apis;
 
+import com.example.prepics.annotations.Admin;
+import com.example.prepics.dto.ContentDTO;
 import com.example.prepics.services.api.ContentApiService;
 import com.example.prepics.services.entity.ContentService;
 import lombok.extern.slf4j.Slf4j;
@@ -14,6 +16,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.Map;
+
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+import static org.springframework.http.MediaType.MULTIPART_FORM_DATA_VALUE;
 
 @Slf4j
 @RestController
@@ -43,16 +48,15 @@ public class ContentApi {
      * @param model: Map chứa các tham số mô tả nội dung:
      *               - "type": Loại file (0 cho ảnh, 1 cho video).
      *               - "tags": Các thẻ của nội dung, được phân tách bằng dấu phẩy.
+     *               - "description":   thêm mô tả cho content.
      * @return ResponseEntity: Trả về phản hồi chứa thông tin về nội dung đã tải lên.
      * @throws IOException: Nếu có lỗi khi tải lên file.
      * @throws ChangeSetPersister.NotFoundException: Nếu không tìm thấy dữ liệu yêu cầu.
      */
-    @PostMapping("/upload")
+    @PostMapping(value = "/upload", consumes = {APPLICATION_JSON_VALUE, MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<?> uploadContent(
-            Authentication authentication,
-            @RequestParam("file") MultipartFile file,
-            @RequestBody Map<String, Object> model) throws IOException, ChangeSetPersister.NotFoundException {
-        return ResponseEntity.ok(contentApiService.uploadContent(authentication, file, model));
+            Authentication authentication,@RequestPart ContentDTO request, @RequestPart MultipartFile file) throws IOException, ChangeSetPersister.NotFoundException {
+        return ResponseEntity.ok(contentApiService.uploadContent(authentication, file, request));
     }
 
     /**
@@ -116,8 +120,11 @@ public class ContentApi {
      */
     @GetMapping("/by-type")
     public ResponseEntity<?> findAllByType(
-            @RequestParam(name = "type", required = false, defaultValue = "0") String type) throws ChangeSetPersister.NotFoundException {
-        return ResponseEntity.ok(contentApiService.findAllByType((Integer.parseInt(type) == 0)));
+            @RequestParam("type") int type,
+            @RequestParam(value = "page", required = false, defaultValue = "1") Integer page,
+            @RequestParam(value = "size", required = false, defaultValue = "10") Integer size)
+            throws ChangeSetPersister.NotFoundException {
+        return ResponseEntity.ok(contentApiService.findAllByType((type == 0), page, size));
     }
 
     /**
@@ -130,8 +137,11 @@ public class ContentApi {
      */
     @GetMapping("/by-tags")
     public ResponseEntity<?> findAllByTags(
-            @RequestParam("tags") String tags) throws ChangeSetPersister.NotFoundException {
-        return ResponseEntity.ok(contentApiService.findAllByTags(tags));
+            @RequestParam("tags") String tags,
+            @RequestParam(value = "page", required = false, defaultValue = "1") Integer page,
+            @RequestParam(value = "size", required = false, defaultValue = "10") Integer size)
+            throws ChangeSetPersister.NotFoundException {
+        return ResponseEntity.ok(contentApiService.findAllByTags(tags,page, size));
     }
 
     /**
@@ -202,6 +212,48 @@ public class ContentApi {
 
         // Trả về dữ liệu video với định dạng video/mp4
         return ResponseEntity.ok(video);
+    }
+
+    /**
+     * API để thêm tags vào Elasticsearch.
+     * Chỉ admin mới có thể truy cập API này.
+     *
+     * @param authentication: Thông tin người dùng hiện tại.
+     * @return Map: Trả về kết quả thành công hoặc thất bại.
+     */
+    @Admin
+    @PostMapping("elastic/insert")
+    public ResponseEntity<?> doInsertTagsIntoElastic(Authentication authentication) {
+        return ResponseEntity.ok(contentApiService.doInsertTagsIntoElastic(authentication));
+    }
+
+    /**
+     * API để xóa tất cả tags trong Elasticsearch.
+     * Chỉ admin mới có thể truy cập API này.
+     *
+     * @param authentication: Thông tin người dùng hiện tại.
+     * @return Map: Trả về kết quả thành công hoặc thất bại.
+     */
+    @Admin
+    @DeleteMapping("elastic/delete")
+    public ResponseEntity<?> doDeleteTagsInElastic(Authentication authentication) {
+        return ResponseEntity.ok(contentApiService.doDeleteTagsInElastic(authentication));
+    }
+
+    /**
+     * API để thêm tags vào Elasticsearch.
+     * Chỉ admin mới có thể truy cập API này.
+     *
+     * @param authentication: Thông tin người dùng hiện tại.
+     * @return Map: Trả về kết quả thành công hoặc thất bại.
+     */
+    @Admin
+    @GetMapping("/search/fuzzy")
+    public ResponseEntity<?> doSearchWithFuzzy(@RequestParam String indexName, @RequestParam String fieldName,
+                                               @RequestParam String approximates,
+                                   @RequestParam(value = "page", required = false, defaultValue = "1") Integer page,
+                                   @RequestParam(value = "size", required = false, defaultValue = "10") Integer size) {
+        return ResponseEntity.ok(contentApiService.doSearchWithFuzzy(indexName, fieldName, approximates, page, size));
     }
 }
 

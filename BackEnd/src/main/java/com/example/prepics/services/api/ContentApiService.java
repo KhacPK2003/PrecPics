@@ -2,16 +2,22 @@ package com.example.prepics.services.api;
 
 import co.elastic.clients.elasticsearch.core.SearchResponse;
 import co.elastic.clients.elasticsearch.core.search.Hit;
+import com.example.prepics.dto.ContentDTO;
+import com.example.prepics.annotations.Admin;
 import com.example.prepics.entity.Content;
+import com.example.prepics.entity.Tag;
 import com.example.prepics.entity.User;
-import com.example.prepics.models.ContentElasticSearch;
+import com.example.prepics.models.ContentESDocument;
 import com.example.prepics.models.ResponseProperties;
+import com.example.prepics.models.TagESDocument;
 import com.example.prepics.repositories.ContentRepository;
 import com.example.prepics.services.cloudinary.CloudinaryService;
 import com.example.prepics.services.elasticsearch.ContentElasticSearchService;
 import com.example.prepics.services.elasticsearch.ElasticSearchService;
+import com.example.prepics.services.elasticsearch.TagESDocumentService;
 import com.example.prepics.services.entity.ContentService;
 import com.example.prepics.services.entity.GotTagsService;
+import com.example.prepics.services.entity.TagService;
 import com.example.prepics.services.entity.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,20 +60,20 @@ public class ContentApiService {
     @Autowired
     private ContentRepository contentRepository;
 
+    @Autowired
+    private TagService tagService;
+
+    @Autowired
+    private TagESDocumentService tagESDocumentService;
+
     private User getAuthenticatedUser(Authentication authentication) throws ChangeSetPersister.NotFoundException {
         User userDecode = (User) authentication.getPrincipal();
         return userService.findByEmail(User.class, userDecode.getEmail())
                 .orElseThrow(ChangeSetPersister.NotFoundException::new);
     }
 
-    private void getAdminUser(Authentication authentication) throws ChangeSetPersister.NotFoundException {
-        User user = getAuthenticatedUser(authentication);
-        if (!user.getIsAdmin()) {
-            throw new RuntimeException("User is not an admin");
-        }
-    }
-
-    public Map<String, Object> uploadContent(Authentication authentication, MultipartFile file, Map<String, Object> model)
+    @com.example.prepics.annotations.User
+    public Map<String, Object> uploadContent(Authentication authentication, MultipartFile file, ContentDTO contentDTO)
             throws IOException, ChangeSetPersister.NotFoundException {
         User user = getAuthenticatedUser(authentication);
 
@@ -75,9 +81,10 @@ public class ContentApiService {
             return ResponseProperties.createResponse(400, "Error : File is empty", null);
         }
 
-        boolean isImage = Integer.parseInt(model.get("type").toString()) == 0;
+        boolean isImage = contentDTO.getType() == 0;
         Map<String, Object> fileUpload =
-                isImage ? cloudinaryService.uploadFile(file) : cloudinaryService.uploadVideo(file);
+                isImage ? cloudinaryService.uploadFile(file)
+                        : cloudinaryService.uploadVideo(file);
 
         Content content = new Content();
         content.setId(fileUpload.get("public_id").toString());
@@ -86,14 +93,14 @@ public class ContentApiService {
         content.setHeight((Integer) fileUpload.get("height"));
         content.setWidth((Integer) fileUpload.get("width"));
         content.setDataUrl(fileUpload.get("url").toString());
-        content.setDescription(model.get("description").toString());
+        content.setDescription(contentDTO.getDescription());
         content.setType(isImage);
         content.setDateUpload(BigInteger.valueOf(new Date().getTime()));
         content.setUserId(user.getId());
 
         contentService.create(content);
 
-        List<String> tagNames = List.of(model.get("tags").toString().split(","));
+        List<String> tagNames = List.of(contentDTO.getTags().split(","));
         tagNames.forEach(tagName -> {
             try {
                 gotTagsService.addTagByName(content.getId(), tagName);
@@ -107,14 +114,14 @@ public class ContentApiService {
         return ResponseProperties.createResponse(200, "Success", content);
     }
 
+    @com.example.prepics.annotations.User
     public Map<String, Object> deleteContent(Authentication authentication, String id)
             throws IOException, ChangeSetPersister.NotFoundException {
-        getAuthenticatedUser(authentication);
 
         Content content = contentService.findById(Content.class, id)
                 .orElseThrow(ChangeSetPersister.NotFoundException::new);
 
-        contentElasticSearchService.delete(modelMapper.map(content, ContentElasticSearch.class));
+        contentElasticSearchService.delete(modelMapper.map(content, ContentESDocument.class));
 
         Map<String, Object> fileUpload = cloudinaryService.deleteFile(id);
 
@@ -155,16 +162,15 @@ public class ContentApiService {
         return ResponseProperties.createResponse(200, "Success", contents);
     }
 
-    public Map<String, Object> findAllByType(boolean type) throws ChangeSetPersister.NotFoundException {
-        List<Content> contents = contentService.findAll(Content.class, type)
+    public Map<String, Object> findAllByType(boolean type, Integer page, Integer size) throws ChangeSetPersister.NotFoundException {
+        List<Content> contents = contentService.findAll(Content.class, type, page, size)
                 .orElseThrow(ChangeSetPersister.NotFoundException::new);
 
         return ResponseProperties.createResponse(200, "Success", contents);
     }
 
-    public Map<String, Object> findAllByTags(String tags) throws ChangeSetPersister.NotFoundException {
-        List<String> tagNames = List.of(tags.split(","));
-        List<Content> contents = contentService.findAllByTags(tagNames)
+    public Map<String, Object> findAllByTags(String tags, Integer page, Integer size) throws ChangeSetPersister.NotFoundException {
+        List<Content> contents = contentService.findContentsByTags(tags, page, size)
                 .orElseThrow(ChangeSetPersister.NotFoundException::new);
 
         return ResponseProperties.createResponse(200, "Success", contents);
@@ -202,52 +208,64 @@ public class ContentApiService {
         }).orElse(null);
     }
 
+    @com.example.prepics.annotations.User
     public byte[] getImageWithSize(Authentication authentication, Map<String, Object> model)
             throws IOException, ChangeSetPersister.NotFoundException {
 
         return getContentWithSize(authentication, model, true);
     }
 
+    @com.example.prepics.annotations.User
     public byte[] getVideoWithSize(Authentication authentication, Map<String, Object> model)
             throws IOException, ChangeSetPersister.NotFoundException {
 
         return getContentWithSize(authentication, model, false);
     }
 
-    public Map<String, Object> doSearchWithFuzzy(String indexName, String fieldName, String approximates) {
-        List<String> tags = List.of(approximates.split(","));
-        Set<ContentElasticSearch> result = new HashSet<>();
+    public Map<String, Object> doSearchWithFuzzy(String indexName, String fieldName, String approximates
+            , Integer page, Integer size) {
+        List<String> tagNames = List.of(approximates.split(","));
+        Set<TagESDocument> tags = new HashSet<>();
 
         try {
-            tags.forEach(tag -> {
+            tagNames.forEach(tag -> {
                 try {
-                    SearchResponse searchResponse = elasticSearchService.fuzzySearch(indexName, fieldName, tag);
-                    List<Hit<ContentElasticSearch>> hitList = searchResponse.hits().hits();
-                    hitList.forEach(hit -> result.add(hit.source()));
+                    SearchResponse searchResponse =
+                            elasticSearchService.fuzzySearch(Tag.class , indexName, fieldName, tag);
+                    List<Hit<TagESDocument>> hitList = searchResponse.hits().hits();
+                    hitList.forEach(hit -> tags.add(hit.source()));
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
             });
+
+            //
+            String names = tags.stream()
+                    .map(TagESDocument::getName)
+                    .filter(name -> name != null && !name.trim().isEmpty())
+                    .map(String::toLowerCase)
+                    .toString();
+
+            List<Content> result = contentService.findContentsByTags(names, page, size)
+                    .orElseThrow(ChangeSetPersister.NotFoundException::new);
+
+            return ResponseProperties.createResponse(200, "Success", result);
         } catch (Exception e) {
 
             return ResponseProperties.createResponse(500, "Unexpected error during fuzzy search", e);
         }
-
-        return ResponseProperties.createResponse(200, "Success", result);
     }
 
-    public Map<String, Object> doInsertContentsIntoElastic(Authentication authentication) {
+    @Admin
+    public Map<String, Object> doInsertTagsIntoElastic(Authentication authentication) {
         try {
-            // Kiểm tra quyền Admin
-            getAdminUser(authentication);
-
             // Lấy danh sách nội dung
-            List<Content> contents = contentService.findAll(Content.class)
+            List<Tag> tags = tagService.findAll(Tag.class)
                     .orElseThrow(ChangeSetPersister.NotFoundException::new);
 
             // Lưu nội dung vào Elasticsearch
-            Iterable<ContentElasticSearch> result = contentElasticSearchService.saveAll(contents)
-                    .orElseThrow(() -> new RuntimeException("Error inserting contents into Elasticsearch"));
+            Iterable<TagESDocument> result = tagESDocumentService.saveAll(tags)
+                    .orElseThrow(() -> new RuntimeException("Error inserting tags into Elasticsearch"));
 
             return ResponseProperties.createResponse(200, "Success", result);
         } catch (RuntimeException | ChangeSetPersister.NotFoundException e) {
@@ -256,13 +274,11 @@ public class ContentApiService {
         }
     }
 
-    public Map<String, Object> doDeleteContentsInElastic(Authentication authentication) {
+    @Admin
+    public Map<String, Object> doDeleteTagsInElastic(Authentication authentication) {
         try {
-            // Kiểm tra quyền Admin
-            getAdminUser(authentication);
-
             // Xóa toàn bộ nội dung trong Elasticsearch
-            contentElasticSearchService.deleteAll();
+            tagESDocumentService.deleteAll();
 
             return ResponseProperties.createResponse(200, "Success", true);
         } catch (RuntimeException e) {

@@ -12,11 +12,9 @@ import java.util.Optional;
 public interface ContentService extends CRUDInterface<Content, String> {
 
 
-    Optional<List<Content>> findAll(Class<Content> clazz, boolean type) throws ChangeSetPersister.NotFoundException;
+    Optional<List<Content>> findAll(Class<Content> clazz, boolean type, Integer page, Integer size) throws ChangeSetPersister.NotFoundException;
 
-    Optional<byte[]>  getByteArrayFromImageURL(String url);
-
-    Optional<List<Content>> findAllByTags(List<String> tags);
+    Optional<List<Content>> findContentsByTags(String tags, Integer page, Integer size);
 
     Optional<File> changeResolutionForImage(String url, int width, int height) throws IOException;
 

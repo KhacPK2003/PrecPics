@@ -1,28 +1,28 @@
 package com.example.prepics.services.elasticsearch;
 
 import com.example.prepics.entity.Content;
-import com.example.prepics.models.ContentElasticSearch;
+import com.example.prepics.models.ContentESDocument;
 
 import java.util.List;
 import java.util.Optional;
 
 public interface ContentElasticSearchService {
 
-    Optional<ContentElasticSearch> insertContent(Content entity);
+    Optional<ContentESDocument> insertContent(Content entity);
 
-    Optional<ContentElasticSearch> insertContent(ContentElasticSearch entity);
+    Optional<ContentESDocument> insertContent(ContentESDocument entity);
 
-    Optional<Iterable<ContentElasticSearch>> getContent();
+    Optional<Iterable<ContentESDocument>> getContent();
 
-    Optional<Iterable<ContentElasticSearch>> getContent(boolean  type);
+    Optional<Iterable<ContentESDocument>> getContent(boolean  type);
 
-    Optional<Iterable<ContentElasticSearch>> saveAll(List<Content> Contents);
+    Optional<Iterable<ContentESDocument>> saveAll(List<Content> Contents);
 
-    Optional<Iterable<ContentElasticSearch>> deleteAll();
+    Optional<Iterable<ContentESDocument>> deleteAll();
 
-    Optional<Iterable<ContentElasticSearch>> deleteAll(List<Content> Contents);
+    Optional<Iterable<ContentESDocument>> deleteAll(List<Content> Contents);
 
-    Optional<ContentElasticSearch> delete(ContentElasticSearch entity);
+    Optional<ContentESDocument> delete(ContentESDocument entity);
 
-    Optional<ContentElasticSearch> delete(Content entity);
+    Optional<ContentESDocument> delete(Content entity);
 }

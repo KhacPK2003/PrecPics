@@ -65,4 +65,17 @@ public class TagRepository implements CRUDInterface<Tag, Long> {
                 .findFirst();
     }
 
+    @Transactional("slaveTransactionManager")
+    public Optional<List<Tag>> findByNamesIgnoreCase(List<String> names) {
+        if (names == null || names.isEmpty()) {
+            return Optional.empty();
+        }
+
+        String query = "SELECT t FROM Tag t WHERE LOWER(t.name) IN :names";
+        return Optional.ofNullable(slaveEntityManager.createQuery(query, Tag.class)
+                .setParameter("names", names.stream()
+                        .map(String::toLowerCase)
+                        .toList())
+                .getResultList());
+    }
 }
