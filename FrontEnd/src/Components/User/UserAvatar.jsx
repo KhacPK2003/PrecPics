@@ -24,7 +24,7 @@ function UserAvatar({User , Logout}){
                 <Tooltip title="Mở thanh cài đặt">
                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                     <Avatar alt="Remy Sharp" src="" />
-                <p class="text-base text-white text-left ml-2">Xin chào {User.displayName}!!!</p>
+                <p className="text-base text-white text-left ml-2">Xin chào {User.displayName}!!!</p>
                 </IconButton>
                 </Tooltip>
                 <Menu

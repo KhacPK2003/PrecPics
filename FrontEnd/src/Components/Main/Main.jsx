@@ -1,28 +1,27 @@
 import SectionImage from "../SectionImage/SectionImage";
 import SectionVideo from "../SectionVideo/SectionVideo"; 
-const imageSections = [
-    <SectionImage key={1} />,
-    <SectionImage key={2} />,
-    <SectionImage key={3} />,
-    <SectionImage key={4} />,
-    <SectionImage key={5} />,
-    <SectionImage key={6} />,
-  ];
+import React, { useState, useEffect } from 'react';
 
-  const videoSections = [
-    <SectionVideo key={1} />,
-    <SectionVideo key={2} />,
-    <SectionVideo key={3} />,
-    <SectionVideo key={4} />,
-    <SectionVideo key={5} />,
-  ];
 function Main({showvideo = false}){
+    const Type = (showvideo ? 1 : 0);
+    const [data, setData] = useState([]);
+    useEffect(() => {
+        // Gửi yêu cầu đến API
+        fetch(`http://localhost:8080/public/api/contents/by-type?type=${Type}`)
+          .then((response) => response.json()) // Chuyển đổi response thành JSON
+          .then(({ payload }) => {
+            setData(payload); // Cập nhật state với dữ liệu API
+            // Đánh dấu đã tải xong
+          })
+      }, []); 
     return (
         <>
             <section id="gallery" className="gallery">
                 <div className="w-full px-4">
                     <div className="flex flex-wrap justify-center">
-                            {showvideo ? videoSections : imageSections}
+                    {data.map((post) => (
+                        <SectionImage key={post.id} content={post}/>
+                    ))}
                     </div>
                 </div>
             </section>

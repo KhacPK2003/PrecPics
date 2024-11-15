@@ -31,6 +31,9 @@ public class Content implements Serializable {
     @Column(name = "asset_id")
     private String assetId;
 
+    @Column(name = "description")
+    private String description;
+
     @Column(name = "date_upload")
     private BigInteger dateUpload;
 

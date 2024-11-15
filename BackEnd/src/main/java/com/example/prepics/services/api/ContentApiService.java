@@ -86,6 +86,7 @@ public class ContentApiService {
         content.setHeight((Integer) fileUpload.get("height"));
         content.setWidth((Integer) fileUpload.get("width"));
         content.setDataUrl(fileUpload.get("url").toString());
+        content.setDescription(model.get("description").toString());
         content.setType(isImage);
         content.setDateUpload(BigInteger.valueOf(new Date().getTime()));
         content.setUserId(user.getId());
@@ -101,7 +102,7 @@ public class ContentApiService {
             }
         });
 
-        contentElasticSearchService.insertContent(content);
+//        contentElasticSearchService.insertContent(content);
 
         return ResponseProperties.createResponse(200, "Success", content);
     }

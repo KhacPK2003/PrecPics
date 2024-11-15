@@ -28,13 +28,10 @@ public class ContentApi {
 
     /**
      * Upload content (image/video)
-     *
      * API này cho phép người dùng tải lên các nội dung (hình ảnh hoặc video) và lưu trữ vào hệ thống.
-     *
      * Các tham số trong model:
      * - "type": Loại nội dung (0 - ảnh, 1 - video).
      * - "tags": Các thẻ của nội dung, các thẻ cách nhau bằng dấu phẩy.
-     *
      * Quy trình xử lý:
      * - Tải lên file (ảnh hoặc video) và lưu thông tin vào cơ sở dữ liệu.
      * - Tạo mới đối tượng `Content` và lưu thông tin về file đã tải lên (ví dụ: ID, tên, chiều cao, chiều rộng, URL).
@@ -60,12 +57,10 @@ public class ContentApi {
 
     /**
      * Delete content by ID
-     *
      * API này cho phép người dùng xóa nội dung dựa trên ID.
      * Quy trình xử lý:
      * - Kiểm tra xem người dùng có quyền xóa nội dung hay không.
      * - Xóa nội dung trong hệ thống cơ sở dữ liệu và Elasticsearch.
-     *
      * @param authentication: Thông tin người dùng đã đăng nhập.
      * @param id: ID của nội dung cần xóa.
      * @return ResponseEntity: Trả về phản hồi cho việc xóa nội dung.
@@ -103,9 +98,7 @@ public class ContentApi {
 
     /**
      * Get all content
-     *
      * API này trả về tất cả các nội dung có trong hệ thống.
-     *
      * @return ResponseEntity: Trả về danh sách tất cả nội dung.
      * @throws ChangeSetPersister.NotFoundException: Nếu không tìm thấy nội dung.
      */
@@ -116,22 +109,19 @@ public class ContentApi {
 
     /**
      * Get content by type (image/video) (0/1)
-     *
      * API này trả về các nội dung có loại (hình ảnh hoặc video) dựa trên tham số truyền vào.
-     *
      * @param type: Loại nội dung (0 - hình ảnh, 1 - video).
      * @return ResponseEntity: Trả về các nội dung với loại đã chọn.
      * @throws ChangeSetPersister.NotFoundException: Nếu không tìm thấy nội dung với loại đã chỉ định.
      */
     @GetMapping("/by-type")
     public ResponseEntity<?> findAllByType(
-            @RequestParam("type") int type) throws ChangeSetPersister.NotFoundException {
-        return ResponseEntity.ok(contentApiService.findAllByType((type == 0)));
+            @RequestParam(name = "type", required = false, defaultValue = "0") String type) throws ChangeSetPersister.NotFoundException {
+        return ResponseEntity.ok(contentApiService.findAllByType((Integer.parseInt(type) == 0)));
     }
 
     /**
      * Get content by tags
-     *
      * API này trả về các nội dung có thẻ (tags) phù hợp với các thẻ được chỉ định.
      *
      * @param tags: Các thẻ cần tìm kiếm, phân tách bằng dấu phẩy.
@@ -146,7 +136,6 @@ public class ContentApi {
 
     /**
      * Get content by ID
-     *
      * API này cho phép người dùng lấy nội dung dựa trên ID của nó.
      *
      * @param id: ID của nội dung cần tìm kiếm.
@@ -161,7 +150,6 @@ public class ContentApi {
 
     /**
      * Get image with specified size
-     *
      * API này cho phép người dùng lấy ảnh đã thay đổi kích thước dựa trên các tham số chiều rộng và chiều cao.
      *
      * @param authentication: Thông tin người dùng đã đăng nhập.
@@ -190,7 +178,6 @@ public class ContentApi {
 
     /**
      * Get video with specified size
-     *
      * API này cho phép người dùng lấy video đã thay đổi kích thước dựa trên các tham số chiều rộng và chiều cao.
      *
      * @param authentication: Thông tin người dùng đã đăng nhập.
