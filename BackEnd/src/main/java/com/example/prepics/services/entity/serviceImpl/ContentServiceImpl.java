@@ -7,7 +7,6 @@ import com.github.kokorin.jaffree.StreamType;
 import com.github.kokorin.jaffree.ffmpeg.FFmpeg;
 import com.github.kokorin.jaffree.ffmpeg.UrlInput;
 import com.github.kokorin.jaffree.ffmpeg.UrlOutput;
-import com.google.api.client.util.Base64;
 import jakarta.persistence.EntityExistsException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,9 +16,6 @@ import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
-import java.math.BigInteger;
-import java.net.URL;
-import java.net.URLConnection;
 import java.util.List;
 import java.util.Optional;
 
@@ -50,9 +46,9 @@ public class ContentServiceImpl implements ContentService {
     }
 
     @Override
-    public Optional<List<Content>> findAll(Class<Content> clazz, boolean type)
+    public Optional<List<Content>> findAll(Class<Content> clazz, boolean type, Integer page, Integer size)
             throws ChangeSetPersister.NotFoundException {
-        return contentRepository.findAllByType(type);
+        return contentRepository.findAllByType(type, page, size);
     }
 
     @Override
@@ -73,32 +69,8 @@ public class ContentServiceImpl implements ContentService {
     }
 
     @Override
-    public Optional<byte[]> getByteArrayFromImageURL(String url) {
-        try {
-            URL imageUrl = new URL(url);
-            URLConnection connection = imageUrl.openConnection();
-
-            try (InputStream is = connection.getInputStream();
-                 ByteArrayOutputStream stream = new ByteArrayOutputStream()) {
-
-                byte[] buffer = new byte[1024];
-                int read;
-                while ((read = is.read(buffer)) != -1) {
-                    stream.write(buffer, 0, read);
-                }
-
-                stream.flush();
-                return Optional.ofNullable(Base64.encodeBase64(stream.toByteArray()));
-            }
-        } catch (Exception e) {
-            log.error(e.toString());
-        }
-        return Optional.empty();
-    }
-
-    @Override
-    public Optional<List<Content>> findAllByTags(List<String> tags) {
-        return contentRepository.findAllByTags(tags);
+    public Optional<List<Content>> findContentsByTags(String tags, Integer page, Integer size) {
+        return contentRepository.findContentsByTags(tags, page, size);
     }
 
 

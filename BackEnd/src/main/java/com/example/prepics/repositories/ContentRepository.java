@@ -66,26 +66,14 @@ public class ContentRepository implements CRUDInterface<Content, String> {
     }
 
     @Transactional("slaveTransactionManager")
-    public Optional<List<Content>> findAllByType(boolean type) {
-        String query = "SELECT c FROM Content c WHERE c.type = :type";
+    public Optional<List<Content>> findAllByType(boolean type, Integer page, Integer size) {
+        String query = "SELECT c FROM Content c WHERE c.type = :type ORDER BY c.dateUpload DESC";
         List<Content> result = slaveEntityManager.createQuery(query, Content.class)
                 .setParameter("type", type)
+                .setMaxResults(size)
+                .setFirstResult((page - 1) * size)
                 .getResultList();
         return Optional.of(result);
-    }
-
-    @Transactional("slaveTransactionManager")
-    public Optional<List<Content>> findAllByTags(List<String> tags) {
-        CriteriaBuilder cb = slaveEntityManager.getCriteriaBuilder();
-        CriteriaQuery<Content> query = cb.createQuery(Content.class);
-        Root<Content> content = query.from(Content.class);
-        Join<Content, GotTags> gotTagsJoin = content.join("gotTags");
-        Join<GotTags, Tag> tagJoin = gotTagsJoin.join("tag");
-
-        query.select(content)
-                .where(tagJoin.get("name").in(tags));
-
-        return Optional.of(slaveEntityManager.createQuery(query).getResultList());
     }
 
     @Transactional("slaveTransactionManager")
@@ -98,5 +86,19 @@ public class ContentRepository implements CRUDInterface<Content, String> {
                 .getResultList();
 
         return result.isEmpty() ? Optional.empty() : Optional.of(String.join(", ", result));
+    }
+
+    @Transactional("slaveTransactionManager")
+    public Optional<List<Content>> findContentsByTags(String tags, Integer page, Integer size) {
+        String query ="SELECT c FROM Content c " +
+                "JOIN GotTags gt on c.id = gt.contentId " +
+                "JOIN Tag t on gt.tagId = t.id " +
+                "WHERE LOWER(t.name) IN :nameTag " +
+                "ORDER BY c.dateUpload DESC";
+        return Optional.ofNullable(slaveEntityManager.createQuery(query, Content.class)
+                .setParameter("nameTag", tags.toLowerCase())
+                .setMaxResults(size)
+                .setFirstResult((page - 1) * size)
+                .getResultList());
     }
 }

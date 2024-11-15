@@ -61,7 +61,7 @@ public class FolloweeRepository implements CRUDInterface<Followees, Long> {
     public Optional<Followees> findByUserIdAndFolloweeId(Class<Followees> clazz, String userId, String followeeId)
             throws ChangeSetPersister.NotFoundException {
         String query = "SELECT a FROM Followees a WHERE a.userId = :userId and a.followeeId = :followeeId";
-        return slaveEntityManager.createQuery(query, Followees.class)
+        return slaveEntityManager.createQuery(query, clazz)
                 .setParameter("userId", userId)
                 .setParameter("followeeId", followeeId)
                 .getResultStream()
