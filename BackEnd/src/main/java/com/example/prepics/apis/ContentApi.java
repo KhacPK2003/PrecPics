@@ -43,15 +43,7 @@ public class ContentApi {
      * - Thêm các thẻ (tags) vào nội dung.
      * - Lưu thông tin vào Elasticsearch để hỗ trợ tìm kiếm.
      *
-     * @param authentication: Thông tin người dùng đã đăng nhập (sử dụng Spring Security).
-     * @param file: File tải lên (ảnh hoặc video).
-     * @param model: Map chứa các tham số mô tả nội dung:
-     *               - "type": Loại file (0 cho ảnh, 1 cho video).
-     *               - "tags": Các thẻ của nội dung, được phân tách bằng dấu phẩy.
-     *               - "description":   thêm mô tả cho content.
-     * @return ResponseEntity: Trả về phản hồi chứa thông tin về nội dung đã tải lên.
-     * @throws IOException: Nếu có lỗi khi tải lên file.
-     * @throws ChangeSetPersister.NotFoundException: Nếu không tìm thấy dữ liệu yêu cầu.
+
      */
     @PostMapping(value = "/upload", consumes = {APPLICATION_JSON_VALUE, MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<?> uploadContent(

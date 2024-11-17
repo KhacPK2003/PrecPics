@@ -7,7 +7,7 @@ function Main({showvideo = false}){
     const [data, setData] = useState([]);
     useEffect(() => {
         // Gửi yêu cầu đến API
-        fetch(`http://localhost:8080/public/api/contents/by-type?type=${Type}`)
+        fetch(`http://localhost:8080/public/api/contents/by-type?type=${Type}&page=1&size=10`)
           .then((response) => response.json()) // Chuyển đổi response thành JSON
           .then(({ payload }) => {
             setData(payload); // Cập nhật state với dữ liệu API
