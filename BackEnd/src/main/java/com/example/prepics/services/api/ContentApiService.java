@@ -2,12 +2,12 @@ package com.example.prepics.services.api;
 
 import co.elastic.clients.elasticsearch.core.SearchResponse;
 import co.elastic.clients.elasticsearch.core.search.Hit;
+import com.example.prepics.annotations.Guest;
 import com.example.prepics.dto.ContentDTO;
 import com.example.prepics.annotations.Admin;
 import com.example.prepics.entity.Content;
 import com.example.prepics.entity.Tag;
 import com.example.prepics.entity.User;
-import com.example.prepics.models.ContentESDocument;
 import com.example.prepics.models.ResponseProperties;
 import com.example.prepics.models.TagESDocument;
 import com.example.prepics.repositories.ContentRepository;
@@ -51,7 +51,7 @@ public class ContentApiService {
     private ElasticSearchService elasticSearchService;
 
     @Autowired
-    ModelMapper modelMapper;
+    private ModelMapper modelMapper;
 
     @Autowired
     private ContentRepository contentRepository;
@@ -68,9 +68,8 @@ public class ContentApiService {
                 .orElseThrow(ChangeSetPersister.NotFoundException::new);
     }
 
-    @com.example.prepics.annotations.User
     public Map<String, Object> uploadContent(Authentication authentication, MultipartFile file, ContentDTO contentDTO)
-            throws IOException, ChangeSetPersister.NotFoundException {
+            throws Exception {
         User user = getAuthenticatedUser(authentication);
 
         if (file.isEmpty()) {
@@ -89,6 +88,7 @@ public class ContentApiService {
         content.setHeight((Integer) fileUpload.get("height"));
         content.setWidth((Integer) fileUpload.get("width"));
         content.setDataUrl(fileUpload.get("url").toString());
+        content.setDataByte(contentService.calculateHash(file.getResource().getFile()));
         content.setDescription(contentDTO.getDescription());
         content.setType(isImage);
         content.setDateUpload(BigInteger.valueOf(new Date().getTime()));
@@ -108,7 +108,6 @@ public class ContentApiService {
         return ResponseProperties.createResponse(200, "Success", content);
     }
 
-    @com.example.prepics.annotations.User
     public Map<String, Object> deleteContent(Authentication authentication, String id)
             throws IOException, ChangeSetPersister.NotFoundException {
 
@@ -198,14 +197,12 @@ public class ContentApiService {
         }).orElse(null);
     }
 
-    @com.example.prepics.annotations.User
     public byte[] getImageWithSize(Authentication authentication, Map<String, Object> model)
             throws IOException, ChangeSetPersister.NotFoundException {
 
         return getContentWithSize(authentication, model, true);
     }
 
-    @com.example.prepics.annotations.User
     public byte[] getVideoWithSize(Authentication authentication, Map<String, Object> model)
             throws IOException, ChangeSetPersister.NotFoundException {
 
@@ -239,7 +236,6 @@ public class ContentApiService {
         }
     }
 
-    @Admin
     public Map<String, Object> doInsertTagsIntoElastic(Authentication authentication) {
         try {
             // Lấy danh sách nội dung
@@ -257,7 +253,6 @@ public class ContentApiService {
         }
     }
 
-    @Admin
     public Map<String, Object> doDeleteTagsInElastic(Authentication authentication) {
         try {
             // Xóa toàn bộ nội dung trong Elasticsearch

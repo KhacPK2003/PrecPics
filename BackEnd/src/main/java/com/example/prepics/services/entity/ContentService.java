@@ -20,4 +20,8 @@ public interface ContentService extends CRUDInterface<Content, String> {
 
     Optional<File> changeResolutionForVideo(String url, int width, int height) throws IOException;
 
+    String calculateHash(File imagePath) throws Exception;
+
+    boolean isExistContentData(String dataByte) throws ChangeSetPersister.NotFoundException;
+
 }

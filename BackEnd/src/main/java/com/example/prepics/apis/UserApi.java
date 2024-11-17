@@ -1,5 +1,7 @@
 package com.example.prepics.apis;
 
+import com.example.prepics.annotations.Admin;
+import com.example.prepics.annotations.Guest;
 import com.example.prepics.entity.User;
 import com.example.prepics.services.api.UserApiService;
 import lombok.extern.slf4j.Slf4j;
@@ -29,6 +31,7 @@ public class UserApi {
      * @return Map: Trả về kết quả đăng nhập, bao gồm thông tin người dùng.
      * @throws ChangeSetPersister.NotFoundException: Nếu không tìm thấy người dùng.
      */
+    @Guest
     @PostMapping("/login")
     public ResponseEntity<?> loginUserWithGoogle(Authentication authentication)
             throws ChangeSetPersister.NotFoundException {
@@ -47,6 +50,7 @@ public class UserApi {
      * @return Map: Trả về danh sách tất cả người dùng nếu là admin.
      * @throws ChangeSetPersister.NotFoundException: Nếu không tìm thấy người dùng.
      */
+    @Admin
     @GetMapping
     public ResponseEntity<?> findAll(Authentication authentication) throws ChangeSetPersister.NotFoundException {
         return ResponseEntity.ok(userApiService.findAll(authentication));
@@ -64,6 +68,7 @@ public class UserApi {
      * @return Map: Trả về thông tin của người dùng nếu tìm thấy.
      * @throws ChangeSetPersister.NotFoundException: Nếu không tìm thấy người dùng.
      */
+    @Guest
     @GetMapping("/{id}")
     public ResponseEntity<?> findById(@PathVariable String id) throws ChangeSetPersister.NotFoundException {
         return ResponseEntity.ok(userApiService.findById(id));
@@ -83,6 +88,7 @@ public class UserApi {
      * @return Map: Trả về kết quả cập nhật thành công.
      * @throws ChangeSetPersister.NotFoundException: Nếu không tìm thấy người dùng.
      */
+    @com.example.prepics.annotations.User
     @PutMapping("/{id}")
     public ResponseEntity<?> update(Authentication authentication, @PathVariable String id, @RequestBody User entity)
             throws ChangeSetPersister.NotFoundException {
@@ -102,6 +108,7 @@ public class UserApi {
      * @return Map: Trả về kết quả xóa người dùng thành công.
      * @throws ChangeSetPersister.NotFoundException: Nếu không tìm thấy người dùng.
      */
+    @com.example.prepics.annotations.User
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable String id) throws ChangeSetPersister.NotFoundException {
         return ResponseEntity.ok(userApiService.delete(id));
@@ -120,6 +127,7 @@ public class UserApi {
      * @return Map: Trả về kết quả thành công khi theo dõi người dùng.
      * @throws ChangeSetPersister.NotFoundException: Nếu không tìm thấy người dùng.
      */
+    @com.example.prepics.annotations.User
     @PostMapping("/{userId}/follow")
     public ResponseEntity<?> doFollowUser(Authentication authentication, @PathVariable String userId)
             throws ChangeSetPersister.NotFoundException {
@@ -140,6 +148,7 @@ public class UserApi {
      * @return Map: Trả về kết quả thành công khi bỏ theo dõi.
      * @throws ChangeSetPersister.NotFoundException: Nếu không tìm thấy người dùng hoặc liên kết.
      */
+    @com.example.prepics.annotations.User
     @DeleteMapping("/{followeeId}/unfollow/{followerId}")
     public ResponseEntity<?> doUnfollowUser(Authentication authentication, @PathVariable String followeeId
             , @PathVariable String followerId) throws ChangeSetPersister.NotFoundException {

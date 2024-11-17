@@ -1,5 +1,6 @@
 package com.example.prepics.services.entity.serviceImpl;
 
+import com.example.prepics.config.PerceptualHash;
 import com.example.prepics.entity.Content;
 import com.example.prepics.repositories.ContentRepository;
 import com.example.prepics.services.entity.ContentService;
@@ -112,5 +113,31 @@ public class ContentServiceImpl implements ContentService {
         File result = new File(pathToDst);
         result.deleteOnExit();
         return Optional.of(result);
+    }
+
+    @Override
+    public String calculateHash(File imagePath) throws Exception {
+        return PerceptualHash.calculatePHash(imagePath);
+    }
+
+    @Override
+    public boolean isExistContentData(String dataByte) throws ChangeSetPersister.NotFoundException {
+        List<Content> contents = contentRepository.findAll(Content.class)
+                .orElseThrow(ChangeSetPersister.NotFoundException::new);
+        // Kiểm tra nếu tồn tại Content nào có Hamming Distance < 10
+        return contents.stream().anyMatch(e -> hammingDistance(e.getDataByte(), dataByte) < 10);
+    }
+
+    public int hammingDistance(String hash1, String hash2) {
+        if (hash1.length() != hash2.length()) {
+            throw new IllegalArgumentException("Hashes must have the same length");
+        }
+        int distance = 0;
+        for (int i = 0; i < hash1.length(); i++) {
+            if (hash1.charAt(i) != hash2.charAt(i)) {
+                distance++;
+            }
+        }
+        return distance;
     }
 }

@@ -57,10 +57,17 @@ function Upload() {
             tags: tags,
         };
 
+        // const formData = new FormData();
+        // formData.append('file', media);
+        // formData.append('request', JSON.stringify(requestData));
+        // console.log(token);
+
         const formData = new FormData();
-        formData.append('file', media);
-        formData.append('request', JSON.stringify(requestData));
-        console.log(token);
+        formData.append("file", media);
+        formData.append(
+            "request",
+            new Blob([JSON.stringify(requestData)], { type: "application/json" })
+        );
         try {
             const response = await fetch('http://localhost:8080/public/api/contents/upload', {
                 method: 'POST',

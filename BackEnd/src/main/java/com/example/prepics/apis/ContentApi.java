@@ -1,6 +1,8 @@
 package com.example.prepics.apis;
 
 import com.example.prepics.annotations.Admin;
+import com.example.prepics.annotations.Guest;
+import com.example.prepics.annotations.User;
 import com.example.prepics.dto.ContentDTO;
 import com.example.prepics.services.api.ContentApiService;
 import com.example.prepics.services.entity.ContentService;
@@ -48,9 +50,10 @@ public class ContentApi {
      *
 
      */
+    @User
     @PostMapping(value = "/upload", consumes = {APPLICATION_JSON_VALUE, MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<?> uploadContent(
-            Authentication authentication,@RequestPart ContentDTO request, @RequestPart MultipartFile file) throws IOException, ChangeSetPersister.NotFoundException {
+            Authentication authentication,@RequestPart ContentDTO request, @RequestPart MultipartFile file) throws Exception {
         return ResponseEntity.ok(contentApiService.uploadContent(authentication, file, request));
     }
 
@@ -68,6 +71,7 @@ public class ContentApi {
      * @throws IOException: Nếu có lỗi khi thao tác với file.
      * @throws ChangeSetPersister.NotFoundException: Nếu không tìm thấy nội dung.
      */
+    @User
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<?> deleteContent(
             Authentication authentication,
@@ -89,6 +93,7 @@ public class ContentApi {
      * @return ResponseEntity: Trả về phản hồi cho việc cập nhật thẻ.
      * @throws ChangeSetPersister.NotFoundException: Nếu không tìm thấy nội dung hoặc người dùng.
      */
+    @User
     @PutMapping("/update-tags/{contentId}")
     public ResponseEntity<?> updateTags(
             Authentication authentication,
@@ -105,6 +110,7 @@ public class ContentApi {
      * @return ResponseEntity: Trả về danh sách tất cả nội dung.
      * @throws ChangeSetPersister.NotFoundException: Nếu không tìm thấy nội dung.
      */
+    @Guest
     @GetMapping("/all")
     public ResponseEntity<?> findAllContent() throws ChangeSetPersister.NotFoundException {
         return ResponseEntity.ok(contentApiService.findAllContent());
@@ -119,6 +125,7 @@ public class ContentApi {
      * @return ResponseEntity: Trả về các nội dung với loại đã chọn.
      * @throws ChangeSetPersister.NotFoundException: Nếu không tìm thấy nội dung với loại đã chỉ định.
      */
+    @Guest
     @GetMapping("/by-type")
     public ResponseEntity<?> findAllByType(
             @RequestParam("type") int type,
@@ -137,6 +144,7 @@ public class ContentApi {
      * @return ResponseEntity: Trả về các nội dung với thẻ phù hợp.
      * @throws ChangeSetPersister.NotFoundException: Nếu không tìm thấy nội dung với các thẻ đã chỉ định.
      */
+    @Guest
     @GetMapping("/by-tags")
     public ResponseEntity<?> findAllByTags(
             @RequestParam("tags") String tags,
@@ -155,6 +163,7 @@ public class ContentApi {
      * @return ResponseEntity: Trả về nội dung với ID tương ứng.
      * @throws ChangeSetPersister.NotFoundException: Nếu không tìm thấy nội dung.
      */
+    @Guest
     @GetMapping("/{id}")
     public ResponseEntity<?> findContentById(
             @PathVariable("id") String id) throws ChangeSetPersister.NotFoundException {
@@ -173,6 +182,7 @@ public class ContentApi {
      *               - "height": Chiều cao mới của ảnh.
      * @return ResponseEntity<byte[]>: Dữ liệu ảnh đã thay đổi kích thước dưới dạng mảng byte, trả về với kiểu `image/jpeg`.
      */
+    @User
     @GetMapping(value = "/image/resize", produces = MediaType.IMAGE_JPEG_VALUE)
     public ResponseEntity<byte[]> getImageWithSize(
             Authentication authentication,
@@ -202,6 +212,7 @@ public class ContentApi {
      *               - "height": Chiều cao mới của video.
      * @return ResponseEntity<byte[]>: Dữ liệu video đã thay đổi kích thước dưới dạng mảng byte, trả về với kiểu `video/mp4`.
      */
+    @User
     @GetMapping(value = "/video/resize", produces = "video/mp4")
     public ResponseEntity<byte[]> getVideoWithSize(
             Authentication authentication,
@@ -252,13 +263,13 @@ public class ContentApi {
      * @param authentication: Thông tin người dùng hiện tại.
      * @return Map: Trả về kết quả thành công hoặc thất bại.
      */
-    @Admin
+    @Guest
     @GetMapping("/search/fuzzy")
     public ResponseEntity<?> doSearchWithFuzzy(@RequestParam(value = "indexName", required = false, defaultValue = "tags") String indexName,
                                                @RequestParam(value = "fieldName", required = false, defaultValue = "name") String fieldName,
                                                @RequestParam String approximates,
-                                   @RequestParam(value = "page", required = false, defaultValue = "1") Integer page,
-                                   @RequestParam(value = "size", required = false, defaultValue = "10") Integer size) {
+                                               @RequestParam(value = "page", required = false, defaultValue = "1") Integer page,
+                                               @RequestParam(value = "size", required = false, defaultValue = "10") Integer size) {
         return ResponseEntity.ok(contentApiService.doSearchWithFuzzy(indexName, fieldName, approximates, page, size));
     }
 }

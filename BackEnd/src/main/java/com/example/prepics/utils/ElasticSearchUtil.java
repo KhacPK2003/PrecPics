@@ -1,7 +1,6 @@
 package com.example.prepics.utils;
 
 import co.elastic.clients.elasticsearch._types.query_dsl.FuzzyQuery;
-import co.elastic.clients.elasticsearch._types.query_dsl.MatchQuery;
 import co.elastic.clients.elasticsearch._types.query_dsl.Query;
 import lombok.val;
 
@@ -13,7 +12,6 @@ public class ElasticSearchUtil {
         Supplier<Query> supplier = ()->Query.of(q->q.fuzzy(createFuzzyQuery(fieldName, approximate)));
         return  supplier;
     }
-
 
     public static FuzzyQuery createFuzzyQuery(String fieldName, String approximate){
         val fuzzyQuery  = new FuzzyQuery.Builder();
