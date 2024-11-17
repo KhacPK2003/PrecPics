@@ -1,10 +1,7 @@
 package com.example.prepics.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.data.elasticsearch.annotations.Document;
 
 import java.util.Objects;
@@ -14,6 +11,7 @@ import java.util.Objects;
 @Getter
 @Setter
 @Document(indexName = "tags")
+@ToString
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class TagESDocument {
     private String id;

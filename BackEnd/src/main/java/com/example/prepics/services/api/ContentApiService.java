@@ -12,7 +12,6 @@ import com.example.prepics.models.ResponseProperties;
 import com.example.prepics.models.TagESDocument;
 import com.example.prepics.repositories.ContentRepository;
 import com.example.prepics.services.cloudinary.CloudinaryService;
-import com.example.prepics.services.elasticsearch.ContentElasticSearchService;
 import com.example.prepics.services.elasticsearch.ElasticSearchService;
 import com.example.prepics.services.elasticsearch.TagESDocumentService;
 import com.example.prepics.services.entity.ContentService;
@@ -47,9 +46,6 @@ public class ContentApiService {
 
     @Autowired
     private GotTagsService gotTagsService;
-
-    @Autowired
-    private ContentElasticSearchService contentElasticSearchService;
 
     @Autowired
     private ElasticSearchService elasticSearchService;
@@ -109,8 +105,6 @@ public class ContentApiService {
             }
         });
 
-//        contentElasticSearchService.insertContent(content);
-
         return ResponseProperties.createResponse(200, "Success", content);
     }
 
@@ -120,8 +114,6 @@ public class ContentApiService {
 
         Content content = contentService.findById(Content.class, id)
                 .orElseThrow(ChangeSetPersister.NotFoundException::new);
-
-        contentElasticSearchService.delete(modelMapper.map(content, ContentESDocument.class));
 
         Map<String, Object> fileUpload = cloudinaryService.deleteFile(id);
 
@@ -149,8 +141,6 @@ public class ContentApiService {
                 throw new RuntimeException(e);
             }
         });
-
-        contentElasticSearchService.insertContent(content);
 
         return ResponseProperties.createResponse(200, "Success", true);
     }
@@ -225,31 +215,24 @@ public class ContentApiService {
     public Map<String, Object> doSearchWithFuzzy(String indexName, String fieldName, String approximates
             , Integer page, Integer size) {
         List<String> tagNames = List.of(approximates.split(","));
-        Set<TagESDocument> tags = new HashSet<>();
+        Set<String> tags = new HashSet<>();
 
         try {
             tagNames.forEach(tag -> {
                 try {
                     SearchResponse searchResponse =
-                            elasticSearchService.fuzzySearch(Tag.class , indexName, fieldName, tag);
+                            elasticSearchService.fuzzySearch(TagESDocument.class , indexName, fieldName, tag);
                     List<Hit<TagESDocument>> hitList = searchResponse.hits().hits();
-                    hitList.forEach(hit -> tags.add(hit.source()));
+                    hitList.forEach(hit -> tags.add(hit.source().getName()));
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
             });
 
-            //
-            String names = tags.stream()
-                    .map(TagESDocument::getName)
-                    .filter(name -> name != null && !name.trim().isEmpty())
-                    .map(String::toLowerCase)
-                    .toString();
-
-            List<Content> result = contentService.findContentsByTags(names, page, size)
+            List<Content> result = contentService.findContentsByTags(tags.toString(), page, size)
                     .orElseThrow(ChangeSetPersister.NotFoundException::new);
 
-            return ResponseProperties.createResponse(200, "Success", result);
+            return ResponseProperties.createResponse(200, "Success", tags.toString());
         } catch (Exception e) {
 
             return ResponseProperties.createResponse(500, "Unexpected error during fuzzy search", e);

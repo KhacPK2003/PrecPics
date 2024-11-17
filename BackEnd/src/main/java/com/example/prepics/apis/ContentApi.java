@@ -262,7 +262,8 @@ public class ContentApi {
      */
     @Admin
     @GetMapping("/search/fuzzy")
-    public ResponseEntity<?> doSearchWithFuzzy(@RequestParam String indexName, @RequestParam String fieldName,
+    public ResponseEntity<?> doSearchWithFuzzy(@RequestParam(value = "indexName", required = false, defaultValue = "tags") String indexName,
+                                               @RequestParam(value = "fieldName", required = false, defaultValue = "name") String fieldName,
                                                @RequestParam String approximates,
                                    @RequestParam(value = "page", required = false, defaultValue = "1") Integer page,
                                    @RequestParam(value = "size", required = false, defaultValue = "10") Integer size) {

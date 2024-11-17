@@ -25,9 +25,9 @@ public class ElasticSearchService {
 //        return response;
 //    }
 
-    public SearchResponse<?> fuzzySearch(Class<?> clazz , String indexName , String fieldName, String approximate) throws IOException {
+    public SearchResponse<TagESDocument> fuzzySearch(Class<TagESDocument> clazz , String indexName , String fieldName, String approximate) throws IOException {
         Supplier<Query>  supplier = ElasticSearchUtil.createSupplierQuery(fieldName, approximate);
-        SearchResponse<?> response = elasticsearchClient
+        SearchResponse<TagESDocument> response = elasticsearchClient
                 .search(s->s.index(indexName).query(supplier.get()),clazz);
         return response;
     }
