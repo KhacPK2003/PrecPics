@@ -2,7 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 body{
-    background-color: #379d7d;
+    background-color: #fff;
 }
 .gallery {
     margin-top: 40px;

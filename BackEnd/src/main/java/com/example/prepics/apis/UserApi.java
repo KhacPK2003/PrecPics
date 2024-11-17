@@ -19,7 +19,6 @@ public class UserApi {
 
     /**
      * Đăng nhập người dùng qua Google.
-     *
      * API này cho phép người dùng đăng nhập vào hệ thống thông qua tài khoản Google.
      * Quy trình xử lý:
      * - Lấy thông tin người dùng từ Authentication (dữ liệu người dùng đã đăng nhập).
@@ -38,7 +37,6 @@ public class UserApi {
 
     /**
      * Lấy danh sách tất cả người dùng (dành cho admin).
-     *
      * API này cho phép admin lấy tất cả thông tin người dùng trong hệ thống.
      * Quy trình xử lý:
      * - Kiểm tra quyền admin của người dùng hiện tại.
@@ -56,7 +54,6 @@ public class UserApi {
 
     /**
      * Lấy thông tin người dùng theo ID.
-     *
      * API này cho phép người dùng hoặc admin lấy thông tin của một người dùng dựa trên ID.
      * Quy trình xử lý:
      * - Kiểm tra người dùng có tồn tại không.
@@ -74,7 +71,6 @@ public class UserApi {
 
     /**
      * Cập nhật thông tin người dùng.
-     *
      * API này cho phép người dùng cập nhật thông tin cá nhân của mình.
      * Quy trình xử lý:
      * - Kiểm tra quyền của người dùng hiện tại có thể cập nhật thông tin hay không.
@@ -96,7 +92,6 @@ public class UserApi {
 
     /**
      * Xóa người dùng theo ID.
-     *
      * API này cho phép xóa người dùng khỏi hệ thống.
      * Quy trình xử lý:
      * - Tìm kiếm người dùng theo ID.
@@ -114,7 +109,6 @@ public class UserApi {
 
     /**
      * Theo dõi một người dùng khác.
-     *
      * API này cho phép người dùng theo dõi một người dùng khác trong hệ thống.
      * Quy trình xử lý:
      * - Kiểm tra xem người dùng hiện tại có tồn tại trong hệ thống không.
@@ -134,7 +128,6 @@ public class UserApi {
 
     /**
      * Bỏ theo dõi một người dùng khác.
-     *
      * API này cho phép người dùng bỏ theo dõi một người dùng khác trong hệ thống.
      * Quy trình xử lý:
      * - Kiểm tra xem người dùng hiện tại có tồn tại trong hệ thống không.

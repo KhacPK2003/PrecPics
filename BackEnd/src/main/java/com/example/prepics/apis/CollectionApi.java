@@ -28,7 +28,8 @@ public class CollectionApi {
      * @param collectionName: Tên của bộ sưu tập cần tạo.
      * @return ResponseEntity: Trả về phản hồi cho việc tạo bộ sưu tập.
      * @throws ChangeSetPersister.NotFoundException: Nếu không tìm thấy người dùng.
-     */
+     **/
+
     @PostMapping
     public ResponseEntity<?> createCollection(Authentication authentication, @RequestBody String collectionName) {
         return ResponseEntity.ok(collectionApiService.createCollection(authentication, collectionName));
@@ -36,7 +37,6 @@ public class CollectionApi {
 
     /**
      * Cập nhật thông tin bộ sưu tập.
-     *
      * API này cho phép người dùng cập nhật thông tin bộ sưu tập.
      * Quy trình xử lý:
      * - Kiểm tra xem người dùng có quyền cập nhật bộ sưu tập đó hay không.
@@ -92,12 +92,10 @@ public class CollectionApi {
 
     /**
      * Thêm nội dung vào bộ sưu tập.
-     *
      * API này cho phép người dùng thêm nội dung vào bộ sưu tập của mình.
      * Quy trình xử lý:
      * - Kiểm tra xem người dùng có quyền thêm nội dung vào bộ sưu tập không.
      * - Thêm nội dung vào bộ sưu tập.
-     *
      * @param authentication: Thông tin người dùng đã đăng nhập.
      * @param collectionId: ID của bộ sưu tập.
      * @param contentId: ID của nội dung cần thêm vào bộ sưu tập.
@@ -112,7 +110,6 @@ public class CollectionApi {
 
     /**
      * Xóa nội dung khỏi bộ sưu tập.
-     *
      * API này cho phép người dùng xóa nội dung khỏi bộ sưu tập của mình.
      * Quy trình xử lý:
      * - Kiểm tra xem người dùng có quyền xóa nội dung khỏi bộ sưu tập không.

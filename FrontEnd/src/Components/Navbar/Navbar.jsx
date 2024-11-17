@@ -3,24 +3,23 @@ import UserAvatar from '../User/UserAvatar';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
-import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import Menu from '@mui/material/Menu';
-import MenuIcon from '@mui/icons-material/Menu';
 import Container from '@mui/material/Container';
 import Button from '@mui/material/Button';
 import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
-import PropTypes from 'prop-types'
 import { useNavigate } from 'react-router-dom';
 
 const pages = [
     { name: 'Trang chủ', path: '/' },
     { name: 'Upload', path: '/Upload' },
     { name: 'Liên hệ', path: '/Contact' },
+    { name : 'Video' , path: '/'},
+    { name : 'Ảnh' , path: '/'},
 ];
 
-function Navbar({isLoggedIn = false}){
+function Navbar({UserInfo , onClickVideo , handleLogOut , isLogin}){
     const [anchorElNav, setAnchorElNav] = React.useState(null);
     const navigate = useNavigate();
 
@@ -29,7 +28,16 @@ function Navbar({isLoggedIn = false}){
     };
   
     function handleCloseNavMenu(page) {
-    //   setAnchorElNav(null);
+       if(page.name === 'Video'){
+            onClickVideo(page.name);
+       }
+       if(page.name === 'Ảnh'){
+            onClickVideo(page.name);
+       }
+       if(page.name === 'Upload' && !isLogin){
+            navigate('/Login');
+            return;
+       }
        navigate(page.path);
     }
   
@@ -67,16 +75,6 @@ function Navbar({isLoggedIn = false}){
                     </Typography>
 
                     <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
-                        {/* <IconButton
-                        size="small"
-                        aria-label="account of current user"
-                        aria-controls="menu-appbar"
-                        aria-haspopup="true"
-                        onClick={handleOpenNavMenu}
-                        color="inherit"
-                        >
-                        <MenuIcon />
-                        </IconButton> */}
                         <Menu
                         id="menu-appbar"
                         anchorEl={anchorElNav}
@@ -130,8 +128,8 @@ function Navbar({isLoggedIn = false}){
                         </Button>
                         ))}
                     </Box>
-                    {isLoggedIn ? (
-                            <UserAvatar />
+                    {(UserInfo != null) ? (
+                            <UserAvatar User = {UserInfo} Logout = {handleLogOut}/>
                         ) : (
                             <Box sx={{ display: 'flex', alignItems: 'center' }}>
                                 <Button

@@ -9,12 +9,13 @@ import Typography from '@mui/material/Typography';
 
 
 const settings = ['Trang cá nhân', 'Logout'];
-function UserAvatar(){
+function UserAvatar({User , Logout}){
     const [anchorElUser, setAnchorElUser] = React.useState(null);
     const handleOpenUserMenu = (event) => {
         setAnchorElUser(event.currentTarget);
     };
-    const handleCloseUserMenu = () => {
+    const handleCloseUserMenu = (setting) => {
+        if(setting === 'Logout') Logout();
         setAnchorElUser(null);
       };
     return (
@@ -23,6 +24,7 @@ function UserAvatar(){
                 <Tooltip title="Mở thanh cài đặt">
                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                     <Avatar alt="Remy Sharp" src="" />
+                <p className="text-base text-white text-left ml-2">Xin chào {User.displayName}!!!</p>
                 </IconButton>
                 </Tooltip>
                 <Menu
@@ -42,7 +44,7 @@ function UserAvatar(){
                 onClose={handleCloseUserMenu}
                 >
                 {settings.map((setting) => (
-                    <MenuItem key={setting} onClick={handleCloseUserMenu}>
+                    <MenuItem key={setting} onClick={() => handleCloseUserMenu(setting)}>
                     <Typography sx={{ textAlign: 'center' }}>{setting}</Typography>
                     </MenuItem>
                 ))}
