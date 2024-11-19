@@ -50,10 +50,9 @@ services:
       - bootstrap.memory_lock=true
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
     volumes:
-      - type: bind
-        source: ./elasticsearch/config/elasticsearch.yml
-        target: /usr/share/elasticsearch/config/elasticsearch.yml
-          - ./elasticsearch/data:/usr/share/elasticsearch/data
+      - elasticsearch_config:/usr/share/elasticsearch/config
 volumes:
   postgresql_master_data:
+    driver: local
+  elasticsearch_config:
     driver: local
