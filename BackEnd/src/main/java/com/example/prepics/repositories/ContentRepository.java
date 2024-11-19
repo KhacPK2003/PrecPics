@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Repository
 public class ContentRepository implements CRUDInterface<Content, String> {
@@ -77,6 +78,15 @@ public class ContentRepository implements CRUDInterface<Content, String> {
     }
 
     @Transactional("slaveTransactionManager")
+    public Optional<List<Content>> findAllByType(boolean type) {
+        String query = "SELECT c FROM Content c WHERE c.type = :type ORDER BY c.dateUpload DESC";
+        List<Content> result = slaveEntityManager.createQuery(query, Content.class)
+                .setParameter("type", type)
+                .getResultList();
+        return Optional.of(result);
+    }
+
+    @Transactional("slaveTransactionManager")
     public Optional<String> findTagsByContentId(String contentId) {
         String query = "SELECT t.name FROM Tag t " +
                 "JOIN GotTags g ON t.id = g.tagId " +
@@ -89,14 +99,16 @@ public class ContentRepository implements CRUDInterface<Content, String> {
     }
 
     @Transactional("slaveTransactionManager")
-    public Optional<List<Content>> findContentsByTags(String tags, Integer page, Integer size) {
+    public Optional<List<Content>> findContentsByTags(List<String> tags, Integer page, Integer size) {
         String query ="SELECT c FROM Content c " +
                 "JOIN GotTags gt on c.id = gt.contentId " +
                 "JOIN Tag t on gt.tagId = t.id " +
-                "WHERE LOWER(t.name) IN :nameTag " +
+                "WHERE LOWER(t.name) IN ( :nameTag ) " +
                 "ORDER BY c.dateUpload DESC";
         return Optional.ofNullable(slaveEntityManager.createQuery(query, Content.class)
-                .setParameter("nameTag", tags.toLowerCase())
+                .setParameter("nameTag", tags.stream().map(String::trim)
+                        .map(String::toLowerCase)
+                        .collect(Collectors.toList()))
                 .setMaxResults(size)
                 .setFirstResult((page - 1) * size)
                 .getResultList());

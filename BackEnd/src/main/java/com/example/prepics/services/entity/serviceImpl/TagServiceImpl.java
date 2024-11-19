@@ -1,7 +1,6 @@
 package com.example.prepics.services.entity.serviceImpl;
 
 import com.example.prepics.entity.Tag;
-import com.example.prepics.exception.GlobalRuntimeException;
 import com.example.prepics.repositories.TagRepository;
 import com.example.prepics.services.elasticsearch.TagESDocumentService;
 import com.example.prepics.services.entity.TagService;

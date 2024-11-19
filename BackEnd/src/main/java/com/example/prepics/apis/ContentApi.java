@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
@@ -151,7 +152,7 @@ public class ContentApi {
             @RequestParam(value = "page", required = false, defaultValue = "1") Integer page,
             @RequestParam(value = "size", required = false, defaultValue = "10") Integer size)
             throws ChangeSetPersister.NotFoundException {
-        return ResponseEntity.ok(contentApiService.findAllByTags(tags,page, size));
+        return ResponseEntity.ok(contentApiService.findAllByTags(List.of(tags.split(", ")),page, size));
     }
 
     /**
@@ -267,7 +268,7 @@ public class ContentApi {
     @GetMapping("/search/fuzzy")
     public ResponseEntity<?> doSearchWithFuzzy(@RequestParam(value = "indexName", required = false, defaultValue = "tags") String indexName,
                                                @RequestParam(value = "fieldName", required = false, defaultValue = "name") String fieldName,
-                                               @RequestParam String approximates,
+                                               @RequestParam(value = "approximates") String approximates,
                                                @RequestParam(value = "page", required = false, defaultValue = "1") Integer page,
                                                @RequestParam(value = "size", required = false, defaultValue = "10") Integer size) {
         return ResponseEntity.ok(contentApiService.doSearchWithFuzzy(indexName, fieldName, approximates, page, size));

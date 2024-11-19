@@ -9,24 +9,20 @@ import com.github.kokorin.jaffree.ffmpeg.FFmpeg;
 import com.github.kokorin.jaffree.ffmpeg.UrlInput;
 import com.github.kokorin.jaffree.ffmpeg.UrlOutput;
 import jakarta.persistence.EntityExistsException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
+import java.math.BigInteger;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class ContentServiceImpl implements ContentService {
-
-    private static final Logger log = LoggerFactory.getLogger(ContentServiceImpl.class);
-
-    @Value("${video.path}")
-    private String VIDEO_DIR;
 
     @Autowired
     private ContentRepository contentRepository;
@@ -70,10 +66,9 @@ public class ContentServiceImpl implements ContentService {
     }
 
     @Override
-    public Optional<List<Content>> findContentsByTags(String tags, Integer page, Integer size) {
+    public Optional<List<Content>> findContentsByTags(List<String> tags, Integer page, Integer size) {
         return contentRepository.findContentsByTags(tags, page, size);
     }
-
 
     @Override
     public Optional<File> changeResolutionForImage(String contentUrl, int width, int height) throws IOException {
@@ -116,28 +111,62 @@ public class ContentServiceImpl implements ContentService {
     }
 
     @Override
-    public String calculateHash(File imagePath) throws Exception {
-        return PerceptualHash.calculatePHash(imagePath);
+    public String calculateImageHash(MultipartFile imagePath) throws Exception {
+        return PerceptualHash.calculateImagePHash(imagePath);
     }
 
     @Override
-    public boolean isExistContentData(String dataByte) throws ChangeSetPersister.NotFoundException {
-        List<Content> contents = contentRepository.findAll(Content.class)
+    public String calculateVideoHash(MultipartFile imagePath) throws Exception {
+        return PerceptualHash.processVideo(imagePath);
+    }
+
+    @Override
+    public boolean isExistImageData(String dataByte) throws ChangeSetPersister.NotFoundException {
+        List<Content> contents = contentRepository.findAllByType(true)
                 .orElseThrow(ChangeSetPersister.NotFoundException::new);
         // Kiểm tra nếu tồn tại Content nào có Hamming Distance < 10
-        return contents.stream().anyMatch(e -> hammingDistance(e.getDataByte(), dataByte) < 10);
+        return contents.stream().map(Content::getDataByte).anyMatch(e -> hammingDistance(e, dataByte) < 10);
     }
 
     public int hammingDistance(String hash1, String hash2) {
-        if (hash1.length() != hash2.length()) {
-            throw new IllegalArgumentException("Hashes must have the same length");
+        // Kiểm tra null
+        if (hash1 == null || hash2 == null) {
+            throw new IllegalArgumentException("Hashes must not be null");
         }
-        int distance = 0;
-        for (int i = 0; i < hash1.length(); i++) {
-            if (hash1.charAt(i) != hash2.charAt(i)) {
-                distance++;
-            }
-        }
+
+        // Chuyển đổi từ hexadecimal sang BigInteger
+        BigInteger value1 = new BigInteger(hash1, 16);
+        BigInteger value2 = new BigInteger(hash2, 16);
+
+        // Tính XOR giữa hai giá trị
+        BigInteger xor = value1.xor(value2);
+
+        // Đếm số bit 1 trong XOR
+        int distance = xor.bitCount();
+
         return distance;
+    }
+
+    public int compareVideos(String videoHash1, String videoHash2) {
+        // So sánh các video bằng cách tính khoảng cách Hamming giữa hai hash
+        int distance = hammingDistance(videoHash1, videoHash2);
+
+        // Tính tỷ lệ phần trăm tương đồng giữa hai video
+        int maxDistance = videoHash1.length(); // Max distance = chiều dài của hash
+        double similarityPercentage = (1 - (double) distance / maxDistance) * 100;
+
+        return (int) similarityPercentage;
+    }
+
+
+    @Override
+    public boolean isExistVideoData(String dataByte) throws ChangeSetPersister.NotFoundException {
+        List<Content> contents = contentRepository.findAllByType(false)
+                .orElseThrow(ChangeSetPersister.NotFoundException::new);
+
+        // Tìm kiếm video trùng lặp với dữ liệu input
+        return contents.stream()
+                .map(Content::getDataByte)
+                .anyMatch(existingData -> compareVideos(existingData, dataByte) > 70);
     }
 }

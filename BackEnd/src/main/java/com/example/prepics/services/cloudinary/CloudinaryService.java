@@ -15,6 +15,8 @@ public interface CloudinaryService {
 
     Map<String, Object> uploadVideo(MultipartFile file) throws IOException;
 
+    Map<String, Object> uploadVideo(byte[] file) throws IOException;
+
     Map<String, Object> getFileDetails(String assetId) throws Exception;
 
     Map<String, Object> deleteFile(String publicId) throws IOException;

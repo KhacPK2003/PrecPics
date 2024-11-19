@@ -2,9 +2,7 @@ package com.example.prepics.services.api;
 
 import co.elastic.clients.elasticsearch.core.SearchResponse;
 import co.elastic.clients.elasticsearch.core.search.Hit;
-import com.example.prepics.annotations.Guest;
 import com.example.prepics.dto.ContentDTO;
-import com.example.prepics.annotations.Admin;
 import com.example.prepics.entity.Content;
 import com.example.prepics.entity.Tag;
 import com.example.prepics.entity.User;
@@ -30,6 +28,8 @@ import java.io.IOException;
 
 import java.math.BigInteger;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 
 @Service
@@ -68,6 +68,8 @@ public class ContentApiService {
                 .orElseThrow(ChangeSetPersister.NotFoundException::new);
     }
 
+
+
     public Map<String, Object> uploadContent(Authentication authentication, MultipartFile file, ContentDTO contentDTO)
             throws Exception {
         User user = getAuthenticatedUser(authentication);
@@ -75,11 +77,23 @@ public class ContentApiService {
         if (file.isEmpty()) {
             return ResponseProperties.createResponse(400, "Error : File is empty", null);
         }
+        // Lưu tệp tạm thời
+        byte[] fileBytes = file.getBytes();
 
         boolean isImage = contentDTO.getType() == 0;
-        Map<String, Object> fileUpload =
-                isImage ? cloudinaryService.uploadFile(file)
-                        : cloudinaryService.uploadVideo(file);
+        String hashData = isImage
+                ? contentService.calculateImageHash(file)
+                : contentService.calculateVideoHash(file);
+        if ((isImage && contentService.isExistImageData(hashData))
+                || (!isImage && contentService.isExistVideoData(hashData))) {
+            String fileType = isImage ? "Image" : "Video";
+            return ResponseProperties
+                    .createResponse(400, "Error: " + fileType + " already exists", null);
+        }
+
+        // Upload file to Cloudinary
+        Map<String, Object> fileUpload = isImage ? cloudinaryService.uploadFile(file)
+                : cloudinaryService.uploadVideo(fileBytes);
 
         Content content = new Content();
         content.setId(fileUpload.get("public_id").toString());
@@ -88,7 +102,7 @@ public class ContentApiService {
         content.setHeight((Integer) fileUpload.get("height"));
         content.setWidth((Integer) fileUpload.get("width"));
         content.setDataUrl(fileUpload.get("url").toString());
-        content.setDataByte(contentService.calculateHash(file.getResource().getFile()));
+        content.setDataByte(hashData);
         content.setDescription(contentDTO.getDescription());
         content.setType(isImage);
         content.setDateUpload(BigInteger.valueOf(new Date().getTime()));
@@ -105,7 +119,7 @@ public class ContentApiService {
             }
         });
 
-        return ResponseProperties.createResponse(200, "Success", content);
+        return ResponseProperties.createResponse(200, "Success", hashData);
     }
 
     public Map<String, Object> deleteContent(Authentication authentication, String id)
@@ -158,7 +172,7 @@ public class ContentApiService {
         return ResponseProperties.createResponse(200, "Success", contents);
     }
 
-    public Map<String, Object> findAllByTags(String tags, Integer page, Integer size) throws ChangeSetPersister.NotFoundException {
+    public Map<String, Object> findAllByTags(List<String> tags, Integer page, Integer size) throws ChangeSetPersister.NotFoundException {
         List<Content> contents = contentService.findContentsByTags(tags, page, size)
                 .orElseThrow(ChangeSetPersister.NotFoundException::new);
 
@@ -226,10 +240,10 @@ public class ContentApiService {
                 }
             });
 
-            List<Content> result = contentService.findContentsByTags(tags.toString(), page, size)
+            List<Content> result = contentService.findContentsByTags(tags.stream().toList(), page, size)
                     .orElseThrow(ChangeSetPersister.NotFoundException::new);
-
-            return ResponseProperties.createResponse(200, "Success", tags.toString());
+            System.out.println(tags.toString());
+            return ResponseProperties.createResponse(200, "Success", result);
         } catch (Exception e) {
 
             return ResponseProperties.createResponse(500, "Unexpected error during fuzzy search", e);

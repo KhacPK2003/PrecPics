@@ -29,8 +29,17 @@ public class CloudinaryServiceImpl implements CloudinaryService {
         return cloudinary.uploader().upload(Files.readAllBytes(file.toPath()), ObjectUtils.emptyMap());
     }
 
+    @Override
     public Map<String, Object> uploadVideo(MultipartFile file) throws IOException {
         return cloudinary.uploader().upload(file.getBytes(),
+                ObjectUtils.asMap(
+                        "resource_type", "video"
+                ));
+    }
+
+    @Override
+    public Map<String, Object> uploadVideo(byte[] file) throws IOException {
+        return cloudinary.uploader().upload(file,
                 ObjectUtils.asMap(
                         "resource_type", "video"
                 ));
