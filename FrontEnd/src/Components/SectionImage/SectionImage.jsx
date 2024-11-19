@@ -40,7 +40,7 @@ function SectionImage({content}){
                         <Dialog open={open} onClose={handleClose} maxWidth="lg" fullWidth >
                             <DialogTitle onClose={handleClose}>Ảnh</DialogTitle>
                             <DialogContent dividers>
-                                <GallerySingle />
+                                <GallerySingle content={content}/>
                             </DialogContent>
                         </Dialog>
                         

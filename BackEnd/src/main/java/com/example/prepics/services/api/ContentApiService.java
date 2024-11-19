@@ -73,13 +73,11 @@ public class ContentApiService {
     public Map<String, Object> uploadContent(Authentication authentication, MultipartFile file, ContentDTO contentDTO)
             throws Exception {
         User user = getAuthenticatedUser(authentication);
-
         if (file.isEmpty()) {
             return ResponseProperties.createResponse(400, "Error : File is empty", null);
         }
         // Lưu tệp tạm thời
         byte[] fileBytes = file.getBytes();
-
         boolean isImage = contentDTO.getType() == 0;
         String hashData = isImage
                 ? contentService.calculateImageHash(file)
@@ -88,7 +86,7 @@ public class ContentApiService {
                 || (!isImage && contentService.isExistVideoData(hashData))) {
             String fileType = isImage ? "Image" : "Video";
             return ResponseProperties
-                    .createResponse(400, "Error: " + fileType + " already exists", null);
+                    .createResponse(400, "Error: " + fileType + " đã tồn tại", null);
         }
 
         // Upload file to Cloudinary
@@ -106,7 +104,8 @@ public class ContentApiService {
         content.setDescription(contentDTO.getDescription());
         content.setType(isImage);
         content.setDateUpload(BigInteger.valueOf(new Date().getTime()));
-        content.setUserId(user.getId());
+//        content.setUserId(user.getId());
+        content.setUser(user);
 
         contentService.create(content);
 
@@ -119,7 +118,7 @@ public class ContentApiService {
             }
         });
 
-        return ResponseProperties.createResponse(200, "Success", hashData);
+        return ResponseProperties.createResponse(200, "Success", content);
     }
 
     public Map<String, Object> deleteContent(Authentication authentication, String id)

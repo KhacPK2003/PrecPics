@@ -35,7 +35,7 @@ function Home(){
     const [showVideo, setShowVideo] = useState(false);
     const handleVideoClick = (name) => {
         if(name == 'Video' && !showVideo) setShowVideo(true); // Khi click vào button video, sẽ set showVideo = true
-        if(name == 'Ảnh' && showVideo) setShowVideo(false); // Khi click vào button video, sẽ set showVideo = true
+        if(name == 'Ảnh' && showVideo) setShowVideo(false);
     };
     return (
         <>

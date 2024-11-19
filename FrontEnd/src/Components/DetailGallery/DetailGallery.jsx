@@ -21,10 +21,10 @@ const comments = [
         comment: 'Mình cũng thích nơi này!',
       }
   ];
-function DetailGallery(){
+function DetailGallery({content}){
     const [isFavorite, setIsFavorite] = useState(false);
 
-    const [countHeart,setCountHeart] = useState(0);
+    const [countHeart,setCountHeart] = useState(content.liked);
 
     const toggleFavorite = () => {
         setIsFavorite((prev) => !prev);
@@ -39,13 +39,13 @@ function DetailGallery(){
     return (
             <div className="bg-popover dark:bg-card p-4 rounded-lg shadow-lg h-[calc(80vh-90px)] flex flex-col">
                 <div className="flex items-center mb-4">
-                    <img className="w-10 h-10 rounded-full" src="https://placehold.co/40x40" alt="Profile Picture" />
+                    <img className="w-10 h-10 rounded-full" src={content.user.avatarUrl} alt="Profile Picture" />
                     <div className="ml-3">
-                        <span className="font-bold text-primary">vietcetera</span>
+                        <span className="font-bold text-primary">{content.user.userName}</span>
                     </div>
                 </div>
                 <p className="text-foreground mb-2">
-                    #show chủ đề
+                    {content.description}
                 </p>
                 <div className="text-muted-foreground text-sm mb-2">
                     # show Tag
@@ -77,9 +77,9 @@ function DetailGallery(){
                     <input type="text" placeholder="Thêm bình luận..." className="flex-grow ml-2 p-2 border border-border rounded-lg bg-input text-foreground" />
                     <button className="bg-blue-500 text-primary-foreground hover:bg-primary/80 py-1 px-3 rounded ml-2">Đăng</button>
                 </div>
-                <div className='mt-3 ml-[150px]'>
+                {/* <div className='mt-3 ml-[150px]'>
                     <DropdownButton></DropdownButton>
-                </div>
+                </div> */}
              </div>
 
     );

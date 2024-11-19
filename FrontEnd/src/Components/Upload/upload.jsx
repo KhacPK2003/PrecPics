@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { auth } from '../../firebaseconfig'; // Đảm bảo cấu hình firebase chính xác
+import { auth } from '../../firebaseconfig';
 import { onAuthStateChanged } from 'firebase/auth';
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const inputClasses = 'border border-zinc-300 rounded-lg p-2 w-full';
 const labelClasses = 'block text-sm font-medium text-zinc-700';
@@ -11,7 +13,8 @@ function Upload() {
     const [mediaType, setMediaType] = useState('');
     const [title, setTitle] = useState('');
     const [tags, setTags] = useState('');
-    const [token, setToken] = useState(null); // State để lưu trữ token người dùng
+    const [token, setToken] = useState(null);
+    const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
@@ -30,7 +33,7 @@ function Upload() {
     const handleMediaChange = (event) => {
         const file = event.target.files[0];
         if (file) {
-            setMedia(file); // Lưu file thay vì URL để upload
+            setMedia(file);
             setMediaType(file.type.startsWith('video') ? 'video' : 'image');
         } else {
             setMedia(null);
@@ -56,18 +59,18 @@ function Upload() {
             description: title,
             tags: tags,
         };
-
-        // const formData = new FormData();
-        // formData.append('file', media);
-        // formData.append('request', JSON.stringify(requestData));
-        // console.log(token);
-
+        console.log(token);
         const formData = new FormData();
         formData.append('file', media);
         formData.append(
             "request",
             new Blob([JSON.stringify(requestData)], { type: "application/json" })
-          );
+        );
+
+        // Hiển thị thông báo "Đang xử lý..." khi bắt đầu tải lên
+        const toastId = toast.loading("Đang xử lý...");
+        setIsLoading(true);
+
         try {
             const response = await fetch('http://localhost:8080/public/api/contents/upload', {
                 method: 'POST',
@@ -79,8 +82,14 @@ function Upload() {
 
             if (response.ok) {
                 const result = await response.json();
-                alert('Tải lên thành công!');
-                console.log('Upload successful:', result);
+                // Sau khi gửi xong, hiển thị thông báo thành công
+                toast.update(toastId, {
+                    render: "Tải lên thành công!",
+                    type: "success",
+                    isLoading: false,
+                    autoClose: 5000,
+                });
+
                 // Reset form sau khi upload
                 setMedia(null);
                 setMediaType('');
@@ -88,12 +97,26 @@ function Upload() {
                 setTags('');
             } else {
                 const errorData = await response.json();
-                alert(`Tải lên thất bại: ${errorData.message || response.statusText}`);
+                // Cập nhật thông báo lỗi nếu tải lên thất bại
+                toast.update(toastId, {
+                    render: `Tải lên thất bại!`,
+                    type: "error",
+                    isLoading: false,
+                    autoClose: 5000,
+                });
                 console.error('Upload failed:', response.statusText);
             }
         } catch (error) {
+            // Cập nhật thông báo lỗi nếu có lỗi xảy ra
+            toast.update(toastId, {
+                render: 'Đã xảy ra lỗi khi tải lên, vui lòng thử lại!',
+                type: "error",
+                isLoading: false,
+                autoClose: 5000,
+            });
             console.error('Upload failed:', error);
-            alert('Đã xảy ra lỗi khi tải lên, vui lòng thử lại!');
+        } finally {
+            setIsLoading(false);
         }
     };
 
@@ -134,9 +157,21 @@ function Upload() {
                     </div>
                 )}
             </div>
-            <button type="submit" className={buttonClasses}>
-                Tải lên
+            <button type="submit" className={buttonClasses} disabled={isLoading}>
+                {isLoading ? 'Đang tải lên...' : 'Tải lên'}
             </button>
+            <ToastContainer 
+                position="bottom-left" 
+                autoClose={5000} 
+                hideProgressBar={false} 
+                newestOnTop={true} 
+                closeButton={true} 
+                rtl={false} 
+                pauseOnFocusLoss 
+                draggable 
+                pauseOnHover 
+                theme="light" // Tùy chọn theme: light, dark
+            />
         </form>
     );
 }

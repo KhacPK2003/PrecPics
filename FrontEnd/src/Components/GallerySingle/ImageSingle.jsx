@@ -16,21 +16,29 @@ const Item = styled(Paper)(({ theme }) => ({
       backgroundColor: '#1A2027',
     }),
   }));
-function GallerySingle(){
+
+// Style cho ảnh
+const Image = styled('img')({
+    width: '100%',  // Đảm bảo ảnh chiếm toàn bộ chiều rộng của phần tử Item
+    height: '100%', // Đảm bảo ảnh chiếm toàn bộ chiều cao của phần tử Item
+    objectFit: 'cover', // Đảm bảo ảnh phủ toàn bộ mà không bị kéo giãn hoặc mất tỷ lệ
+    objectPosition: 'center', // Căn giữa ảnh nếu ảnh có tỷ lệ không giống với phần tử
+});
+
+function GallerySingle({content}){
     return (
         <Grid2 container rowSpacing={1}>
             <Grid2 size={6}>
-                <Item >
-                    <img
-                        src="src/assets/image.png"
-                        className="w-full h-full object-cover rounded transition-transform duration-300"
-                    />
-                </Item>
-            </Grid2>
+            <Item>
+                <Image
+                    src={content.dataUrl}
+                />
+            </Item>
+        </Grid2>
             <Grid2 size={6}>
                 <Item >
-                    <DetailGallery />
-                    {/* <DropdownButton/> */}
+                    <DetailGallery content={content}/>
+                    <DropdownButton/>
                 </Item>
             </Grid2>
         </Grid2>

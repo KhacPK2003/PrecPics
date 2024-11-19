@@ -261,7 +261,7 @@ public class ContentApi {
      * API để thêm tags vào Elasticsearch.
      * Chỉ admin mới có thể truy cập API này.
      *
-     * @param authentication: Thông tin người dùng hiện tại.
+     * @param : Thông tin người dùng hiện tại.
      * @return Map: Trả về kết quả thành công hoặc thất bại.
      */
     @Guest
