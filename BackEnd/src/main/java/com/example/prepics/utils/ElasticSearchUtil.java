@@ -13,9 +13,8 @@ public class ElasticSearchUtil {
         return  supplier;
     }
 
-
     public static FuzzyQuery createFuzzyQuery(String fieldName, String approximate){
         val fuzzyQuery  = new FuzzyQuery.Builder();
-        return  fuzzyQuery.field(fieldName).value(approximate).build();
+        return  fuzzyQuery.field(fieldName).value(approximate).fuzziness("3").build();
     }
 }

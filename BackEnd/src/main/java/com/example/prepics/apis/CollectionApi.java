@@ -1,9 +1,11 @@
 package com.example.prepics.apis;
 
+import com.example.prepics.annotations.User;
 import com.example.prepics.entity.Collection;
 import com.example.prepics.services.api.CollectionApiService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -29,7 +31,7 @@ public class CollectionApi {
      * @return ResponseEntity: Trả về phản hồi cho việc tạo bộ sưu tập.
      * @throws ChangeSetPersister.NotFoundException: Nếu không tìm thấy người dùng.
      **/
-
+    @User
     @PostMapping
     public ResponseEntity<?> createCollection(Authentication authentication, @RequestBody String collectionName) {
         return ResponseEntity.ok(collectionApiService.createCollection(authentication, collectionName));
@@ -48,6 +50,7 @@ public class CollectionApi {
      * @return ResponseEntity: Trả về phản hồi cho việc cập nhật bộ sưu tập.
      * @throws ChangeSetPersister.NotFoundException: Nếu không tìm thấy bộ sưu tập hoặc người dùng.
      */
+    @User
     @PutMapping("/{id}")
     public ResponseEntity<?> updateCollection(Authentication authentication, @PathVariable Long id,
                                                 @RequestBody Collection model) {
@@ -68,6 +71,7 @@ public class CollectionApi {
      * @return ResponseEntity: Trả về phản hồi cho việc xóa bộ sưu tập.
      * @throws ChangeSetPersister.NotFoundException: Nếu không tìm thấy bộ sưu tập hoặc người dùng.
      */
+    @User
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteCollection(Authentication authentication, @PathVariable Long id) {
         return ResponseEntity.ok(collectionApiService.deleteCollection(authentication, id));
@@ -102,6 +106,7 @@ public class CollectionApi {
      * @return ResponseEntity: Trả về phản hồi cho việc thêm nội dung vào bộ sưu tập.
      * @throws ChangeSetPersister.NotFoundException: Nếu không tìm thấy bộ sưu tập hoặc nội dung.
      */
+    @User
     @PostMapping("/{collectionId}/contents/{contentId}")
     public ResponseEntity<?> addContentToCollection(Authentication authentication, @PathVariable Long collectionId,
                                                       @PathVariable String contentId) {
@@ -121,6 +126,7 @@ public class CollectionApi {
      * @return ResponseEntity: Trả về phản hồi cho việc xóa nội dung khỏi bộ sưu tập.
      * @throws ChangeSetPersister.NotFoundException: Nếu không tìm thấy bộ sưu tập hoặc nội dung.
      */
+    @User
     @DeleteMapping("/{collectionId}/contents/{contentId}")
     public ResponseEntity<?> removeContentFromCollection(Authentication authentication, @PathVariable Long collectionId,
                                                            @PathVariable String contentId) {

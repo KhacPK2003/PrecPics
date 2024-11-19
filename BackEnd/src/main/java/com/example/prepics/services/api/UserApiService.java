@@ -149,5 +149,4 @@ public class UserApiService {
 
         return ResponseProperties.createResponse(200, "Success", true);
     }
-
 }

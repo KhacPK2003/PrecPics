@@ -55,6 +55,9 @@ public class Content implements Serializable {
     @Column(name = "data_url")
     private String dataUrl;
 
+    @Column(name = "data_byte")
+    private String dataByte;
+
     //type true la gallery, false la video
     @Column(name = "type")
     private boolean type;

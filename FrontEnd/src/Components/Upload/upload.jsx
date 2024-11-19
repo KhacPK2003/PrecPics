@@ -57,6 +57,11 @@ function Upload() {
             tags: tags,
         };
 
+        // const formData = new FormData();
+        // formData.append('file', media);
+        // formData.append('request', JSON.stringify(requestData));
+        // console.log(token);
+
         const formData = new FormData();
         formData.append('file', media);
         formData.append(

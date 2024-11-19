@@ -2,6 +2,7 @@ package com.example.prepics.services.entity.serviceImpl;
 
 import com.example.prepics.entity.Tag;
 import com.example.prepics.repositories.TagRepository;
+import com.example.prepics.services.elasticsearch.TagESDocumentService;
 import com.example.prepics.services.entity.TagService;
 import jakarta.persistence.EntityExistsException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,9 @@ public class TagServiceImpl implements TagService {
 
     @Autowired
     private TagRepository tagRepository;
+
+    @Autowired
+    private TagESDocumentService tagESDocumentService;
 
     @Override
     public Optional<Tag> delete(Long aLong) throws ChangeSetPersister.NotFoundException {
@@ -56,7 +60,8 @@ public class TagServiceImpl implements TagService {
         if (tag.isPresent()) {
             return tag;
         }
-
-        return create(name);
+        Tag result = create(name).orElseThrow(RuntimeException::new);
+        tagESDocumentService.insertTag(result);
+        return Optional.of(result);
     }
 }
