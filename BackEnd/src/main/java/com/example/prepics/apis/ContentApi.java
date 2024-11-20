@@ -55,7 +55,7 @@ public class ContentApi {
     @PostMapping(value = "/upload", consumes = {APPLICATION_JSON_VALUE, MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<?> uploadContent(
             Authentication authentication,@RequestPart ContentDTO request, @RequestPart MultipartFile file) throws Exception {
-        return ResponseEntity.ok(contentApiService.uploadContent(authentication, file, request));
+        return contentApiService.uploadContent(authentication, file, request);
     }
 
     /**
@@ -77,7 +77,7 @@ public class ContentApi {
     public ResponseEntity<?> deleteContent(
             Authentication authentication,
             @PathVariable("id") String id) throws IOException, ChangeSetPersister.NotFoundException {
-        return ResponseEntity.ok(contentApiService.deleteContent(authentication, id));
+        return contentApiService.deleteContent(authentication, id);
     }
 
     /**
@@ -100,7 +100,7 @@ public class ContentApi {
             Authentication authentication,
             @PathVariable("contentId") String contentId,
             @RequestParam("tags") String tags) throws ChangeSetPersister.NotFoundException {
-        return ResponseEntity.ok(contentApiService.updateTags(authentication, contentId, tags));
+        return contentApiService.updateTags(authentication, contentId, tags);
     }
 
     /**
@@ -114,7 +114,7 @@ public class ContentApi {
     @Guest
     @GetMapping("/all")
     public ResponseEntity<?> findAllContent() throws ChangeSetPersister.NotFoundException {
-        return ResponseEntity.ok(contentApiService.findAllContent());
+        return contentApiService.findAllContent();
     }
 
     /**
@@ -133,7 +133,7 @@ public class ContentApi {
             @RequestParam(value = "page", required = false, defaultValue = "1") Integer page,
             @RequestParam(value = "size", required = false, defaultValue = "10") Integer size)
             throws ChangeSetPersister.NotFoundException {
-        return ResponseEntity.ok(contentApiService.findAllByType((type == 0), page, size));
+        return contentApiService.findAllByType((type == 0), page, size);
     }
 
     /**
@@ -152,7 +152,7 @@ public class ContentApi {
             @RequestParam(value = "page", required = false, defaultValue = "1") Integer page,
             @RequestParam(value = "size", required = false, defaultValue = "10") Integer size)
             throws ChangeSetPersister.NotFoundException {
-        return ResponseEntity.ok(contentApiService.findAllByTags(List.of(tags.split(", ")),page, size));
+        return contentApiService.findAllByTags(List.of(tags.split(", ")),page, size);
     }
 
     /**
@@ -168,7 +168,7 @@ public class ContentApi {
     @GetMapping("/{id}")
     public ResponseEntity<?> findContentById(
             @PathVariable("id") String id) throws ChangeSetPersister.NotFoundException {
-        return ResponseEntity.ok(contentApiService.findContentById(id));
+        return contentApiService.findContentById(id);
     }
 
     /**
@@ -241,7 +241,7 @@ public class ContentApi {
     @Admin
     @PostMapping("elastic/insert")
     public ResponseEntity<?> doInsertTagsIntoElastic(Authentication authentication) {
-        return ResponseEntity.ok(contentApiService.doInsertTagsIntoElastic(authentication));
+        return contentApiService.doInsertTagsIntoElastic(authentication);
     }
 
     /**
@@ -254,7 +254,7 @@ public class ContentApi {
     @Admin
     @DeleteMapping("elastic/delete")
     public ResponseEntity<?> doDeleteTagsInElastic(Authentication authentication) {
-        return ResponseEntity.ok(contentApiService.doDeleteTagsInElastic(authentication));
+        return contentApiService.doDeleteTagsInElastic(authentication);
     }
 
     /**
@@ -271,7 +271,7 @@ public class ContentApi {
                                                @RequestParam(value = "approximates") String approximates,
                                                @RequestParam(value = "page", required = false, defaultValue = "1") Integer page,
                                                @RequestParam(value = "size", required = false, defaultValue = "10") Integer size) {
-        return ResponseEntity.ok(contentApiService.doSearchWithFuzzy(indexName, fieldName, approximates, page, size));
+        return contentApiService.doSearchWithFuzzy(indexName, fieldName, approximates, page, size);
     }
 }
 

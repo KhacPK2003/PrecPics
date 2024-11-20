@@ -3,7 +3,6 @@ package com.example.prepics.services.api;
 import co.elastic.clients.elasticsearch.core.SearchResponse;
 import co.elastic.clients.elasticsearch.core.search.Hit;
 import com.example.prepics.dto.ContentDTO;
-import com.example.prepics.entity.Comment;
 import com.example.prepics.entity.Content;
 import com.example.prepics.entity.Tag;
 import com.example.prepics.entity.User;
@@ -17,6 +16,7 @@ import com.example.prepics.services.entity.*;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.crossstore.ChangeSetPersister;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,8 +27,6 @@ import java.io.IOException;
 
 import java.math.BigInteger;
 import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.*;
 
 @Service
@@ -71,7 +69,7 @@ public class ContentApiService {
     }
 
     @Transactional("masterTransactionManager")
-    public Map<String, Object> uploadContent(Authentication authentication, MultipartFile file, ContentDTO contentDTO)
+    public ResponseEntity<?> uploadContent(Authentication authentication, MultipartFile file, ContentDTO contentDTO)
             throws Exception {
         User user = getAuthenticatedUser(authentication);
 
@@ -122,7 +120,7 @@ public class ContentApiService {
         return ResponseProperties.createResponse(200, "Success", content);
     }
     @Transactional("masterTransactionManager")
-    public Map<String, Object> deleteContent(Authentication authentication, String id)
+    public ResponseEntity<?> deleteContent(Authentication authentication, String id)
             throws IOException, ChangeSetPersister.NotFoundException {
 
         Content content = contentService.findById(Content.class, id)
@@ -133,7 +131,7 @@ public class ContentApiService {
         return ResponseProperties.createResponse(200, "Success", fileUpload);
     }
     @Transactional("masterTransactionManager")
-    public Map<String, Object> updateTags(Authentication authentication, String contentId, String tags)
+    public ResponseEntity<?> updateTags(Authentication authentication, String contentId, String tags)
             throws ChangeSetPersister.NotFoundException {
         User user = getAuthenticatedUser(authentication);
 
@@ -158,28 +156,28 @@ public class ContentApiService {
         return ResponseProperties.createResponse(200, "Success", true);
     }
     @Transactional("slaveTransactionManager")
-    public Map<String, Object> findAllContent() throws ChangeSetPersister.NotFoundException {
+    public ResponseEntity<?> findAllContent() throws ChangeSetPersister.NotFoundException {
         List<Content> contents = contentService.findAll(Content.class)
                 .orElseThrow(ChangeSetPersister.NotFoundException::new);
 
         return ResponseProperties.createResponse(200, "Success", contents);
     }
 
-    public Map<String, Object> findAllByType(boolean type, Integer page, Integer size) throws ChangeSetPersister.NotFoundException {
+    public ResponseEntity<?> findAllByType(boolean type, Integer page, Integer size) throws ChangeSetPersister.NotFoundException {
         List<Content> contents = contentService.findAll(Content.class, type, page, size)
                 .orElseThrow(ChangeSetPersister.NotFoundException::new);
 
         return ResponseProperties.createResponse(200, "Success", contents);
     }
 
-    public Map<String, Object> findAllByTags(List<String> tags, Integer page, Integer size) throws ChangeSetPersister.NotFoundException {
+    public ResponseEntity<?> findAllByTags(List<String> tags, Integer page, Integer size) throws ChangeSetPersister.NotFoundException {
         List<Content> contents = contentService.findContentsByTags(tags, page, size)
                 .orElseThrow(ChangeSetPersister.NotFoundException::new);
 
         return ResponseProperties.createResponse(200, "Success", contents);
     }
 
-    public Map<String, Object> findContentById(String id) throws ChangeSetPersister.NotFoundException {
+    public ResponseEntity<?> findContentById(String id) throws ChangeSetPersister.NotFoundException {
         Content content = contentService.findById(Content.class, id)
                 .orElseThrow(() -> new RuntimeException("Content not found"));
 
@@ -223,7 +221,7 @@ public class ContentApiService {
         return getContentWithSize(authentication, model, false);
     }
 
-    public Map<String, Object> doSearchWithFuzzy(String indexName, String fieldName, String approximates
+    public ResponseEntity<?> doSearchWithFuzzy(String indexName, String fieldName, String approximates
             , Integer page, Integer size) {
         List<String> tagNames = List.of(approximates.split(","));
         Set<String> tags = new HashSet<>();
@@ -250,7 +248,7 @@ public class ContentApiService {
         }
     }
 
-    public Map<String, Object> doInsertTagsIntoElastic(Authentication authentication) {
+    public ResponseEntity<?> doInsertTagsIntoElastic(Authentication authentication) {
         try {
             // Lấy danh sách nội dung
             List<Tag> tags = tagService.findAll(Tag.class)
@@ -267,7 +265,7 @@ public class ContentApiService {
         }
     }
 
-    public Map<String, Object> doDeleteTagsInElastic(Authentication authentication) {
+    public ResponseEntity<?> doDeleteTagsInElastic(Authentication authentication) {
         try {
             // Xóa toàn bộ nội dung trong Elasticsearch
             tagESDocumentService.deleteAll();
@@ -283,7 +281,7 @@ public class ContentApiService {
     }
 //
 //    @com.example.prepics.annotations.User
-//    public Map<String, Object> doDeleteComment(Authentication authentication, Long commentId)
+//    public ResponseEntity<?> doDeleteComment(Authentication authentication, Long commentId)
 //            throws ChangeSetPersister.NotFoundException {
 //        User user = getAuthenticatedUser(authentication);
 //        Comment comment = commentService.findById(Comment.class, commentId)

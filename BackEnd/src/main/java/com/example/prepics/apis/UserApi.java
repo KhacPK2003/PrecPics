@@ -35,7 +35,7 @@ public class UserApi {
     @PostMapping("/login")
     public ResponseEntity<?> loginUserWithGoogle(Authentication authentication)
             throws ChangeSetPersister.NotFoundException {
-        return ResponseEntity.ok(userApiService.loginUserWithGoogle(authentication));
+        return userApiService.loginUserWithGoogle(authentication);
     }
 
     /**
@@ -53,7 +53,7 @@ public class UserApi {
     @Admin
     @GetMapping
     public ResponseEntity<?> findAll(Authentication authentication) throws ChangeSetPersister.NotFoundException {
-        return ResponseEntity.ok(userApiService.findAll(authentication));
+        return userApiService.findAll(authentication);
     }
 
     /**
@@ -71,7 +71,7 @@ public class UserApi {
     @Guest
     @GetMapping("/{id}")
     public ResponseEntity<?> findById(@PathVariable String id) throws ChangeSetPersister.NotFoundException {
-        return ResponseEntity.ok(userApiService.findById(id));
+        return userApiService.findById(id);
     }
 
     /**
@@ -93,7 +93,7 @@ public class UserApi {
     public ResponseEntity<?> update(Authentication authentication, @PathVariable String id, @RequestBody User entity)
             throws ChangeSetPersister.NotFoundException {
         entity.setId(id);  // Đảm bảo ID đúng
-        return ResponseEntity.ok(userApiService.update(authentication, entity));
+        return userApiService.update(authentication, entity);
     }
 
     /**
@@ -111,7 +111,7 @@ public class UserApi {
     @com.example.prepics.annotations.User
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable String id) throws ChangeSetPersister.NotFoundException {
-        return ResponseEntity.ok(userApiService.delete(id));
+        return userApiService.delete(id);
     }
 
     /**
@@ -131,7 +131,7 @@ public class UserApi {
     @PostMapping("/{userId}/follow")
     public ResponseEntity<?> doFollowUser(Authentication authentication, @PathVariable String userId)
             throws ChangeSetPersister.NotFoundException {
-        return ResponseEntity.ok(userApiService.doFollowUser(authentication, userId));
+        return userApiService.doFollowUser(authentication, userId);
     }
 
     /**
@@ -152,6 +152,6 @@ public class UserApi {
     @DeleteMapping("/{followeeId}/unfollow/{followerId}")
     public ResponseEntity<?> doUnfollowUser(Authentication authentication, @PathVariable String followeeId
             , @PathVariable String followerId) throws ChangeSetPersister.NotFoundException {
-        return ResponseEntity.ok(userApiService.doUnfollowUser(authentication, followeeId, followerId));
+        return userApiService.doUnfollowUser(authentication, followeeId, followerId);
     }
 }
