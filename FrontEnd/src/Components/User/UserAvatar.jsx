@@ -6,15 +6,19 @@ import Menu from '@mui/material/Menu';
 import Tooltip from '@mui/material/Tooltip';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
+import { useNavigate } from 'react-router-dom';
+
 
 
 const settings = ['Trang cá nhân', 'Logout'];
 function UserAvatar({User , Logout}){
     const [anchorElUser, setAnchorElUser] = React.useState(null);
+    const navigate = useNavigate();
     const handleOpenUserMenu = (event) => {
         setAnchorElUser(event.currentTarget);
     };
     const handleCloseUserMenu = (setting) => {
+        if(setting === 'Trang cá nhân') navigate('/about');
         if(setting === 'Logout') Logout();
         setAnchorElUser(null);
       };
