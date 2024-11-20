@@ -12,6 +12,7 @@ import com.example.prepics.services.entity.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.crossstore.ChangeSetPersister;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
@@ -43,7 +44,7 @@ public class CollectionApiService {
     }
 
 
-    public Map<String, Object> createCollection(Authentication authentication, String collectionName) {
+    public ResponseEntity<?> createCollection(Authentication authentication, String collectionName) {
         try {
             User user = getAuthenticatedUser(authentication);
 
@@ -66,7 +67,7 @@ public class CollectionApiService {
         }
     }
 
-    public Map<String, Object> updateCollection(Authentication authentication, Collection model) {
+    public ResponseEntity<?> updateCollection(Authentication authentication, Collection model) {
         try {
             User user = getAuthenticatedUser(authentication);
 
@@ -88,7 +89,7 @@ public class CollectionApiService {
         }
     }
 
-    public Map<String, Object> deleteCollection(Authentication authentication, Long collectionId) {
+    public ResponseEntity<?> deleteCollection(Authentication authentication, Long collectionId) {
         try {
             User user = getAuthenticatedUser(authentication);
 
@@ -108,7 +109,7 @@ public class CollectionApiService {
         }
     }
 
-    public Map<String, Object> getCollection(Long collectionId) {
+    public ResponseEntity<?> getCollection(Long collectionId) {
         try {
             Collection collection = collectionService.findById(Collection.class, collectionId)
                     .orElseThrow(ChangeSetPersister.NotFoundException::new);
@@ -118,7 +119,7 @@ public class CollectionApiService {
         }
     }
 
-    public Map<String, Object> addContentToCollection(Authentication authentication, Long collectionId, String contentId) {
+    public ResponseEntity<?> addContentToCollection(Authentication authentication, Long collectionId, String contentId) {
         try {
             User user = getAuthenticatedUser(authentication);
 
@@ -146,7 +147,7 @@ public class CollectionApiService {
         }
     }
 
-    public Map<String, Object> removeContentToCollection(Authentication authentication, Long collectionId, String contentId) {
+    public ResponseEntity<?> removeContentToCollection(Authentication authentication, Long collectionId, String contentId) {
         try {
             User user = getAuthenticatedUser(authentication);
 

@@ -29,10 +29,10 @@ public class Comment implements Serializable {
     @Column(nullable = false, name = "content")
     private String contentValue;
 
-    @Column(insertable=false, updatable=false, name = "user_id")
+    @Column(name = "user_id")
     private String userId;
 
-    @Column(insertable=false, updatable=false, name = "content_id")
+    @Column(name = "content_id")
     private String contentId;
 
     @ManyToOne(fetch = FetchType.EAGER)

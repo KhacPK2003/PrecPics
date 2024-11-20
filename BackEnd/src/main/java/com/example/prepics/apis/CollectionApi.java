@@ -34,7 +34,7 @@ public class CollectionApi {
     @User
     @PostMapping
     public ResponseEntity<?> createCollection(Authentication authentication, @RequestBody String collectionName) {
-        return ResponseEntity.ok(collectionApiService.createCollection(authentication, collectionName));
+        return collectionApiService.createCollection(authentication, collectionName);
     }
 
     /**
@@ -55,7 +55,7 @@ public class CollectionApi {
     public ResponseEntity<?> updateCollection(Authentication authentication, @PathVariable Long id,
                                                 @RequestBody Collection model) {
         model.setId(id);  // Đảm bảo ID đúng
-        return ResponseEntity.ok(collectionApiService.updateCollection(authentication, model));
+        return collectionApiService.updateCollection(authentication, model);
     }
 
     /**
@@ -74,7 +74,7 @@ public class CollectionApi {
     @User
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteCollection(Authentication authentication, @PathVariable Long id) {
-        return ResponseEntity.ok(collectionApiService.deleteCollection(authentication, id));
+        return collectionApiService.deleteCollection(authentication, id);
     }
 
     /**
@@ -91,7 +91,7 @@ public class CollectionApi {
      */
     @GetMapping("/{id}")
     public ResponseEntity<?> getCollection(@PathVariable Long id) {
-        return ResponseEntity.ok(collectionApiService.getCollection(id));
+        return collectionApiService.getCollection(id);
     }
 
     /**
@@ -110,7 +110,7 @@ public class CollectionApi {
     @PostMapping("/{collectionId}/contents/{contentId}")
     public ResponseEntity<?> addContentToCollection(Authentication authentication, @PathVariable Long collectionId,
                                                       @PathVariable String contentId) {
-        return ResponseEntity.ok(collectionApiService.addContentToCollection(authentication, collectionId, contentId));
+        return collectionApiService.addContentToCollection(authentication, collectionId, contentId);
     }
 
     /**
@@ -130,7 +130,7 @@ public class CollectionApi {
     @DeleteMapping("/{collectionId}/contents/{contentId}")
     public ResponseEntity<?> removeContentFromCollection(Authentication authentication, @PathVariable Long collectionId,
                                                            @PathVariable String contentId) {
-        return ResponseEntity.ok(collectionApiService.removeContentToCollection(authentication, collectionId, contentId));
+        return collectionApiService.removeContentToCollection(authentication, collectionId, contentId);
     }
 }
 

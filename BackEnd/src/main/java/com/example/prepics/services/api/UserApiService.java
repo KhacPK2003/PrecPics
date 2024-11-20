@@ -10,6 +10,7 @@ import com.example.prepics.services.entity.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.crossstore.ChangeSetPersister;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
@@ -31,7 +32,7 @@ public class UserApiService {
     @Autowired
     private FolloweeService followeeService;
 
-    public Map<String, Object> loginUserWithGoogle(Authentication authentication)
+    public ResponseEntity<?> loginUserWithGoogle(Authentication authentication)
             throws ChangeSetPersister.NotFoundException {
         // Lấy thông tin người dùng từ Authentication
         User userDecode = (User) authentication.getPrincipal();
@@ -51,7 +52,7 @@ public class UserApiService {
         return ResponseProperties.createResponse(200, "Success", user);
     }
 
-    public Map<String, Object> findAll(Authentication authentication) throws ChangeSetPersister.NotFoundException {
+    public ResponseEntity<?> findAll(Authentication authentication) throws ChangeSetPersister.NotFoundException {
         // Lấy thông tin người dùng hiện tại
         User userDecode = (User) authentication.getPrincipal();
         User currentUser = userService.findByEmail(User.class, userDecode.getEmail())
@@ -70,7 +71,7 @@ public class UserApiService {
         return ResponseProperties.createResponse(200, "Success", users);
     }
 
-    public Map<String, Object> findById(String id) throws ChangeSetPersister.NotFoundException {
+    public ResponseEntity<?> findById(String id) throws ChangeSetPersister.NotFoundException {
         // Tìm người dùng theo ID
         User user = userService.findById(User.class, id)
                 .orElseThrow(ChangeSetPersister.NotFoundException::new);
@@ -79,7 +80,7 @@ public class UserApiService {
         return ResponseProperties.createResponse(200, "Success", user);
     }
 
-    public Map<String, Object> update(Authentication authentication, User entity)
+    public ResponseEntity<?> update(Authentication authentication, User entity)
             throws ChangeSetPersister.NotFoundException {
         // Lấy thông tin người dùng hiện tại
         User userDecode = (User) authentication.getPrincipal();
@@ -100,14 +101,14 @@ public class UserApiService {
     }
 
 
-    public Map<String, Object> delete(String id) throws ChangeSetPersister.NotFoundException {
+    public ResponseEntity<?> delete(String id) throws ChangeSetPersister.NotFoundException {
         User result = userService.findById(User.class, id).orElseThrow(ChangeSetPersister.NotFoundException::new);
 
         userService.delete(id);
         return ResponseProperties.createResponse(200, "Success", result);
     }
 
-    public Map<String, Object> doFollowUser(Authentication authentication, String userId)
+    public ResponseEntity<?> doFollowUser(Authentication authentication, String userId)
             throws ChangeSetPersister.NotFoundException {
         User userDecode = (User) authentication.getPrincipal();
         User currentUser = userService.findByEmail(User.class, userDecode.getEmail())
@@ -133,7 +134,7 @@ public class UserApiService {
         return ResponseProperties.createResponse(200, "Success", true);
     }
 
-    public Map<String, Object> doUnfollowUser(Authentication authentication, String followeeId, String followerId)
+    public ResponseEntity<?> doUnfollowUser(Authentication authentication, String followeeId, String followerId)
             throws ChangeSetPersister.NotFoundException {
         User userDecode = (User) authentication.getPrincipal();
         User currentUser = userService.findByEmail(User.class, userDecode.getEmail())
