@@ -68,7 +68,7 @@ public class Content implements Serializable {
     @Column(name = "is_public")
     private boolean isPublic;
 
-    @Column(name = "user_id", insertable=false, updatable=false)
+    @Column(name = "user_id")
     private String userId;
 
     @OneToMany(mappedBy = "contentId", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
@@ -91,7 +91,17 @@ public class Content implements Serializable {
     )
     Set<GotTags> gotTags;
 
+    @OneToMany(mappedBy = "contentId", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JsonIgnoreProperties(
+            value = {
+                    "applications",
+                    "user"
+            }
+    )
+    Set<Comment> comments;
+
     @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "user_id", insertable = false, updatable = false)
     @JsonIgnoreProperties(
             value = {
                     "applications",

@@ -27,15 +27,15 @@ public class Followers implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "follower_id", insertable=false, updatable=false)
+    @Column(name = "follower_id")
     private String followerId;
 
-    @Column(name = "user_id", insertable=false, updatable=false)
+    @Column(name = "user_id")
     private String userId;
 
 
     @ManyToOne
-    @JoinColumn(name = "follower_id")
+    @JoinColumn(name = "follower_id", insertable=false, updatable=false)
     @JsonIgnoreProperties(
             value = {
                     "applications",
@@ -48,7 +48,7 @@ public class Followers implements Serializable {
     private User follower;
 
     @OneToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", insertable=false, updatable=false)
     @JsonIgnore
     private User user;
 }

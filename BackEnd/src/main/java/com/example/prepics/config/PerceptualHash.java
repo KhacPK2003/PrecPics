@@ -1,6 +1,5 @@
 package com.example.prepics.config;
 
-import com.github.kokorin.jaffree.LogLevel;
 import com.github.kokorin.jaffree.ffmpeg.FFmpeg;
 import com.github.kokorin.jaffree.ffmpeg.UrlInput;
 import com.github.kokorin.jaffree.ffmpeg.UrlOutput;
@@ -96,7 +95,6 @@ public class PerceptualHash {
 
         return hash.toString();
     }
-
 
     public static String processVideo(MultipartFile file) throws Exception {
         // Lưu tệp tạm thời

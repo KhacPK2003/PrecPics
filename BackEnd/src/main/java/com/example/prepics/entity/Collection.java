@@ -29,7 +29,7 @@ public class Collection implements Serializable {
     @Column(name = "name")
     private String name;
 
-    @Column(name = "user_id", insertable=false, updatable=false)
+    @Column(name = "user_id")
     private String userId;
 
     @Column(name = "date_create")
@@ -49,6 +49,7 @@ public class Collection implements Serializable {
     Set<InCols> inCols;
 
     @ManyToOne()
+    @JoinColumn(name = "user_id", insertable=false, updatable=false)
     @JsonIgnoreProperties(
             value = {
                     "applications",

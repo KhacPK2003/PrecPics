@@ -1,12 +1,10 @@
 package com.example.prepics.repositories;
 
-import com.example.prepics.entity.GotTags;
+import com.example.prepics.entity.Comment;
 import com.example.prepics.interfaces.CRUDInterface;
-import com.example.prepics.services.elasticsearch.TagESDocumentService;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.PersistenceContextType;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,7 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public class GotTagsRepository implements CRUDInterface<GotTags, Long> {
+public class CommentRepository implements CRUDInterface<Comment, Long> {
     @PersistenceContext(unitName = "masterEntityManagerFactory", type = PersistenceContextType.TRANSACTION)
     private EntityManager masterEntityManager;
 
@@ -24,34 +22,34 @@ public class GotTagsRepository implements CRUDInterface<GotTags, Long> {
 
     @Override
     @Transactional("masterTransactionManager")
-    public Optional<List<GotTags>> findAll(Class<GotTags> clazz) throws ChangeSetPersister.NotFoundException {
+    public Optional<List<Comment>> findAll(Class<Comment> clazz) throws ChangeSetPersister.NotFoundException {
         return Optional.ofNullable(masterEntityManager
-                .createQuery("SELECT a FROM GotTags a", GotTags.class).getResultList());
+                .createQuery("SELECT a FROM Comment a", Comment.class).getResultList());
     }
 
     @Override
     @Transactional("slaveTransactionManager")
-    public Optional<GotTags> findById(Class<GotTags> clazz, Long id) throws ChangeSetPersister.NotFoundException {
+    public Optional<Comment> findById(Class<Comment> clazz, Long id) throws ChangeSetPersister.NotFoundException {
         return Optional.ofNullable(slaveEntityManager.find(clazz, id));
     }
 
     @Override
     @Transactional("masterTransactionManager")
-    public Optional<GotTags> create(GotTags entity) {
+    public Optional<Comment> create(Comment entity) {
         masterEntityManager.persist(entity);
         return Optional.ofNullable(entity);
     }
 
     @Override
     @Transactional("masterTransactionManager")
-    public Optional<GotTags> update(GotTags entity) {
+    public Optional<Comment> update(Comment entity) {
         return Optional.ofNullable(masterEntityManager.merge(entity));
     }
 
     @Override
     @Transactional("masterTransactionManager")
-    public Optional<GotTags> delete(Long id) throws ChangeSetPersister.NotFoundException {
-        Optional<GotTags> result = Optional.ofNullable(slaveEntityManager.find(GotTags.class, id));
+    public Optional<Comment> delete(Long id) throws ChangeSetPersister.NotFoundException {
+        Optional<Comment> result = Optional.ofNullable(slaveEntityManager.find(Comment.class, id));
         if (result.isEmpty()) {
             return Optional.empty();
         }
@@ -59,16 +57,4 @@ public class GotTagsRepository implements CRUDInterface<GotTags, Long> {
                 : masterEntityManager.merge(result.get()));
         return result;
     }
-
-    @Transactional("slaveTransactionManager")
-    public Optional<GotTags> findByContentIdAndTagId(String contentId, Long tagId)
-            throws ChangeSetPersister.NotFoundException {
-        String query = "SELECT g FROM GotTags g WHERE g.contentId = :contentId AND g.tagId = :tagId";
-        return slaveEntityManager.createQuery(query, GotTags.class)
-                .setParameter("contentId", contentId)
-                .setParameter("tagId", tagId)
-                .getResultStream()
-                .findFirst();
-    }
-
 }

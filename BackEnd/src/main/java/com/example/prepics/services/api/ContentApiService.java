@@ -3,6 +3,7 @@ package com.example.prepics.services.api;
 import co.elastic.clients.elasticsearch.core.SearchResponse;
 import co.elastic.clients.elasticsearch.core.search.Hit;
 import com.example.prepics.dto.ContentDTO;
+import com.example.prepics.entity.Comment;
 import com.example.prepics.entity.Content;
 import com.example.prepics.entity.Tag;
 import com.example.prepics.entity.User;
@@ -12,15 +13,13 @@ import com.example.prepics.repositories.ContentRepository;
 import com.example.prepics.services.cloudinary.CloudinaryService;
 import com.example.prepics.services.elasticsearch.ElasticSearchService;
 import com.example.prepics.services.elasticsearch.TagESDocumentService;
-import com.example.prepics.services.entity.ContentService;
-import com.example.prepics.services.entity.GotTagsService;
-import com.example.prepics.services.entity.TagService;
-import com.example.prepics.services.entity.UserService;
+import com.example.prepics.services.entity.*;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -60,6 +59,9 @@ public class ContentApiService {
     private TagService tagService;
 
     @Autowired
+    private CommentService commentService;
+
+    @Autowired
     private TagESDocumentService tagESDocumentService;
 
     private User getAuthenticatedUser(Authentication authentication) throws ChangeSetPersister.NotFoundException {
@@ -68,8 +70,7 @@ public class ContentApiService {
                 .orElseThrow(ChangeSetPersister.NotFoundException::new);
     }
 
-
-
+    @Transactional("masterTransactionManager")
     public Map<String, Object> uploadContent(Authentication authentication, MultipartFile file, ContentDTO contentDTO)
             throws Exception {
         User user = getAuthenticatedUser(authentication);
@@ -91,7 +92,7 @@ public class ContentApiService {
                     .createResponse(400, "Error: " + fileType + " already exists", null);
         }
 
-        // Upload file to Cloudinary
+//         Upload file to Cloudinary
         Map<String, Object> fileUpload = isImage ? cloudinaryService.uploadFile(file)
                 : cloudinaryService.uploadVideo(fileBytes);
 
@@ -106,8 +107,7 @@ public class ContentApiService {
         content.setDescription(contentDTO.getDescription());
         content.setType(isImage);
         content.setDateUpload(BigInteger.valueOf(new Date().getTime()));
-        content.setUserId(user.getId());
-
+        content.setUser(user);
         contentService.create(content);
 
         List<String> tagNames = List.of(contentDTO.getTags().split(","));
@@ -119,9 +119,9 @@ public class ContentApiService {
             }
         });
 
-        return ResponseProperties.createResponse(200, "Success", hashData);
+        return ResponseProperties.createResponse(200, "Success", content);
     }
-
+    @Transactional("masterTransactionManager")
     public Map<String, Object> deleteContent(Authentication authentication, String id)
             throws IOException, ChangeSetPersister.NotFoundException {
 
@@ -132,7 +132,7 @@ public class ContentApiService {
 
         return ResponseProperties.createResponse(200, "Success", fileUpload);
     }
-
+    @Transactional("masterTransactionManager")
     public Map<String, Object> updateTags(Authentication authentication, String contentId, String tags)
             throws ChangeSetPersister.NotFoundException {
         User user = getAuthenticatedUser(authentication);
@@ -157,7 +157,7 @@ public class ContentApiService {
 
         return ResponseProperties.createResponse(200, "Success", true);
     }
-
+    @Transactional("slaveTransactionManager")
     public Map<String, Object> findAllContent() throws ChangeSetPersister.NotFoundException {
         List<Content> contents = contentService.findAll(Content.class)
                 .orElseThrow(ChangeSetPersister.NotFoundException::new);
@@ -281,4 +281,14 @@ public class ContentApiService {
             return ResponseProperties.createResponse(500, "Unexpected error occurred", null);
         }
     }
+//
+//    @com.example.prepics.annotations.User
+//    public Map<String, Object> doDeleteComment(Authentication authentication, Long commentId)
+//            throws ChangeSetPersister.NotFoundException {
+//        User user = getAuthenticatedUser(authentication);
+//        Comment comment = commentService.findById(Comment.class, commentId)
+//                .orElseThrow(ChangeSetPersister.NotFoundException::new);
+//        Content content = contentService.findById(Content.class, )
+//        if (comment.getUserId().equals(user.getId()) || ) {}
+//    }
 }

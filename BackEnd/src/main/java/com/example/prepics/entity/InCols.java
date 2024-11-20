@@ -25,10 +25,11 @@ public class InCols implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "content_id", insertable=false, updatable=false)
+    @Column(name = "content_id")
     private String contentId;
 
     @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "content_id", insertable=false, updatable=false)
     @JsonIgnoreProperties(
             value = {
                     "applications",
@@ -39,10 +40,11 @@ public class InCols implements Serializable {
     )
     private Content content;
 
-    @Column(name = "collection_id", insertable=false, updatable=false)
+    @Column(name = "collection_id")
     private String collectionId;
 
     @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "collection_id", insertable=false, updatable=false)
     @JsonIgnoreProperties(
             value = {
                     "applications",

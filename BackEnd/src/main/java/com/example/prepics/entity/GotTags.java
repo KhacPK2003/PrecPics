@@ -24,10 +24,11 @@ public class GotTags implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "content_id", insertable=false, updatable=false)
+    @Column(name = "content_id")
     private String contentId;
 
     @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "content_id", insertable=false, updatable=false)
     @JsonIgnoreProperties(
             value = {
                     "applications",
@@ -38,10 +39,11 @@ public class GotTags implements Serializable {
     )
     private Content content;
 
-    @Column(name = "tag_id", insertable=false, updatable=false)
+    @Column(name = "tag_id")
     private Long tagId;
 
     @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "tag_id", insertable=false, updatable=false)
     @JsonIgnoreProperties(
             value = {
                     "applications",
