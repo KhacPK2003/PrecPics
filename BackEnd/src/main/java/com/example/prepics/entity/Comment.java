@@ -11,44 +11,46 @@ import lombok.Setter;
 import java.io.Serial;
 import java.io.Serializable;
 
-@Entity
 @Getter
 @Setter
+@Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "followees", schema = "public")
-public class Followees implements Serializable {
+@Table(name = "comment", schema = "public")
+public class Comment implements Serializable {
 
     @Serial
-    private static final long serialVersionUID = 1123456573434L;
+    private static final long serialVersionUID = 11234134523452345L;
 
     @Id
-    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "followee_id")
-    private String followeeId;
+    @Column(nullable = false, name = "content")
+    private String contentValue;
 
-    @Column(name = "user_id")
+    @Column(insertable=false, updatable=false, name = "user_id")
     private String userId;
 
+    @Column(insertable=false, updatable=false, name = "content_id")
+    private String contentId;
 
-    @ManyToOne
-    @JoinColumn(name = "followee_id", insertable=false, updatable=false)
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(insertable=false, updatable=false, name = "user_id")
     @JsonIgnoreProperties(
             value = {
                     "applications",
                     "contents",
                     "collections",
+                    "user",
                     "followers",
                     "followees"
             }
     )
-    private User followee;
-
-    @OneToOne
-    @JoinColumn(name = "user_id", insertable=false, updatable=false)
-    @JsonIgnore
     private User user;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(insertable=false, updatable=false, name = "content_id")
+    @JsonIgnore()
+    private Content content;
 }

@@ -125,7 +125,7 @@ public class ContentServiceImpl implements ContentService {
         List<Content> contents = contentRepository.findAllByType(true)
                 .orElseThrow(ChangeSetPersister.NotFoundException::new);
         // Kiểm tra nếu tồn tại Content nào có Hamming Distance < 10
-        return contents.stream().map(Content::getDataByte).anyMatch(e -> hammingDistance(e, dataByte) < 10);
+        return contents.stream().map(Content::getDataByte).anyMatch(e -> hammingDistance(dataByte, e) < 10);
     }
 
     public int hammingDistance(String hash1, String hash2) {
@@ -138,6 +138,8 @@ public class ContentServiceImpl implements ContentService {
         BigInteger value1 = new BigInteger(hash1, 16);
         BigInteger value2 = new BigInteger(hash2, 16);
 
+        System.out.println("value1: " + value1);
+        System.out.println("value2: " + value2);
         // Tính XOR giữa hai giá trị
         BigInteger xor = value1.xor(value2);
 
@@ -167,6 +169,6 @@ public class ContentServiceImpl implements ContentService {
         // Tìm kiếm video trùng lặp với dữ liệu input
         return contents.stream()
                 .map(Content::getDataByte)
-                .anyMatch(existingData -> compareVideos(existingData, dataByte) > 70);
+                .anyMatch(existingData -> compareVideos(dataByte, existingData) > 10);
     }
 }
