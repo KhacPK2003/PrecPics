@@ -107,7 +107,6 @@ public class ContentApiService {
         content.setDateUpload(BigInteger.valueOf(new Date().getTime()));
         content.setUserId(user.getId());
         contentService.create(content);
-
         List<String> tagNames = List.of(contentDTO.getTags().split(","));
         tagNames.forEach(tagName -> {
             try {
@@ -117,13 +116,16 @@ public class ContentApiService {
             }
         });
 
-        return ResponseProperties.createResponse(200, "Success", content);
+        Content result = contentService.findById(Content.class, content.getId())
+                .orElseThrow(ChangeSetPersister.NotFoundException::new);
+
+        return ResponseProperties.createResponse(200, "Success", result);
     }
     @Transactional("masterTransactionManager")
     public ResponseEntity<?> deleteContent(Authentication authentication, String id)
             throws IOException, ChangeSetPersister.NotFoundException {
 
-        Content content = contentService.findById(Content.class, id)
+        Content isExist = contentService.findById(Content.class, id)
                 .orElseThrow(ChangeSetPersister.NotFoundException::new);
 
         Map<String, Object> fileUpload = cloudinaryService.deleteFile(id);
@@ -135,10 +137,10 @@ public class ContentApiService {
             throws ChangeSetPersister.NotFoundException {
         User user = getAuthenticatedUser(authentication);
 
-        Content content = contentRepository.findById(Content.class, contentId)
+        Content isExist = contentRepository.findById(Content.class, contentId)
                 .orElseThrow(ChangeSetPersister.NotFoundException::new);
 
-        if (!content.getUserId().equals(user.getId())) {
+        if (!isExist.getUserId().equals(user.getId())) {
 
             return ResponseProperties
                     .createResponse(403, "Error : User does not own this content", null);
@@ -186,7 +188,6 @@ public class ContentApiService {
 
     private byte[] getContentWithSize(Authentication authentication, Map<String, Object> model, boolean isImage)
             throws IOException, ChangeSetPersister.NotFoundException {
-        User user = getAuthenticatedUser(authentication);
 
         Content content = modelMapper.map(model.get("content"), Content.class);
 
@@ -197,11 +198,13 @@ public class ContentApiService {
                 ? contentService.changeResolutionForImage(content.getDataUrl(), width, height)
                 : contentService.changeResolutionForVideo(content.getDataUrl(), width, height);
 
+        content.setDownloads(content.getDownloads() + 1);
+        contentService.update(content);
+
         return result.map(file -> {
             try {
                 byte[] data = Files.readAllBytes(file.toPath());
                 file.deleteOnExit();
-
                 return data;
             } catch (IOException e) {
                 throw new RuntimeException("Failed to read file", e);
@@ -209,12 +212,14 @@ public class ContentApiService {
         }).orElse(null);
     }
 
+    @Transactional("slaveTransactionManager")
     public byte[] getImageWithSize(Authentication authentication, Map<String, Object> model)
             throws IOException, ChangeSetPersister.NotFoundException {
 
         return getContentWithSize(authentication, model, true);
     }
 
+    @Transactional("slaveTransactionManager")
     public byte[] getVideoWithSize(Authentication authentication, Map<String, Object> model)
             throws IOException, ChangeSetPersister.NotFoundException {
 
@@ -279,14 +284,4 @@ public class ContentApiService {
             return ResponseProperties.createResponse(500, "Unexpected error occurred", null);
         }
     }
-//
-//    @com.example.prepics.annotations.User
-//    public ResponseEntity<?> doDeleteComment(Authentication authentication, Long commentId)
-//            throws ChangeSetPersister.NotFoundException {
-//        User user = getAuthenticatedUser(authentication);
-//        Comment comment = commentService.findById(Comment.class, commentId)
-//                .orElseThrow(ChangeSetPersister.NotFoundException::new);
-//        Content content = contentService.findById(Content.class, )
-//        if (comment.getUserId().equals(user.getId()) || ) {}
-//    }
 }

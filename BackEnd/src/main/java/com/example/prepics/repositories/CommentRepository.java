@@ -24,7 +24,7 @@ public class CommentRepository implements CRUDInterface<Comment, Long> {
     @Transactional("masterTransactionManager")
     public Optional<List<Comment>> findAll(Class<Comment> clazz) throws ChangeSetPersister.NotFoundException {
         return Optional.ofNullable(masterEntityManager
-                .createQuery("SELECT a FROM Comment a", Comment.class).getResultList());
+                .createQuery("SELECT a FROM Comment a  ORDER BY a.dateCreate DESC", Comment.class).getResultList());
     }
 
     @Override
@@ -56,5 +56,13 @@ public class CommentRepository implements CRUDInterface<Comment, Long> {
         masterEntityManager.remove(masterEntityManager.contains(result.get()) ? result.get()
                 : masterEntityManager.merge(result.get()));
         return result;
+    }
+
+    @Transactional("slaveTransactionManager")
+    public Optional<List<Comment>> findAllByContentId(String contentId) throws ChangeSetPersister.NotFoundException {
+        String query = "SELECT a FROM Comment a WHERE a.contentId = :contentId  ORDER BY a.dateCreate ASC";
+        return Optional.ofNullable(slaveEntityManager.createQuery(query, Comment.class)
+                .setParameter("contentId", contentId)
+                .getResultList());
     }
 }

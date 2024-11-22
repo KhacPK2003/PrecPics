@@ -1,16 +1,10 @@
 package com.example.prepics.repositories;
 
 import com.example.prepics.entity.Content;
-import com.example.prepics.entity.GotTags;
-import com.example.prepics.entity.Tag;
 import com.example.prepics.interfaces.CRUDInterface;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.PersistenceContextType;
-import jakarta.persistence.criteria.CriteriaBuilder;
-import jakarta.persistence.criteria.CriteriaQuery;
-import jakarta.persistence.criteria.Join;
-import jakarta.persistence.criteria.Root;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;

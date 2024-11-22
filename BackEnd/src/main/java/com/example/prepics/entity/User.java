@@ -96,3 +96,5 @@ public class User implements Serializable {
     )
     private Set<Followers> followers;
 }
+
+

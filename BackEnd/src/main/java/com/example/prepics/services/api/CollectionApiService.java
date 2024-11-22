@@ -9,14 +9,12 @@ import com.example.prepics.services.entity.CollectionService;
 import com.example.prepics.services.entity.ContentService;
 import com.example.prepics.services.entity.InColsService;
 import com.example.prepics.services.entity.UserService;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
-import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -33,9 +31,6 @@ public class CollectionApiService {
 
     @Autowired
     private InColsService inColsService;
-
-    @Autowired
-    private ModelMapper modelMapper;
 
     private User getAuthenticatedUser(Authentication authentication) throws ChangeSetPersister.NotFoundException {
         User userDecode = (User) authentication.getPrincipal();
@@ -58,7 +53,6 @@ public class CollectionApiService {
             collection.setUserId(user.getId());
             Collection result = collectionService.create(collection)
                     .orElseThrow(() -> new RuntimeException("Error creating collection"));
-
             return ResponseProperties.createResponse(200, "Success", result);
         } catch (ChangeSetPersister.NotFoundException e) {
             return ResponseProperties.createResponse(404, e.getMessage(), null);
@@ -138,6 +132,10 @@ public class CollectionApiService {
             inCols.setContent(content);
             InCols result = inColsService.create(inCols)
                     .orElseThrow(ChangeSetPersister.NotFoundException::new);
+            if (collection.getName().equalsIgnoreCase("liked")){
+                content.setLiked(content.getLiked() + 1);
+                contentService.update(content);
+            }
 
             return ResponseProperties.createResponse(200, "Success", result);
         } catch (ChangeSetPersister.NotFoundException e) {

@@ -10,6 +10,7 @@ import lombok.Setter;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.math.BigInteger;
 
 @Getter
 @Setter
@@ -28,6 +29,9 @@ public class Comment implements Serializable {
 
     @Column(nullable = false, name = "content")
     private String contentValue;
+
+    @Column(name = "date_create")
+    private BigInteger dateCreate;
 
     @Column(name = "user_id")
     private String userId;
