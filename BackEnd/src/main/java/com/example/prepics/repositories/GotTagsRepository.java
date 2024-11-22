@@ -2,11 +2,9 @@ package com.example.prepics.repositories;
 
 import com.example.prepics.entity.GotTags;
 import com.example.prepics.interfaces.CRUDInterface;
-import com.example.prepics.services.elasticsearch.TagESDocumentService;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.PersistenceContextType;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;

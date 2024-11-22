@@ -12,6 +12,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
+import java.math.BigInteger;
+import java.util.Date;
+
 @Service
 public class CommentApiService {
 
@@ -34,6 +37,7 @@ public class CommentApiService {
         try {
             User user = getAuthenticatedUser(authentication);
             commentModel.setUserId(user.getId());
+            commentModel.setDateCreate(BigInteger.valueOf(new Date().getTime()));
             Comment savedComment = commentService.create(commentModel)
                     .orElseThrow(() -> new RuntimeException("Error creating comment"));
             return ResponseProperties.createResponse(200, "Success", savedComment);
