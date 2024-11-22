@@ -10,7 +10,7 @@ const styles = {
 function Comment({ user, comment }){
     return (
         <div style={styles.commentContainer}>
-          <img src="https://placehold.co/40x40" alt={user.name} style={styles.avatar} />
+          <img src={user.avatar} alt={user.name} style={styles.avatar} />
           <div style={styles.commentContent}>
             <span style={styles.username}>{user.name}</span>
             <p style={styles.commentText}>{comment}</p>

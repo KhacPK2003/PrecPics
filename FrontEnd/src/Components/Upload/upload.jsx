@@ -59,7 +59,7 @@ function Upload() {
             description: title,
             tags: tags,
         };
-        console.log(token);
+        // console.log(token);
         const formData = new FormData();
         formData.append('file', media);
         formData.append(

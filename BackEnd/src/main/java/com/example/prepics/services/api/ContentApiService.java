@@ -105,7 +105,7 @@ public class ContentApiService {
         content.setDescription(contentDTO.getDescription());
         content.setType(isImage);
         content.setDateUpload(BigInteger.valueOf(new Date().getTime()));
-        content.setUser(user);
+        content.setUserId(user.getId());
         contentService.create(content);
 
         List<String> tagNames = List.of(contentDTO.getTags().split(","));

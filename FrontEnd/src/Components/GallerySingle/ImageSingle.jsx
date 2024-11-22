@@ -26,6 +26,7 @@ const Image = styled('img')({
 });
 
 function GallerySingle({content}){
+    
     return (
         <Grid2 container rowSpacing={1}>
             <Grid2 size={6}>

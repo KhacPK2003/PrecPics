@@ -36,7 +36,9 @@ public class CommentApiService {
             commentModel.setUserId(user.getId());
             Comment savedComment = commentService.create(commentModel)
                     .orElseThrow(() -> new RuntimeException("Error creating comment"));
-            return ResponseProperties.createResponse(200, "Success", savedComment);
+            Comment result = commentService.findById(Comment.class, savedComment.getId())
+                    .orElseThrow(ChangeSetPersister.NotFoundException::new);
+            return ResponseProperties.createResponse(200, "Success", result);
         } catch (ChangeSetPersister.NotFoundException e) {
             return ResponseProperties.createResponse(404, e.getMessage(), null);
         } catch (RuntimeException e) {

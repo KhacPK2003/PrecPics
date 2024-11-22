@@ -42,9 +42,8 @@ public class Comment implements Serializable {
                     "applications",
                     "contents",
                     "collections",
-                    "user",
                     "followers",
-                    "followees"
+                    "followees",
             }
     )
     private User user;
