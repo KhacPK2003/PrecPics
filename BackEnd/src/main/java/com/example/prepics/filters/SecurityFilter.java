@@ -54,8 +54,11 @@ public class SecurityFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
         if (!isGuestEndpoint(request)) {
             verifyToken(request);
+            filterChain.doFilter(request, response);
+        }else {
+            filterChain.doFilter(request, response);
         }
-        filterChain.doFilter(request, response);
+//        filterChain.doFilter(request, response);
     }
 
     private boolean isGuestEndpoint(HttpServletRequest request) {

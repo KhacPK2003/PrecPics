@@ -133,7 +133,7 @@ public class CollectionApiService {
             InCols result = inColsService.create(inCols)
                     .orElseThrow(ChangeSetPersister.NotFoundException::new);
             if (collection.getName().equalsIgnoreCase("liked")){
-                content.setLiked(content.getLiked() + 1);
+                content.setLikeds(content.getLikeds() + 1);
                 contentService.update(content);
             }
 

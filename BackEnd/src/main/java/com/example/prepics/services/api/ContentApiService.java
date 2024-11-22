@@ -3,9 +3,8 @@ package com.example.prepics.services.api;
 import co.elastic.clients.elasticsearch.core.SearchResponse;
 import co.elastic.clients.elasticsearch.core.search.Hit;
 import com.example.prepics.dto.ContentDTO;
-import com.example.prepics.entity.Content;
-import com.example.prepics.entity.Tag;
-import com.example.prepics.entity.User;
+import com.example.prepics.entity.*;
+import com.example.prepics.entity.Collection;
 import com.example.prepics.models.ResponseProperties;
 import com.example.prepics.models.TagESDocument;
 import com.example.prepics.repositories.ContentRepository;
@@ -28,6 +27,7 @@ import java.io.IOException;
 import java.math.BigInteger;
 import java.nio.file.Files;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class ContentApiService {
@@ -61,6 +61,8 @@ public class ContentApiService {
 
     @Autowired
     private TagESDocumentService tagESDocumentService;
+    @Autowired
+    private CollectionService collectionService;
 
     private User getAuthenticatedUser(Authentication authentication) throws ChangeSetPersister.NotFoundException {
         User userDecode = (User) authentication.getPrincipal();
@@ -165,9 +167,26 @@ public class ContentApiService {
         return ResponseProperties.createResponse(200, "Success", contents);
     }
 
-    public ResponseEntity<?> findAllByType(boolean type, Integer page, Integer size) throws ChangeSetPersister.NotFoundException {
+    public ResponseEntity<?> findAllByType(Authentication authentication, boolean type, Integer page, Integer size)
+            throws ChangeSetPersister.NotFoundException {
         List<Content> contents = contentService.findAll(Content.class, type, page, size)
                 .orElseThrow(ChangeSetPersister.NotFoundException::new);
+        if (authentication != null) {
+            User user = getAuthenticatedUser(authentication);
+            Optional<Collection> collection = collectionService.getUserCollectionByName(user.getId(), "liked");
+            if (collection.isPresent()) {
+                final String[] inCols = {""};
+                collection.get().getInCols().forEach(e -> inCols[0] = inCols[0] + e.getContentId());
+                if (inCols[0] != null){
+                    for (Content content : contents) {
+                        if (inCols[0].contains(content.getId())) {
+                            content.setLiked(true);
+                        }
+                    }
+                }
+            }
+            return ResponseProperties.createResponse(200, "Success", contents);
+        }
 
         return ResponseProperties.createResponse(200, "Success", contents);
     }

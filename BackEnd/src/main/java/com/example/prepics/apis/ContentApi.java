@@ -126,14 +126,13 @@ public class ContentApi {
      * @return ResponseEntity: Trả về các nội dung với loại đã chọn.
      * @throws ChangeSetPersister.NotFoundException: Nếu không tìm thấy nội dung với loại đã chỉ định.
      */
-    @Guest
     @GetMapping("/by-type")
-    public ResponseEntity<?> findAllByType(
+    public ResponseEntity<?> findAllByType(Authentication authentication,
             @RequestParam("type") int type,
             @RequestParam(value = "page", required = false, defaultValue = "1") Integer page,
             @RequestParam(value = "size", required = false, defaultValue = "10") Integer size)
             throws ChangeSetPersister.NotFoundException {
-        return contentApiService.findAllByType((type == 0), page, size);
+        return contentApiService.findAllByType(authentication, (type == 0), page, size);
     }
 
     /**
