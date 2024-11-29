@@ -111,10 +111,9 @@ public class ContentApi {
      * @return ResponseEntity: Trả về danh sách tất cả nội dung.
      * @throws ChangeSetPersister.NotFoundException: Nếu không tìm thấy nội dung.
      */
-    @Guest
     @GetMapping("/all")
-    public ResponseEntity<?> findAllContent() throws ChangeSetPersister.NotFoundException {
-        return contentApiService.findAllContent();
+    public ResponseEntity<?> findAllContent(Authentication authentication) throws ChangeSetPersister.NotFoundException {
+        return contentApiService.findAllContent(authentication);
     }
 
     /**
@@ -144,14 +143,13 @@ public class ContentApi {
      * @return ResponseEntity: Trả về các nội dung với thẻ phù hợp.
      * @throws ChangeSetPersister.NotFoundException: Nếu không tìm thấy nội dung với các thẻ đã chỉ định.
      */
-    @Guest
     @GetMapping("/by-tags")
-    public ResponseEntity<?> findAllByTags(
+    public ResponseEntity<?> findAllByTags(Authentication authentication,
             @RequestParam("tags") String tags,
             @RequestParam(value = "page", required = false, defaultValue = "1") Integer page,
             @RequestParam(value = "size", required = false, defaultValue = "10") Integer size)
             throws ChangeSetPersister.NotFoundException {
-        return contentApiService.findAllByTags(List.of(tags.split(", ")),page, size);
+        return contentApiService.findAllByTags(authentication, List.of(tags.split(", ")),page, size);
     }
 
     /**
@@ -163,11 +161,10 @@ public class ContentApi {
      * @return ResponseEntity: Trả về nội dung với ID tương ứng.
      * @throws ChangeSetPersister.NotFoundException: Nếu không tìm thấy nội dung.
      */
-    @Guest
     @GetMapping("/{id}")
-    public ResponseEntity<?> findContentById(
+    public ResponseEntity<?> findContentById(Authentication authentication,
             @PathVariable("id") String id) throws ChangeSetPersister.NotFoundException {
-        return contentApiService.findContentById(id);
+        return contentApiService.findContentById(authentication, id);
     }
 
     /**
@@ -265,12 +262,13 @@ public class ContentApi {
      */
     @Guest
     @GetMapping("/search/fuzzy")
-    public ResponseEntity<?> doSearchWithFuzzy(@RequestParam(value = "indexName", required = false, defaultValue = "tags") String indexName,
-                                               @RequestParam(value = "fieldName", required = false, defaultValue = "name") String fieldName,
-                                               @RequestParam(value = "approximates") String approximates,
-                                               @RequestParam(value = "page", required = false, defaultValue = "1") Integer page,
-                                               @RequestParam(value = "size", required = false, defaultValue = "10") Integer size) {
-        return contentApiService.doSearchWithFuzzy(indexName, fieldName, approximates, page, size);
+    public ResponseEntity<?> doSearchWithFuzzy(Authentication authentication,
+                           @RequestParam(value = "indexName", required = false, defaultValue = "tags") String indexName,
+                           @RequestParam(value = "fieldName", required = false, defaultValue = "name") String fieldName,
+                           @RequestParam(value = "approximates") String approximates,
+                           @RequestParam(value = "page", required = false, defaultValue = "1") Integer page,
+                           @RequestParam(value = "size", required = false, defaultValue = "10") Integer size) {
+        return contentApiService.doSearchWithFuzzy(authentication, indexName, fieldName, approximates, page, size);
     }
 }
 

@@ -32,18 +32,30 @@ public class ContentServiceImpl implements ContentService {
         if (content.isEmpty()) {
             throw new ChangeSetPersister.NotFoundException();
         }
+        String tagsByContentId = contentRepository.findTagsByContentId(content.get().getId()).orElse(null);
+        content.get().setTags(tagsByContentId);
         return content;
     }
 
     @Override
     public Optional<List<Content>> findAll(Class<Content> clazz) throws ChangeSetPersister.NotFoundException {
-        return contentRepository.findAll(clazz);
+        List<Content> result = contentRepository.findAll(clazz).orElseThrow();
+        result.forEach(entity -> {
+            String tagsByContentId = contentRepository.findTagsByContentId(entity.getId()).orElse(null);
+            entity.setTags(tagsByContentId);
+        });
+        return Optional.of(result);
     }
 
     @Override
     public Optional<List<Content>> findAll(Class<Content> clazz, boolean type, Integer page, Integer size)
             throws ChangeSetPersister.NotFoundException {
-        return contentRepository.findAllByType(type, page, size);
+        List<Content> result = contentRepository.findAllByType(type, page, size).orElseThrow();
+        result.forEach(entity -> {
+            String tagsByContentId = contentRepository.findTagsByContentId(entity.getId()).orElse(null);
+            entity.setTags(tagsByContentId);
+        });
+        return Optional.of(result);
     }
 
     @Override
@@ -65,7 +77,12 @@ public class ContentServiceImpl implements ContentService {
 
     @Override
     public Optional<List<Content>> findContentsByTags(List<String> tags, Integer page, Integer size) {
-        return contentRepository.findContentsByTags(tags, page, size);
+        List<Content> result = contentRepository.findContentsByTags(tags, page, size).orElseThrow();
+        result.forEach(entity -> {
+            String tagsByContentId = contentRepository.findTagsByContentId(entity.getId()).orElse(null);
+            entity.setTags(tagsByContentId);
+        });
+        return Optional.of(result);
     }
 
     @Override
@@ -167,6 +184,6 @@ public class ContentServiceImpl implements ContentService {
         // Tìm kiếm video trùng lặp với dữ liệu input
         return contents.stream()
                 .map(Content::getDataByte)
-                .anyMatch(existingData -> compareVideos(dataByte, existingData) > 10);
+                .anyMatch(existingData -> compareVideos(dataByte, existingData) > 70);
     }
 }

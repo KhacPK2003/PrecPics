@@ -1,306 +1,316 @@
-package com.example.prepics.services.api;
+    package com.example.prepics.services.api;
 
-import co.elastic.clients.elasticsearch.core.SearchResponse;
-import co.elastic.clients.elasticsearch.core.search.Hit;
-import com.example.prepics.dto.ContentDTO;
-import com.example.prepics.entity.*;
-import com.example.prepics.entity.Collection;
-import com.example.prepics.models.ResponseProperties;
-import com.example.prepics.models.TagESDocument;
-import com.example.prepics.repositories.ContentRepository;
-import com.example.prepics.services.cloudinary.CloudinaryService;
-import com.example.prepics.services.elasticsearch.ElasticSearchService;
-import com.example.prepics.services.elasticsearch.TagESDocumentService;
-import com.example.prepics.services.entity.*;
-import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.crossstore.ChangeSetPersister;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
+    import co.elastic.clients.elasticsearch.core.SearchResponse;
+    import co.elastic.clients.elasticsearch.core.search.Hit;
+    import com.example.prepics.dto.ContentDTO;
+    import com.example.prepics.entity.*;
+    import com.example.prepics.entity.Collection;
+    import com.example.prepics.exception.DuplicateFileException;
+    import com.example.prepics.models.ResponseProperties;
+    import com.example.prepics.models.TagESDocument;
+    import com.example.prepics.repositories.ContentRepository;
+    import com.example.prepics.services.cloudinary.CloudinaryService;
+    import com.example.prepics.services.elasticsearch.ElasticSearchService;
+    import com.example.prepics.services.elasticsearch.TagESDocumentService;
+    import com.example.prepics.services.entity.*;
+    import org.modelmapper.ModelMapper;
+    import org.springframework.beans.factory.annotation.Autowired;
+    import org.springframework.data.crossstore.ChangeSetPersister;
+    import org.springframework.http.ResponseEntity;
+    import org.springframework.security.core.Authentication;
+    import org.springframework.stereotype.Service;
+    import org.springframework.transaction.annotation.Transactional;
+    import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.IOException;
+    import java.io.File;
+    import java.io.IOException;
 
-import java.math.BigInteger;
-import java.nio.file.Files;
-import java.util.*;
-import java.util.stream.Collectors;
+    import java.math.BigInteger;
+    import java.nio.file.Files;
+    import java.util.*;
+    import java.util.stream.Collectors;
 
-@Service
-public class ContentApiService {
+    @Service
+    public class ContentApiService {
 
-    @Autowired
-    private ContentService contentService;
+        @Autowired
+        private ContentService contentService;
 
-    @Autowired
-    private UserService userService;
+        @Autowired
+        private UserService userService;
 
-    @Autowired
-    private CloudinaryService cloudinaryService;
+        @Autowired
+        private CloudinaryService cloudinaryService;
 
-    @Autowired
-    private GotTagsService gotTagsService;
+        @Autowired
+        private GotTagsService gotTagsService;
 
-    @Autowired
-    private ElasticSearchService elasticSearchService;
+        @Autowired
+        private ElasticSearchService elasticSearchService;
 
-    @Autowired
-    private ModelMapper modelMapper;
+        @Autowired
+        private ModelMapper modelMapper;
 
-    @Autowired
-    private ContentRepository contentRepository;
+        @Autowired
+        private ContentRepository contentRepository;
 
-    @Autowired
-    private TagService tagService;
+        @Autowired
+        private TagService tagService;
 
-    @Autowired
-    private CommentService commentService;
+        @Autowired
+        private CommentService commentService;
 
-    @Autowired
-    private TagESDocumentService tagESDocumentService;
-    @Autowired
-    private CollectionService collectionService;
+        @Autowired
+        private TagESDocumentService tagESDocumentService;
+        @Autowired
+        private CollectionService collectionService;
 
-    private User getAuthenticatedUser(Authentication authentication) throws ChangeSetPersister.NotFoundException {
-        User userDecode = (User) authentication.getPrincipal();
-        return userService.findByEmail(User.class, userDecode.getEmail())
-                .orElseThrow(ChangeSetPersister.NotFoundException::new);
-    }
-
-    @Transactional("masterTransactionManager")
-    public ResponseEntity<?> uploadContent(Authentication authentication, MultipartFile file, ContentDTO contentDTO)
-            throws Exception {
-        User user = getAuthenticatedUser(authentication);
-
-        if (file.isEmpty()) {
-            return ResponseProperties.createResponse(400, "Error : File is empty", null);
-        }
-        // Lưu tệp tạm thời
-        byte[] fileBytes = file.getBytes();
-
-        boolean isImage = contentDTO.getType() == 0;
-        String hashData = isImage
-                ? contentService.calculateImageHash(file)
-                : contentService.calculateVideoHash(file);
-        if ((isImage && contentService.isExistImageData(hashData))
-                || (!isImage && contentService.isExistVideoData(hashData))) {
-            String fileType = isImage ? "Image" : "Video";
-            return ResponseProperties
-                    .createResponse(400, "Error: " + fileType + " already exists", null);
+        private User getAuthenticatedUser(Authentication authentication) throws ChangeSetPersister.NotFoundException {
+            User userDecode = (User) authentication.getPrincipal();
+            return userService.findByEmail(User.class, userDecode.getEmail())
+                    .orElseThrow(ChangeSetPersister.NotFoundException::new);
         }
 
-//         Upload file to Cloudinary
-        Map<String, Object> fileUpload = isImage ? cloudinaryService.uploadFile(file)
-                : cloudinaryService.uploadVideo(fileBytes);
-
-        Content content = new Content();
-        content.setId(fileUpload.get("public_id").toString());
-        content.setName(file.getOriginalFilename());
-        content.setAssetId(fileUpload.get("asset_id").toString());
-        content.setHeight((Integer) fileUpload.get("height"));
-        content.setWidth((Integer) fileUpload.get("width"));
-        content.setDataUrl(fileUpload.get("url").toString());
-        content.setDataByte(hashData);
-        content.setDescription(contentDTO.getDescription());
-        content.setType(isImage);
-        content.setDateUpload(BigInteger.valueOf(new Date().getTime()));
-        content.setUser(user);
-        contentService.create(content);
-        List<String> tagNames = List.of(contentDTO.getTags().split(","));
-        tagNames.forEach(tagName -> {
-            try {
-                gotTagsService.addTagByName(content.getId(), tagName);
-            } catch (ChangeSetPersister.NotFoundException e) {
-                throw new RuntimeException(e);
-            }
-        });
-
-        Content result = contentService.findById(Content.class, content.getId())
-                .orElseThrow(ChangeSetPersister.NotFoundException::new);
-
-        return ResponseProperties.createResponse(200, "Success", result);
-    }
-    @Transactional("masterTransactionManager")
-    public ResponseEntity<?> deleteContent(Authentication authentication, String id)
-            throws IOException, ChangeSetPersister.NotFoundException {
-
-        Content isExist = contentService.findById(Content.class, id)
-                .orElseThrow(ChangeSetPersister.NotFoundException::new);
-
-        Map<String, Object> fileUpload = cloudinaryService.deleteFile(id);
-
-        return ResponseProperties.createResponse(200, "Success", fileUpload);
-    }
-    @Transactional("masterTransactionManager")
-    public ResponseEntity<?> updateTags(Authentication authentication, String contentId, String tags)
-            throws ChangeSetPersister.NotFoundException {
-        User user = getAuthenticatedUser(authentication);
-
-        Content isExist = contentRepository.findById(Content.class, contentId)
-                .orElseThrow(ChangeSetPersister.NotFoundException::new);
-
-        if (!isExist.getUserId().equals(user.getId())) {
-
-            return ResponseProperties
-                    .createResponse(403, "Error : User does not own this content", null);
-        }
-
-        List<String> tagNames = List.of(tags.split(","));
-        tagNames.forEach(tagName -> {
-            try {
-                gotTagsService.addTagByName(contentId, tagName);
-            } catch (ChangeSetPersister.NotFoundException e) {
-                throw new RuntimeException(e);
-            }
-        });
-
-        return ResponseProperties.createResponse(200, "Success", true);
-    }
-    @Transactional("slaveTransactionManager")
-    public ResponseEntity<?> findAllContent() throws ChangeSetPersister.NotFoundException {
-        List<Content> contents = contentService.findAll(Content.class)
-                .orElseThrow(ChangeSetPersister.NotFoundException::new);
-
-        return ResponseProperties.createResponse(200, "Success", contents);
-    }
-
-    public ResponseEntity<?> findAllByType(Authentication authentication, boolean type, Integer page, Integer size)
-            throws ChangeSetPersister.NotFoundException {
-        List<Content> contents = contentService.findAll(Content.class, type, page, size)
-                .orElseThrow(ChangeSetPersister.NotFoundException::new);
-        if (authentication != null) {
+        @Transactional("masterTransactionManager")
+        public ResponseEntity<?> uploadContent(Authentication authentication, MultipartFile file, ContentDTO contentDTO)
+                throws Exception {
             User user = getAuthenticatedUser(authentication);
-            Optional<Collection> collection = collectionService.getUserCollectionByName(user.getId(), "liked");
-            if (collection.isPresent()) {
-                final String[] inCols = {""};
-                collection.get().getInCols().forEach(e -> inCols[0] = inCols[0] + e.getContentId());
-                if (inCols[0] != null){
-                    for (Content content : contents) {
-                        if (inCols[0].contains(content.getId())) {
-                            content.setLiked(true);
-                        }
-                    }
-                }
+
+            if (file.isEmpty()) {
+                return ResponseProperties.createResponse(400, "Error : File is empty", null);
             }
-            return ResponseProperties.createResponse(200, "Success", contents);
-        }
+            // Lưu tệp tạm thời
+            byte[] fileBytes = file.getBytes();
 
-        return ResponseProperties.createResponse(200, "Success", contents);
-    }
-
-    public ResponseEntity<?> findAllByTags(List<String> tags, Integer page, Integer size) throws ChangeSetPersister.NotFoundException {
-        List<Content> contents = contentService.findContentsByTags(tags, page, size)
-                .orElseThrow(ChangeSetPersister.NotFoundException::new);
-
-        return ResponseProperties.createResponse(200, "Success", contents);
-    }
-
-    public ResponseEntity<?> findContentById(String id) throws ChangeSetPersister.NotFoundException {
-        Content content = contentService.findById(Content.class, id)
-                .orElseThrow(() -> new RuntimeException("Content not found"));
-
-        return ResponseProperties.createResponse(200, "Success", content);
-    }
-
-    private byte[] getContentWithSize(Authentication authentication, Map<String, Object> model, boolean isImage)
-            throws IOException, ChangeSetPersister.NotFoundException {
-
-        Content content = modelMapper.map(model.get("content"), Content.class);
-
-        int width = Integer.parseInt(model.get("width").toString());
-        int height = Integer.parseInt(model.get("height").toString());
-
-        Optional<File> result = isImage
-                ? contentService.changeResolutionForImage(content.getDataUrl(), width, height)
-                : contentService.changeResolutionForVideo(content.getDataUrl(), width, height);
-
-        content.setDownloads(content.getDownloads() + 1);
-        contentService.update(content);
-
-        return result.map(file -> {
-            try {
-                byte[] data = Files.readAllBytes(file.toPath());
-                file.deleteOnExit();
-                return data;
-            } catch (IOException e) {
-                throw new RuntimeException("Failed to read file", e);
+            boolean isImage = contentDTO.getType() == 0;
+            String hashData = isImage
+                    ? contentService.calculateImageHash(file)
+                    : contentService.calculateVideoHash(file);
+            if ((isImage && contentService.isExistImageData(hashData))
+                    || (!isImage && contentService.isExistVideoData(hashData))) {
+               throw new DuplicateFileException(400, "File already exists");
             }
-        }).orElse(null);
-    }
 
-    @Transactional("slaveTransactionManager")
-    public byte[] getImageWithSize(Authentication authentication, Map<String, Object> model)
-            throws IOException, ChangeSetPersister.NotFoundException {
+    //         Upload file to Cloudinary
+            Map<String, Object> fileUpload = isImage ? cloudinaryService.uploadFile(file)
+                    : cloudinaryService.uploadVideo(fileBytes);
 
-        return getContentWithSize(authentication, model, true);
-    }
-
-    @Transactional("slaveTransactionManager")
-    public byte[] getVideoWithSize(Authentication authentication, Map<String, Object> model)
-            throws IOException, ChangeSetPersister.NotFoundException {
-
-        return getContentWithSize(authentication, model, false);
-    }
-
-    public ResponseEntity<?> doSearchWithFuzzy(String indexName, String fieldName, String approximates
-            , Integer page, Integer size) {
-        List<String> tagNames = List.of(approximates.split(","));
-        Set<String> tags = new HashSet<>();
-
-        try {
-            tagNames.forEach(tag -> {
+            Content content = new Content();
+            content.setId(fileUpload.get("public_id").toString());
+            content.setName(file.getOriginalFilename());
+            content.setAssetId(fileUpload.get("asset_id").toString());
+            content.setHeight((Integer) fileUpload.get("height"));
+            content.setWidth((Integer) fileUpload.get("width"));
+            content.setDataUrl(fileUpload.get("url").toString());
+            content.setDataByte(hashData);
+            content.setDescription(contentDTO.getDescription());
+            content.setType(isImage);
+            content.setDateUpload(BigInteger.valueOf(new Date().getTime()));
+            content.setUser(user);
+            contentService.create(content);
+            List<String> tagNames = List.of(contentDTO.getTags().split(","));
+            tagNames.forEach(tagName -> {
                 try {
-                    SearchResponse searchResponse =
-                            elasticSearchService.fuzzySearch(TagESDocument.class , indexName, fieldName, tag);
-                    List<Hit<TagESDocument>> hitList = searchResponse.hits().hits();
-                    hitList.forEach(hit -> tags.add(hit.source().getName()));
-                } catch (IOException e) {
+                    gotTagsService.addTagByName(content.getId(), tagName);
+                } catch (ChangeSetPersister.NotFoundException e) {
                     throw new RuntimeException(e);
                 }
             });
 
-            List<Content> result = contentService.findContentsByTags(tags.stream().toList(), page, size)
-                    .orElseThrow(ChangeSetPersister.NotFoundException::new);
-            System.out.println(tags.toString());
-            return ResponseProperties.createResponse(200, "Success", result);
-        } catch (Exception e) {
-
-            return ResponseProperties.createResponse(500, "Unexpected error during fuzzy search", e);
-        }
-    }
-
-    public ResponseEntity<?> doInsertTagsIntoElastic(Authentication authentication) {
-        try {
-            // Lấy danh sách nội dung
-            List<Tag> tags = tagService.findAll(Tag.class)
+            Content result = contentService.findById(Content.class, content.getId())
                     .orElseThrow(ChangeSetPersister.NotFoundException::new);
 
-            // Lưu nội dung vào Elasticsearch
-            Iterable<TagESDocument> result = tagESDocumentService.saveAll(tags)
-                    .orElseThrow(() -> new RuntimeException("Error inserting tags into Elasticsearch"));
-
             return ResponseProperties.createResponse(200, "Success", result);
-        } catch (RuntimeException | ChangeSetPersister.NotFoundException e) {
-
-            return ResponseProperties.createResponse(404, e.getMessage(), null);
         }
-    }
+        @Transactional("masterTransactionManager")
+        public ResponseEntity<?> deleteContent(Authentication authentication, String id)
+                throws IOException, ChangeSetPersister.NotFoundException {
 
-    public ResponseEntity<?> doDeleteTagsInElastic(Authentication authentication) {
-        try {
-            // Xóa toàn bộ nội dung trong Elasticsearch
-            tagESDocumentService.deleteAll();
+            Content isExist = contentService.findById(Content.class, id)
+                    .orElseThrow(ChangeSetPersister.NotFoundException::new);
+
+            Map<String, Object> fileUpload = cloudinaryService.deleteFile(id);
+
+            return ResponseProperties.createResponse(200, "Success", fileUpload);
+        }
+        @Transactional("masterTransactionManager")
+        public ResponseEntity<?> updateTags(Authentication authentication, String contentId, String tags)
+                throws ChangeSetPersister.NotFoundException {
+            User user = getAuthenticatedUser(authentication);
+
+            Content isExist = contentRepository.findById(Content.class, contentId)
+                    .orElseThrow(ChangeSetPersister.NotFoundException::new);
+
+            if (!isExist.getUserId().equals(user.getId())) {
+
+                return ResponseProperties
+                        .createResponse(403, "Error : User does not own this content", null);
+            }
+
+            List<String> tagNames = List.of(tags.split(","));
+            tagNames.forEach(tagName -> {
+                try {
+                    gotTagsService.addTagByName(contentId, tagName);
+                } catch (ChangeSetPersister.NotFoundException e) {
+                    throw new RuntimeException(e);
+                }
+            });
 
             return ResponseProperties.createResponse(200, "Success", true);
-        } catch (RuntimeException e) {
+        }
+        @Transactional("slaveTransactionManager")
+        public ResponseEntity<?> findAllContent(Authentication authentication) throws ChangeSetPersister.NotFoundException {
+            List<Content> contents = contentService.findAll(Content.class)
+                    .orElseThrow(ChangeSetPersister.NotFoundException::new);
 
-            return ResponseProperties.createResponse(404, e.getMessage(), null);
-        } catch (Exception e) {
+            return populateLikedContent(authentication, contents);
+        }
 
-            return ResponseProperties.createResponse(500, "Unexpected error occurred", null);
+        public ResponseEntity<?> findAllByType(Authentication authentication, boolean type, Integer page, Integer size)
+                throws ChangeSetPersister.NotFoundException {
+            List<Content> contents = contentService.findAll(Content.class, type, page, size)
+                    .orElseThrow(ChangeSetPersister.NotFoundException::new);
+
+            return populateLikedContent(authentication, contents);
+        }
+
+        public ResponseEntity<?> findAllByTags(Authentication authentication, List<String> tags, Integer page, Integer size)
+                throws ChangeSetPersister.NotFoundException {
+            List<Content> contents = contentService.findContentsByTags(tags, page, size)
+                    .orElseThrow(ChangeSetPersister.NotFoundException::new);
+
+            return populateLikedContent(authentication, contents);
+        }
+
+        public ResponseEntity<?> findContentById(Authentication authentication, String id) throws ChangeSetPersister.NotFoundException {
+            Content content = contentService.findById(Content.class, id)
+                    .orElseThrow(() -> new RuntimeException("Content not found"));
+
+            if (authentication != null) {
+                User user = getAuthenticatedUser(authentication);
+                Optional<Collection> collection = collectionService.getUserCollectionByName(user.getId(), "liked");
+
+                collection.ifPresent(col -> {
+                    Set<String> likedContentIds = col.getInCols().stream()
+                            .map(InCols::getContentId)
+                            .collect(Collectors.toSet());
+                    content.setLiked(likedContentIds.contains(content.getId()));
+                });
+            }
+            return ResponseProperties.createResponse(200, "Success", content);
+        }
+
+        private byte[] getContentWithSize(Authentication authentication, Map<String, Object> model, boolean isImage)
+                throws IOException, ChangeSetPersister.NotFoundException {
+
+            Content content = modelMapper.map(model.get("content"), Content.class);
+
+            int width = Integer.parseInt(model.get("width").toString());
+            int height = Integer.parseInt(model.get("height").toString());
+
+            Optional<File> result = isImage
+                    ? contentService.changeResolutionForImage(content.getDataUrl(), width, height)
+                    : contentService.changeResolutionForVideo(content.getDataUrl(), width, height);
+
+            content.setDownloads(content.getDownloads() + 1);
+            contentService.update(content);
+
+            return result.map(file -> {
+                try {
+                    byte[] data = Files.readAllBytes(file.toPath());
+                    file.deleteOnExit();
+                    return data;
+                } catch (IOException e) {
+                    throw new RuntimeException("Failed to read file", e);
+                }
+            }).orElse(null);
+        }
+
+        @Transactional("slaveTransactionManager")
+        public byte[] getImageWithSize(Authentication authentication, Map<String, Object> model)
+                throws IOException, ChangeSetPersister.NotFoundException {
+
+            return getContentWithSize(authentication, model, true);
+        }
+
+        @Transactional("slaveTransactionManager")
+        public byte[] getVideoWithSize(Authentication authentication, Map<String, Object> model)
+                throws IOException, ChangeSetPersister.NotFoundException {
+
+            return getContentWithSize(authentication, model, false);
+        }
+
+        public ResponseEntity<?> doSearchWithFuzzy(Authentication authentication, String indexName, String fieldName, String approximates
+                , Integer page, Integer size) {
+            List<String> tagNames = List.of(approximates.split(","));
+            Set<String> tags = new HashSet<>();
+
+            try {
+                tagNames.forEach(tag -> {
+                    try {
+                        SearchResponse searchResponse =
+                                elasticSearchService.fuzzySearch(TagESDocument.class , indexName, fieldName, tag);
+                        List<Hit<TagESDocument>> hitList = searchResponse.hits().hits();
+                        hitList.forEach(hit -> tags.add(hit.source().getName()));
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                });
+
+                List<Content> result = contentService.findContentsByTags(tags.stream().toList(), page, size)
+                        .orElseThrow(ChangeSetPersister.NotFoundException::new);
+
+                return populateLikedContent(authentication, result);
+            } catch (Exception e) {
+
+                return ResponseProperties.createResponse(500, "Unexpected error during fuzzy search", e);
+            }
+        }
+
+        public ResponseEntity<?> doInsertTagsIntoElastic(Authentication authentication) {
+            try {
+                // Lấy danh sách nội dung
+                List<Tag> tags = tagService.findAll(Tag.class)
+                        .orElseThrow(ChangeSetPersister.NotFoundException::new);
+
+                // Lưu nội dung vào Elasticsearch
+                Iterable<TagESDocument> result = tagESDocumentService.saveAll(tags)
+                        .orElseThrow(() -> new RuntimeException("Error inserting tags into Elasticsearch"));
+
+                return ResponseProperties.createResponse(200, "Success", result);
+            } catch (RuntimeException | ChangeSetPersister.NotFoundException e) {
+
+                return ResponseProperties.createResponse(404, e.getMessage(), null);
+            }
+        }
+
+        public ResponseEntity<?> doDeleteTagsInElastic(Authentication authentication) {
+            try {
+                // Xóa toàn bộ nội dung trong Elasticsearch
+                tagESDocumentService.deleteAll();
+
+                return ResponseProperties.createResponse(200, "Success", true);
+            } catch (RuntimeException e) {
+
+                return ResponseProperties.createResponse(404, e.getMessage(), null);
+            } catch (Exception e) {
+
+                return ResponseProperties.createResponse(500, "Unexpected error occurred", null);
+            }
+        }
+
+        private ResponseEntity<?> populateLikedContent(Authentication authentication, List<Content> contents) throws ChangeSetPersister.NotFoundException {
+            if (authentication != null) {
+                User user = getAuthenticatedUser(authentication);
+                Optional<Collection> collection = collectionService.getUserCollectionByName(user.getId(), "liked");
+
+                collection.ifPresent(col -> {
+                    Set<String> likedContentIds = col.getInCols().stream()
+                            .map(InCols::getContentId)
+                            .collect(Collectors.toSet());
+                    contents.forEach(content -> content.setLiked(likedContentIds.contains(content.getId())));
+                });
+            }
+            return ResponseProperties.createResponse(200, "Success", contents);
         }
     }
-}
