@@ -157,7 +157,8 @@ public class UserApiService {
         Followers follower = followerService.findByUserIdAndFollowerId(Followers.class, followeeId, followerId)
                 .orElseThrow(ChangeSetPersister.NotFoundException::new);
         followerService.delete(follower.getId());
-
+        System.out.println(followee);
+        System.out.println(follower);
         return ResponseProperties.createResponse(200, "Success", true);
     }
 }
