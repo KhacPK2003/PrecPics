@@ -1,6 +1,7 @@
 package com.example.prepics.services.entity;
 
 import com.example.prepics.entity.Content;
+import com.example.prepics.exception.DuplicateFileException;
 import com.example.prepics.interfaces.CRUDInterface;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.web.multipart.MultipartFile;
@@ -27,6 +28,6 @@ public interface ContentService extends CRUDInterface<Content, String> {
 
     boolean isExistImageData(String dataByte) throws ChangeSetPersister.NotFoundException;
 
-    boolean isExistVideoData(String dataByte) throws ChangeSetPersister.NotFoundException;
+    boolean isExistVideoData(String dataByte) throws DuplicateFileException, ChangeSetPersister.NotFoundException;
 
 }

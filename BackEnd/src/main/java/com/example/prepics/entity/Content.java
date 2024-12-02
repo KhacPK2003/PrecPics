@@ -38,7 +38,7 @@ public class Content implements Serializable {
     private BigInteger dateUpload;
 
     @Column(name = "liked")
-    private int liked;
+    private int likeds;
 
     @Column(name = "downloads")
     private int downloads;
@@ -64,6 +64,9 @@ public class Content implements Serializable {
 
     @Transient
     private String tags;
+
+    @Transient
+    private boolean isLiked;
 
     @Column(name = "is_public")
     private boolean isPublic;
