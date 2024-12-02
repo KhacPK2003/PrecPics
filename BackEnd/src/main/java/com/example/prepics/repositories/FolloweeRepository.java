@@ -48,14 +48,15 @@ public class FolloweeRepository implements CRUDInterface<Followees, Long> {
     @Override
     @Transactional("masterTransactionManager")
     public Optional<Followees> delete(Long id) throws ChangeSetPersister.NotFoundException {
-        Optional<Followees> result = Optional.ofNullable(slaveEntityManager.find(Followees.class, id));
-        if (result.isEmpty()) {
-            return Optional.empty();
-        }
-        masterEntityManager.remove(masterEntityManager.contains(result.get()) ? result.get()
-                : masterEntityManager.merge(result.get()));
-        return result;
+        Followees result = Optional.ofNullable(slaveEntityManager.find(Followees.class, id))
+                .orElseThrow(ChangeSetPersister.NotFoundException::new);
+
+        masterEntityManager.createQuery("DELETE FROM Followees WHERE id = :id")
+                .setParameter("id", id)
+                .executeUpdate();
+        return Optional.ofNullable(result);
     }
+
 
     @Transactional("slaveTransactionManager")
     public Optional<Followees> findByUserIdAndFolloweeId(Class<Followees> clazz, String userId, String followeeId)

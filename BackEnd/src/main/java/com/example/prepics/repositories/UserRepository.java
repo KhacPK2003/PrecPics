@@ -53,13 +53,13 @@ public class UserRepository implements CRUDInterface<User, String> {
     @Override
     @Transactional("masterTransactionManager")
     public Optional<User> delete(String id) throws ChangeSetPersister.NotFoundException {
-        Optional<User> result = Optional.ofNullable(slaveEntityManager.find(User.class, id));
-        if (result.isEmpty()) {
-            return Optional.empty();
-        }
-        masterEntityManager.remove(masterEntityManager.contains(result.get()) ? result.get()
-                : masterEntityManager.merge(result.get()));
-        return result;
+        User result = Optional.ofNullable(slaveEntityManager.find(User.class, id))
+                .orElseThrow(ChangeSetPersister.NotFoundException::new);
+
+        masterEntityManager.createQuery("DELETE FROM User u WHERE u.id = :id")
+                .setParameter("id", id)
+                .executeUpdate();
+        return Optional.ofNullable(result);
     }
 
     @Transactional("slaveTransactionManager")

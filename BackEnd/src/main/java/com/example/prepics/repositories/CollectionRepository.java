@@ -49,13 +49,13 @@ public class CollectionRepository implements CRUDInterface<Collection, Long> {
     @Override
     @Transactional("masterTransactionManager")
     public Optional<Collection> delete(Long id) throws ChangeSetPersister.NotFoundException {
-        Optional<Collection> result = Optional.ofNullable(slaveEntityManager.find(Collection.class, id));
-        if (result.isEmpty()) {
-           return Optional.empty();
-        }
-        masterEntityManager.remove(masterEntityManager.contains(result.get()) ? result.get()
-                : masterEntityManager.merge(result.get()));
-        return result;
+        Collection result = Optional.ofNullable(slaveEntityManager.find(Collection.class, id))
+                .orElseThrow(ChangeSetPersister.NotFoundException::new);
+
+        masterEntityManager.createQuery("DELETE FROM Collection WHERE id = :id")
+                .setParameter("id", id)
+                .executeUpdate();
+        return Optional.ofNullable(result);
     }
 
     @Transactional("slaveTransactionManager")

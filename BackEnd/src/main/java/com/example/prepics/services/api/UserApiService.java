@@ -13,6 +13,7 @@ import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -144,6 +145,7 @@ public class UserApiService {
         return ResponseProperties.createResponse(403, "Forbidden", null);
     }
 
+    @Transactional("masterTransactionManager")
     public ResponseEntity<?> doUnfollowUser(Authentication authentication, String followeeId, String followerId)
             throws ChangeSetPersister.NotFoundException {
         User userDecode = (User) authentication.getPrincipal();
@@ -152,11 +154,11 @@ public class UserApiService {
 
         Followees followee = followeeService.findByUserIdAndFolloweeId(Followees.class, followerId, followeeId)
                 .orElseThrow(ChangeSetPersister.NotFoundException::new);
-        followeeService.delete(followee.getId());
+        followeeService.delete(followee.getId()).orElseThrow(ChangeSetPersister.NotFoundException::new);
 
         Followers follower = followerService.findByUserIdAndFollowerId(Followers.class, followeeId, followerId)
                 .orElseThrow(ChangeSetPersister.NotFoundException::new);
-        followerService.delete(follower.getId());
+        followerService.delete(follower.getId()).orElseThrow(ChangeSetPersister.NotFoundException::new);
 
         return ResponseProperties.createResponse(200, "Success", true);
     }
