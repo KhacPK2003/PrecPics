@@ -49,13 +49,14 @@ public class CommentRepository implements CRUDInterface<Comment, Long> {
     @Override
     @Transactional("masterTransactionManager")
     public Optional<Comment> delete(Long id) throws ChangeSetPersister.NotFoundException {
-        Optional<Comment> result = Optional.ofNullable(slaveEntityManager.find(Comment.class, id));
-        if (result.isEmpty()) {
-            return Optional.empty();
-        }
-        masterEntityManager.remove(masterEntityManager.contains(result.get()) ? result.get()
-                : masterEntityManager.merge(result.get()));
-        return result;
+        Comment result = Optional.ofNullable(slaveEntityManager.find(Comment.class, id))
+                .orElseThrow(ChangeSetPersister.NotFoundException::new);
+
+        masterEntityManager.createQuery("DELETE FROM Comment WHERE id = :id")
+                .setParameter("id", id)
+                .executeUpdate();
+
+        return Optional.ofNullable(result);
     }
 
     @Transactional("slaveTransactionManager")

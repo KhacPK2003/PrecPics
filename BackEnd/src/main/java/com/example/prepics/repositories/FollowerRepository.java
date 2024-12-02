@@ -50,13 +50,13 @@ public class FollowerRepository implements CRUDInterface<Followers, Long> {
     @Override
     @Transactional("masterTransactionManager")
     public Optional<Followers> delete(Long id) throws ChangeSetPersister.NotFoundException {
-        Optional<Followers> result = Optional.ofNullable(slaveEntityManager.find(Followers.class, id));
-        if (result.isEmpty()) {
-            return Optional.empty();
-        }
-        masterEntityManager.remove(masterEntityManager.contains(result.get()) ? result.get()
-                : masterEntityManager.merge(result.get()));
-        return result;
+        Followers result = Optional.ofNullable(slaveEntityManager.find(Followers.class, id))
+                .orElseThrow(ChangeSetPersister.NotFoundException::new);
+
+        masterEntityManager.createQuery("DELETE FROM Followers WHERE id = :id")
+                .setParameter("id", id)
+                .executeUpdate();
+        return Optional.of(result);
     }
 
     @Transactional("slaveTransactionManager")

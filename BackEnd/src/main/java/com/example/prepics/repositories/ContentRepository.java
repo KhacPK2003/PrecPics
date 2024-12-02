@@ -51,13 +51,13 @@ public class ContentRepository implements CRUDInterface<Content, String> {
     @Override
     @Transactional("masterTransactionManager")
     public Optional<Content> delete(String id) throws ChangeSetPersister.NotFoundException {
-        Optional<Content> result = Optional.ofNullable(slaveEntityManager.find(Content.class, id));
-        if (result.isEmpty()) {
-            return Optional.empty();
-        }
-        masterEntityManager.remove(masterEntityManager.contains(result.get()) ? result.get()
-                : masterEntityManager.merge(result.get()));
-        return result;
+        Content result = Optional.ofNullable(slaveEntityManager.find(Content.class, id))
+                .orElseThrow(ChangeSetPersister.NotFoundException::new);
+
+        masterEntityManager.createQuery("DELETE FROM Content c WHERE c.id = :id")
+                .setParameter("id", id)
+                .executeUpdate();
+        return Optional.ofNullable(result);
     }
 
     @Transactional("slaveTransactionManager")

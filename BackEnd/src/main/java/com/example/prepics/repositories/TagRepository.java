@@ -47,13 +47,13 @@ public class TagRepository implements CRUDInterface<Tag, Long> {
     @Override
     @Transactional("masterTransactionManager")
     public Optional<Tag> delete(Long id) throws ChangeSetPersister.NotFoundException {
-        Optional<Tag> result = Optional.ofNullable(slaveEntityManager.find(Tag.class, id));
-        if (result.isEmpty()) {
-           return Optional.empty();
-        }
-        masterEntityManager.remove(masterEntityManager.contains(result.get()) ? result.get()
-                : masterEntityManager.merge(result.get()));
-        return result;
+        Tag result = Optional.ofNullable(slaveEntityManager.find(Tag.class, id))
+                .orElseThrow(ChangeSetPersister.NotFoundException::new);
+
+        masterEntityManager.createQuery("DELETE FROM Tag t WHERE t.id = :id")
+                .setParameter("id", id)
+                .executeUpdate();
+        return Optional.ofNullable(result);
     }
 
     @Transactional("slaveTransactionManager")
