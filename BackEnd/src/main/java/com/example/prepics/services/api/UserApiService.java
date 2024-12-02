@@ -116,21 +116,32 @@ public class UserApiService {
         User targetUser = userService.findById(User.class, userId)
                 .orElseThrow(ChangeSetPersister.NotFoundException::new);
 
-        //tao followee cho user
-        Followees followees = new Followees();
-        followees.setFolloweeId(userId);
-        followees.setUserId(userDecode.getId());
+        Followees followee = followeeService.findByUserIdAndFolloweeId(Followees.class, userId, userDecode.getId())
+                .orElse(null);
 
-        followeeService.create(followees);
+        Followers follower = followerService.findByUserIdAndFollowerId(Followers.class, userDecode.getId(), userId)
+                .orElse(null);
 
-        //tao follower cho user duoc follow
-        Followers followers = new Followers();
-        followers.setFollowerId(userDecode.getId());
-        followers.setUserId(userId);
+        if (followee == null && follower == null) {
 
-        followerService.create(followers);
+            //tao followee cho user
+            Followees followees = new Followees();
+            followees.setFolloweeId(userId);
+            followees.setUserId(userDecode.getId());
 
-        return ResponseProperties.createResponse(200, "Success", true);
+            followeeService.create(followees);
+
+            //tao follower cho user duoc follow
+            Followers followers = new Followers();
+            followers.setFollowerId(userDecode.getId());
+            followers.setUserId(userId);
+
+            followerService.create(followers);
+
+            return ResponseProperties.createResponse(200, "Success", true);
+        }
+
+        return ResponseProperties.createResponse(403, "Forbidden", null);
     }
 
     public ResponseEntity<?> doUnfollowUser(Authentication authentication, String followeeId, String followerId)
