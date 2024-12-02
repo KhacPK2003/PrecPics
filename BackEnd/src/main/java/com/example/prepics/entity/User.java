@@ -73,7 +73,7 @@ public class User implements Serializable {
                     "applications",
                     "inCols",
                     "gotTags",
-                    "user"
+//                    "user"
             }
     )
     private Set<Content> contents;

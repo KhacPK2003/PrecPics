@@ -11,18 +11,6 @@ const AboutData = () => {
     const navigate = useNavigate();
     return (
         <div className='bg-white min-h-screen'>
-        <Navbar></Navbar>
-        <PersonalPage></PersonalPage>
-        <div className='flex justify-center mt-[100px] mr-[900px]'>
-            <Button props ='Mục nổi bật'  onClick={() => navigate('/')}></Button>
-            <Button props ='Bộ sưu tập ' onClick={() => navigate('/aboutcollection')}></Button>
-            <Button props ='Số liệu thống kê ' textcolor='text-white' bgcolor='bg-black' onClick={() => navigate('/aboutdata')} ></Button>
-            <Button props ='Người theo dõi ' onClick={() => navigate('/aboutfollower')}></Button>
-            <Button props ='Đang theo dõi ' onClick={() => navigate('/aboutwatching')}></Button>
-        </div>
-        {/* ******************************************
-        ******************************************
-        ****************************************** */}
         <div className='p-[15px] rounded-[30px] border border-[#dfdfe0] mt-12 mr-6 ml-6'>
             <div className='text-[25px] mt-3'>
                 <h4>Tổng quan</h4>
@@ -34,9 +22,6 @@ const AboutData = () => {
                 <LineChart></LineChart>
             </div>
         </div>
-        {/* ******************************************
-        ******************************************
-        ****************************************** */}
         <div className="flex mt-10 space-x-4 px-4">
             <div className='mt-10 w-1/2'>
            

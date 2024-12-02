@@ -5,6 +5,7 @@ import GallerySingle from '../GallerySingle/ImageSingle';
 import { Button, Dialog, DialogContent, DialogTitle } from '@mui/material';
 
 function SectionImage({content}){
+    // console.log(content);
     const [isFavorite, setIsFavorite] = useState(false);
 
     const [countHeart,setCountHeart] = useState(0);

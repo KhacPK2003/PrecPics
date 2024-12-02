@@ -5,6 +5,7 @@ import SearchBar from "../Components/SearchBar/SearchBar";
 import Main from "../Components/Main/Main";
 import React, { useState , useEffect } from 'react';
 import {  auth, onAuthStateChanged, signOut } from '../firebaseconfig';
+import { Outlet } from 'react-router-dom';
 function Home(){
     const [user, setUser] = useState(null);
     const [Login , setLogin] = useState(false);
@@ -26,6 +27,7 @@ function Home(){
     const handleLogout = async () => {
         try {
           await signOut(auth);
+          localStorage.clear();
           setUser(null);  // Đăng xuất thành công, cập nhật lại state
         } catch (error) {
           console.error("Error during logout", error);
@@ -40,9 +42,7 @@ function Home(){
     return (
         <>
             <Navbar UserInfo = {user} onClickVideo = {handleVideoClick} handleLogOut = {handleLogout} isLogin = {Login}/>
-            <FilterMain/>
-            <SearchBar/>
-            <Main showvideo = {showVideo}/>
+              <Outlet context={{showVideo}}/>
             <Footer/>
         </>
     );

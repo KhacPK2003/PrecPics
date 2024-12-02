@@ -90,6 +90,7 @@ export default function SignIn(props) {
       })
         .then(response => response.json())
         .then(data => {
+          localStorage.setItem('userID',JSON.stringify(data.payload.id));
           console.log("Backend Response:", data)
           navigate("/");
         })

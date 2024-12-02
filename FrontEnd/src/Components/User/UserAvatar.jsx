@@ -18,7 +18,9 @@ function UserAvatar({User , Logout}){
         setAnchorElUser(event.currentTarget);
     };
     const handleCloseUserMenu = (setting) => {
-        if(setting === 'Trang cá nhân') navigate('/about');
+        const get = localStorage.getItem('userID');
+        const id = JSON.parse(get);
+        if(setting === 'Trang cá nhân') navigate(`/about/${id}`);
         if(setting === 'Logout') Logout();
         setAnchorElUser(null);
       };

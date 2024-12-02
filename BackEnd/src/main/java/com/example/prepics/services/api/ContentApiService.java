@@ -116,10 +116,10 @@ public class ContentApiService {
             }
         });
 
-        Content result = contentService.findById(Content.class, content.getId())
-                .orElseThrow(ChangeSetPersister.NotFoundException::new);
+//        Content result = contentService.findById(Content.class, content.getId())
+//                .orElseThrow(ChangeSetPersister.NotFoundException::new);
 
-        return ResponseProperties.createResponse(200, "Success", result);
+        return ResponseProperties.createResponse(200, "Success", content);
     }
     @Transactional("masterTransactionManager")
     public ResponseEntity<?> deleteContent(Authentication authentication, String id)
