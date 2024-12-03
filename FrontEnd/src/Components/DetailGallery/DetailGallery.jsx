@@ -9,7 +9,8 @@ import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from 'react-router-dom';
 
 function DetailGallery({ content }) {
-    const [userId, setUserId] = useState(null);
+    const userId = JSON.parse(localStorage.getItem('userID'));
+    const [CollectLiked , setCollectLiked] = useState(null);
     const [isFavorite, setIsFavorite] = useState(false);
     const [token, setToken] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
@@ -21,36 +22,122 @@ function DetailGallery({ content }) {
         id: info.id // Thêm id bình luận
     }))); // Lưu trữ mảng comments trong state
     const navigate = useNavigate();
-    const [countHeart, setCountHeart] = useState(0);
-
-    const handleChange = (event) => {
-        setInputValue(event.target.value); // Cập nhật giá trị input vào state
-    };
-
-    const toggleFavorite = () => {
-        if (token == null) {
-            navigate('Login');
-            return;
-        }
-        setIsFavorite((prev) => !prev);
-    };
-
+    const [countHeart, setCountHeart] = useState(content.likeds);
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
             if (currentUser) {
                 currentUser
-                    .getIdToken()
-                    .then((idToken) => setToken(idToken))
-                    .catch((error) => console.error('Error getting ID token:', error));
-                setUserId(currentUser.uid);
+                .getIdToken()
+                .then((idToken) => setToken(idToken))
+                .catch((error) => console.error('Error getting ID token:', error));
             } else {
                 setToken(null);
-                setUserId(null);
             }
         });
         return () => unsubscribe();
     }, []); // Take token
+    const handleChange = (event) => {
+        setInputValue(event.target.value); // Cập nhật giá trị input vào state
+    };
 
+    const addContentCollection = async (ID) =>{
+        if(token === null) return;
+        try {
+            const response = await fetch(`http://localhost:8080/public/api/collections/${ID}/contents/${content.id}`, {
+              method: 'POST',
+              headers: {
+                //   'Content-Type': 'application/json',
+                  'Authorization': `Bearer ${token}`,
+              },
+            });
+            if (response.ok) {
+                const data = await response.json();
+                console.log('added successfully:', data);
+              } else {
+                throw new Error('Failed to add content to the collection');
+              }
+            } catch (err) {
+            //   setError(err.message);
+            }
+    }
+
+    const removeContentCollection = async(ID) =>{
+        if(token === null) return;
+        try {
+            const collectionId = 8;
+            const response = await fetch(`http://localhost:8080/public/api/collections/${collectionId}/contents/${content.id}`, {
+              method: 'DELETE',
+              headers: {
+                //   'Content-Type': 'application/json',
+                  'Authorization': `Bearer ${token}`,
+              },
+            });
+            if (response.ok) {
+                const data = await response.json();
+                console.log('Removes successfully:', data);
+              } else {
+                throw new Error('Failed to remove content to the collection');
+              }
+            } catch (err) {
+            //   setError(err.message);
+            }
+    }
+
+    const toggleFavorite = () => {
+        if (token === null) {
+            navigate('Login');
+            return;
+        }
+        console.log(CollectLiked);
+        if(isFavorite){
+            removeContentCollection(CollectLiked.id);
+        }else{
+            addContentCollection(CollectLiked.id);
+        }
+        setIsFavorite((prev) => !prev);
+    };
+    const createLikedCollection = async () => {
+        if(token === null) return;
+        try {
+          const response = await fetch('http://localhost:8080/public/api/collections', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`,
+            },
+            body: "Liked", // You can customize the name as needed
+          });
+    
+          if (response.ok) {
+            const data = await response.json();
+            setCollectLiked(data);
+          } else {
+            throw new Error('Failed to create the collection');
+          }
+        } catch (err) {
+        //   setError(err.message);
+        //   setIsLoading(false);
+        }
+    };
+    
+    useEffect(() => {
+        fetch(`http://localhost:8080/public/api/users/${userId}`)
+            .then((response) => response.json())
+            .then(({ payload }) => {
+                // console.log(payload);
+                if (payload.collections) {
+                    const likedCollection = payload.collections.find(
+                      (collection) => collection.name.trim() === 'Liked'
+                    );
+                    if (likedCollection) {
+                      setCollectLiked(likedCollection);
+                    } else {
+                        createLikedCollection();
+                    }
+                  }
+            });
+    }, [userId,token]);
+    
     useEffect(() => {
         if (isFavorite) {
             setCountHeart((prev) => prev + 1);
@@ -201,6 +288,9 @@ function DetailGallery({ content }) {
     };
     const handleClick = ()=>{
         navigate(`/about/${content.user.id}`);
+    }
+    if(token === null){
+        return (<div>loading...</div>);
     }
     return (
         <div className="bg-popover dark:bg-card p-4 rounded-lg shadow-lg h-[calc(80vh-90px)] flex flex-col">

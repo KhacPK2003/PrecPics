@@ -35,6 +35,15 @@ function GallerySingle({content}){
                     src={content.dataUrl}
                 />
             </Item>
+            <div >
+                <h5 className='mt-4'>Thêm vào bộ sưu tập <i className="fa-regular fa-bookmark"></i></h5>
+                <div className='mt-3'>
+                    <input type="text"  className="px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 mr-1"  placeholder="Nhập tên bộ sưu tập"/>
+                    <button  className="px-6 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        Tạo
+                    </button>
+                </div>
+            </div>
         </Grid2>
             <Grid2 size={6}>
                 <Item >
