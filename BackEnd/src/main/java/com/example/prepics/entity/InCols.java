@@ -41,7 +41,7 @@ public class InCols implements Serializable {
     private Content content;
 
     @Column(name = "collection_id")
-    private String collectionId;
+    private Long collectionId;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "collection_id", insertable=false, updatable=false)
