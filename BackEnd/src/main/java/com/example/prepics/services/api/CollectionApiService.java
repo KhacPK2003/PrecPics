@@ -128,8 +128,8 @@ public class CollectionApiService {
                     .orElseThrow(ChangeSetPersister.NotFoundException::new);
 
             InCols inCols = new InCols();
-            inCols.setCollection(collection);
-            inCols.setContent(content);
+            inCols.setCollectionId(collection.getId());
+            inCols.setContentId(content.getId());
             InCols result = inColsService.create(inCols)
                     .orElseThrow(ChangeSetPersister.NotFoundException::new);
             if (collection.getName().equalsIgnoreCase("liked")){
