@@ -15,6 +15,18 @@ import java.util.Set;
 @Table(name = "user", schema = "public")
 @Builder
 @ToString
+@SqlResultSetMapping(
+        name = "UserStatisticsMapping",
+        classes = @ConstructorResult(
+                targetClass = com.example.prepics.dto.UserStatisticsDTO.class,
+                columns = {
+                        @ColumnResult(name = "totalContents", type = Integer.class),
+                        @ColumnResult(name = "totalFollowers", type = Integer.class),
+                        @ColumnResult(name = "totalFollowing", type = Integer.class),
+                        @ColumnResult(name = "totalLikes", type = Integer.class)
+                }
+        )
+)
 public class User implements Serializable {
 
     @Serial
@@ -56,6 +68,18 @@ public class User implements Serializable {
 
     @Column(name = "is_admin")
     private Boolean isAdmin;
+
+    @Transient
+    private int totalContents;
+
+    @Transient
+    private int totalFollowers;
+
+    @Transient
+    private int totalFollowing;
+
+    @Transient
+    private int totalLikes;
 
     @OneToMany(mappedBy = "userId", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JsonIgnoreProperties(

@@ -1,10 +1,12 @@
 package com.example.prepics.repositories;
 
+import com.example.prepics.dto.UserStatisticsDTO;
 import com.example.prepics.entity.User;
 import com.example.prepics.interfaces.CRUDInterface;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.PersistenceContextType;
+import jakarta.persistence.Query;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -69,5 +71,19 @@ public class UserRepository implements CRUDInterface<User, String> {
                 .setParameter("email", email)
                 .getResultStream()
                 .findFirst();
+    }
+
+    public Optional<UserStatisticsDTO> getUserStatistics(String userId) {
+        String sql = """
+                    SELECT 
+                        (SELECT COUNT(*) FROM content WHERE user_id = ?1) AS totalContents,
+                        (SELECT COUNT(*) FROM followers WHERE user_id = ?1) AS totalFollowers,
+                        (SELECT COUNT(*) FROM followees WHERE user_id = ?1) AS totalFollowing,
+                        COALESCE((SELECT SUM(liked) FROM content WHERE user_id = ?1), 0) AS totalLikes
+                    """;
+
+        return Optional.ofNullable((UserStatisticsDTO) slaveEntityManager.createNativeQuery(sql, "UserStatisticsMapping")
+                .setParameter(1, userId)
+                .getSingleResult());
     }
 }

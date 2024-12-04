@@ -1,5 +1,6 @@
 package com.example.prepics.services.entity.serviceImpl;
 
+import com.example.prepics.dto.UserStatisticsDTO;
 import com.example.prepics.entity.User;
 import com.example.prepics.repositories.UserRepository;
 import com.example.prepics.services.entity.UserService;
@@ -20,6 +21,11 @@ public class UserServiceImpl implements UserService  {
     @Override
     public Optional<User> findByEmail(Class<User> clazz, String email) throws ChangeSetPersister.NotFoundException {
         return userRepository.findByEmail(email);
+    }
+
+    @Override
+    public Optional<UserStatisticsDTO> getUserStatistics(String userId) throws ChangeSetPersister.NotFoundException {
+        return userRepository.getUserStatistics(userId);
     }
 
     @Override

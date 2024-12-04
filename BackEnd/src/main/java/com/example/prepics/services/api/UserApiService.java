@@ -1,5 +1,7 @@
 package com.example.prepics.services.api;
 
+import com.cloudinary.api.exceptions.NotFound;
+import com.example.prepics.dto.UserStatisticsDTO;
 import com.example.prepics.entity.Followees;
 import com.example.prepics.entity.Followers;
 import com.example.prepics.entity.User;
@@ -8,6 +10,7 @@ import com.example.prepics.services.entity.FolloweeService;
 import com.example.prepics.services.entity.FollowerService;
 import com.example.prepics.services.entity.UserService;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.InvalidPropertyException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.http.ResponseEntity;
@@ -53,31 +56,64 @@ public class UserApiService {
     }
 
     public ResponseEntity<?> findAll(Authentication authentication) throws ChangeSetPersister.NotFoundException {
-        // Lấy thông tin người dùng hiện tại
-        User userDecode = (User) authentication.getPrincipal();
-        User currentUser = userService.findByEmail(User.class, userDecode.getEmail())
-                .orElseThrow(ChangeSetPersister.NotFoundException::new);
+        try{
+            // Lấy thông tin người dùng hiện tại
+            User userDecode = (User) authentication.getPrincipal();
+            User currentUser = userService.findByEmail(User.class, userDecode.getEmail())
+                    .orElseThrow(ChangeSetPersister.NotFoundException::new);
 
-        // Kiểm tra quyền admin
-        if (!currentUser.getIsAdmin()) {
+            // Kiểm tra quyền admin
+            if (!currentUser.getIsAdmin()) {
+                return ResponseProperties.createResponse(403, "Forbidden", null);
+            }
+
+            // Tìm tất cả người dùng
+            List<User> users = userService.findAll(User.class)
+                    .orElseThrow(ChangeSetPersister.NotFoundException::new);
+
+            users.forEach(user -> {
+                UserStatisticsDTO dto = null;
+                try {
+                    dto = userService.getUserStatistics(user.getId())
+                            .orElseThrow(ChangeSetPersister.NotFoundException::new);
+                } catch (ChangeSetPersister.NotFoundException e) {
+                    throw new RuntimeException(e);
+                }
+
+                user.setTotalContents(dto.getTotalContents());
+                user.setTotalFollowers(dto.getTotalFollowers());
+                user.setTotalLikes(dto.getTotalLikes());
+                user.setTotalFollowing(dto.getTotalFollowing());
+            });
+
+            // Trả phản hồi
+            return ResponseProperties.createResponse(200, "Success", users);
+        } catch (ChangeSetPersister.NotFoundException e) {
             return ResponseProperties.createResponse(403, "Forbidden", null);
+        } catch (RuntimeException e) {
+            return ResponseProperties.createResponse(500, "Internal Server Error", e);
         }
-
-        // Tìm tất cả người dùng
-        List<User> users = userService.findAll(User.class)
-                .orElseThrow(ChangeSetPersister.NotFoundException::new);
-
-        // Trả phản hồi
-        return ResponseProperties.createResponse(200, "Success", users);
     }
 
     public ResponseEntity<?> findById(String id) throws ChangeSetPersister.NotFoundException {
-        // Tìm người dùng theo ID
-        User user = userService.findById(User.class, id)
-                .orElseThrow(ChangeSetPersister.NotFoundException::new);
+        try {
+            // Tìm người dùng theo ID
+            User user = userService.findById(User.class, id)
+                    .orElseThrow(ChangeSetPersister.NotFoundException::new);
 
-        // Trả phản hồi
-        return ResponseProperties.createResponse(200, "Success", user);
+            UserStatisticsDTO dto = userService.getUserStatistics(user.getId())
+                    .orElseThrow(ChangeSetPersister.NotFoundException::new);
+
+            user.setTotalContents(dto.getTotalContents());
+            user.setTotalFollowers(dto.getTotalFollowers());
+            user.setTotalLikes(dto.getTotalLikes());
+            user.setTotalFollowing(dto.getTotalFollowing());
+
+            // Trả phản hồi
+            return ResponseProperties.createResponse(200, "Success", user);
+        }catch (ChangeSetPersister.NotFoundException e) {
+            return ResponseProperties.createResponse(404, e.getMessage(), null);
+        }
     }
 
     public ResponseEntity<?> update(Authentication authentication, User entity)
