@@ -14,6 +14,7 @@ import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -94,6 +95,10 @@ public class CollectionApiService {
                 return ResponseProperties.createResponse(403, "Unauthorized", null);
             }
 
+            if (collection.getName().equalsIgnoreCase("liked")) {
+                return ResponseProperties.createResponse(403, "Unauthorized", null);
+            }
+
             collectionService.delete(collectionId);
             return ResponseProperties.createResponse(200, "Success", null);
         } catch (ChangeSetPersister.NotFoundException e) {
@@ -113,6 +118,7 @@ public class CollectionApiService {
         }
     }
 
+    @Transactional("masterTransactionManager")
     public ResponseEntity<?> addContentToCollection(Authentication authentication, Long collectionId, String contentId) {
         try {
             User user = getAuthenticatedUser(authentication);
@@ -145,6 +151,7 @@ public class CollectionApiService {
         }
     }
 
+    @Transactional("masterTransactionManager")
     public ResponseEntity<?> removeContentToCollection(Authentication authentication, Long collectionId, String contentId) {
         try {
             User user = getAuthenticatedUser(authentication);
@@ -156,10 +163,17 @@ public class CollectionApiService {
                 return ResponseProperties.createResponse(403, "Unauthorized", null);
             }
 
+            Content content = contentService.findById(Content.class, contentId)
+                    .orElseThrow(ChangeSetPersister.NotFoundException::new);
+
             InCols inCols = inColsService.findByContentIdAndCollectionId(contentId, collectionId)
                     .orElseThrow(ChangeSetPersister.NotFoundException::new);
 
             inColsService.delete(inCols.getId());
+            if (collection.getName().equalsIgnoreCase("liked")){
+                content.setLikeds(content.getLikeds() + 1);
+                contentService.update(content);
+            }
             return ResponseProperties.createResponse(200, "Success", null);
         } catch (ChangeSetPersister.NotFoundException e) {
             return ResponseProperties.createResponse(404, e.getMessage(), null);

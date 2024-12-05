@@ -74,87 +74,99 @@
         @Transactional("masterTransactionManager")
         public ResponseEntity<?> uploadContent(Authentication authentication, MultipartFile file, ContentDTO contentDTO)
                 throws Exception {
-            User user = getAuthenticatedUser(authentication);
-//            System.out.println("Thong tin " + user);
-            if (file.isEmpty()) {
-                return ResponseProperties.createResponse(400, "Error : File is empty", null);
-            }
-            // Lưu tệp tạm thời
-            byte[] fileBytes = file.getBytes();
+            try {
+                User user = getAuthenticatedUser(authentication);
 
-            boolean isImage = contentDTO.getType() == 0;
-            String hashData = isImage
-                    ? contentService.calculateImageHash(file)
-                    : contentService.calculateVideoHash(file);
-            if ((isImage && contentService.isExistImageData(hashData))
-                    || (!isImage && contentService.isExistVideoData(hashData))) {
-               throw new DuplicateFileException(400, "File already exists");
-            }
-
-    //         Upload file to Cloudinary
-            Map<String, Object> fileUpload = isImage ? cloudinaryService.uploadFile(file)
-                    : cloudinaryService.uploadVideo(fileBytes);
-
-            Content content = new Content();
-            content.setId(fileUpload.get("public_id").toString());
-            content.setName(file.getOriginalFilename());
-            content.setAssetId(fileUpload.get("asset_id").toString());
-            content.setHeight((Integer) fileUpload.get("height"));
-            content.setWidth((Integer) fileUpload.get("width"));
-            content.setDataUrl(fileUpload.get("url").toString());
-            content.setDataByte(hashData);
-            content.setDescription(contentDTO.getDescription());
-            content.setType(isImage);
-            content.setDateUpload(BigInteger.valueOf(new Date().getTime()));
-            content.setUserId(user.getId());
-            contentService.create(content);
-            List<String> tagNames = List.of(contentDTO.getTags().split(","));
-            tagNames.forEach(tagName -> {
-                try {
-                    gotTagsService.addTagByName(content.getId(), tagName);
-                } catch (ChangeSetPersister.NotFoundException e) {
-                    throw new RuntimeException(e);
+                if (file.isEmpty()) {
+                    return ResponseProperties.createResponse(400, "Error : File is empty", null);
                 }
-            });
+                // Lưu tệp tạm thời
+                byte[] fileBytes = file.getBytes();
 
-//            Content result = contentService.findById(Content.class, content.getId())
-//                    .orElseThrow(ChangeSetPersister.NotFoundException::new);
+                boolean isImage = contentDTO.getType() == 0;
+                String hashData = isImage
+                        ? contentService.calculateImageHash(file)
+                        : contentService.calculateVideoHash(file);
+                if ((isImage && contentService.isExistImageData(hashData))
+                    || (!isImage && contentService.isExistVideoData(hashData))) {
+                    throw new DuplicateFileException(400, "File already exists");
+                }
 
-            return ResponseProperties.createResponse(200, "Success", content);
+                //         Upload file to Cloudinary
+                Map<String, Object> fileUpload = isImage ? cloudinaryService.uploadFile(file)
+                        : cloudinaryService.uploadVideo(fileBytes);
+
+                Content content = new Content();
+                content.setId(fileUpload.get("public_id").toString());
+                content.setName(file.getOriginalFilename());
+                content.setAssetId(fileUpload.get("asset_id").toString());
+                content.setHeight((Integer) fileUpload.get("height"));
+                content.setWidth((Integer) fileUpload.get("width"));
+                content.setDataUrl(fileUpload.get("url").toString());
+                content.setDataByte(hashData);
+                content.setDescription(contentDTO.getDescription());
+                content.setType(isImage);
+                content.setDateUpload(BigInteger.valueOf(new Date().getTime()));
+                content.setUserId(user.getId());
+                contentService.create(content);
+                List<String> tagNames = List.of(contentDTO.getTags().split(","));
+                tagNames.forEach(tagName -> {
+                    try {
+                        gotTagsService.addTagByName(content.getId(), tagName);
+                    } catch (ChangeSetPersister.NotFoundException e) {
+                        throw new RuntimeException(e);
+                    }
+                });
+
+                Content result = contentService.findById(Content.class, content.getId())
+                        .orElseThrow(ChangeSetPersister.NotFoundException::new);
+
+                return ResponseProperties.createResponse(200, "Success", result);
+            } catch (ChangeSetPersister.NotFoundException e) {
+                return ResponseProperties.createResponse(400, e.getMessage(), null);
+            }
         }
         @Transactional("masterTransactionManager")
         public ResponseEntity<?> deleteContent(Authentication authentication, String id)
                 throws IOException, ChangeSetPersister.NotFoundException {
 
-            Content isExist = contentService.findById(Content.class, id)
-                    .orElseThrow(ChangeSetPersister.NotFoundException::new);
+            try {
+                Content isExist = contentService.findById(Content.class, id)
+                        .orElseThrow(ChangeSetPersister.NotFoundException::new);
 
-            Map<String, Object> fileUpload = cloudinaryService.deleteFile(id);
+                Map<String, Object> fileUpload = cloudinaryService.deleteFile(id);
 
-            return ResponseProperties.createResponse(200, "Success", fileUpload);
+                return ResponseProperties.createResponse(200, "Success", fileUpload);
+            } catch (ChangeSetPersister.NotFoundException e) {
+                return ResponseProperties.createResponse(400, "Error : Content does not exist", null);
+            }
         }
         @Transactional("masterTransactionManager")
         public ResponseEntity<?> updateTags(Authentication authentication, String contentId, String tags)
                 throws ChangeSetPersister.NotFoundException {
-            User user = getAuthenticatedUser(authentication);
+            try {
+                User user = getAuthenticatedUser(authentication);
 
-            Content isExist = contentRepository.findById(Content.class, contentId)
-                    .orElseThrow(ChangeSetPersister.NotFoundException::new);
+                Content isExist = contentRepository.findById(Content.class, contentId)
+                        .orElseThrow(ChangeSetPersister.NotFoundException::new);
 
-            if (!isExist.getUserId().equals(user.getId())) {
+                if (!isExist.getUserId().equals(user.getId())) {
 
-                return ResponseProperties
-                        .createResponse(403, "Error : User does not own this content", null);
-            }
-
-            List<String> tagNames = List.of(tags.split(","));
-            tagNames.forEach(tagName -> {
-                try {
-                    gotTagsService.addTagByName(contentId, tagName);
-                } catch (ChangeSetPersister.NotFoundException e) {
-                    throw new RuntimeException(e);
+                    return ResponseProperties
+                            .createResponse(403, "Error : User does not own this content", null);
                 }
-            });
+
+                List<String> tagNames = List.of(tags.split(","));
+                tagNames.forEach(tagName -> {
+                    try {
+                        gotTagsService.addTagByName(contentId, tagName);
+                    } catch (ChangeSetPersister.NotFoundException e) {
+                        throw new RuntimeException(e);
+                    }
+                });
+            } catch (ChangeSetPersister.NotFoundException e) {
+                return ResponseProperties.createResponse(403, "Error : User does not own this content", null);
+            }
 
             return ResponseProperties.createResponse(200, "Success", true);
         }
