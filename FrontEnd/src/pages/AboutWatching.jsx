@@ -6,6 +6,7 @@ const AboutWatching = () => {
     const [following, setFollowing] = useState([]);
     const { id } = useParams();
     useEffect(() => {
+        if(id === null) return;
         fetch(`http://localhost:8080/public/api/users/${id}`)
             .then((response) => response.json())
             .then(({ payload }) => {

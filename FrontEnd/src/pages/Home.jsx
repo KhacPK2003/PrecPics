@@ -26,8 +26,8 @@ function Home(){
     
     const handleLogout = async () => {
         try {
-          await signOut(auth);
           localStorage.clear();
+          await signOut(auth);
           setUser(null);  // Đăng xuất thành công, cập nhật lại state
         } catch (error) {
           console.error("Error during logout", error);

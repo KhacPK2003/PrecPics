@@ -30,24 +30,24 @@ import OutStanding from "./Components/About/OutStanding";
 function App(){
       return (
         <>
-            <Routes>
-                <Route path="/" element={<Home />}>
-                <Route index element={<MainBody />} /> 
-                <Route path="about/:id" element={<About />}>
-                    <Route index element={<OutStanding />} /> 
-                    <Route path="aboutdata" element={<AboutData />} />
-                    <Route path="aboutfollower" element={<AboutFollower />} />
-                    <Route path="aboutcollection" element={<AboutCollection />} />
-                    <Route path="aboutwatching" element={<AboutWatching />} />
-                </Route>
-                </Route>
-                <Route path="/Upload" element={<Upload/>}/>
-                <Route path="/main" element={<Main/>}/>
-                <Route path="/Login" element={<Login/>}/>
-                <Route path="/SignUp" element={<SignUp/>}/>
-                <Route path="/aboutnotification/:id" element={<EditNotification/>}/>
-                <Route path="/aboutprofile/:id" element={<EditProfile/>}/>
-            </Routes> 
+                <Routes>
+                    <Route path="/" element={<Home />}>
+                    <Route index element={<MainBody />} />
+                    <Route path="about/:id" element={<About />}>
+                        <Route index element={<OutStanding />} />
+                        <Route path="aboutdata" element={<AboutData />} />
+                        <Route path="aboutfollower" element={<AboutFollower />} />
+                        <Route path="aboutcollection" element={<AboutCollection />} />
+                        <Route path="aboutwatching" element={<AboutWatching />} />
+                    </Route>
+                    <Route path="collection/:id" element={<Collection />} /> {/* Định nghĩa route cho Collection */}
+                    </Route>
+                    <Route path="/Login" element={<Login />} />
+                    <Route path="/Upload" element={<Upload />} />
+                    <Route path="/SignUp" element={<SignUp />} />
+                    <Route path="/aboutnotification/:id" element={<EditNotification />} />
+                    <Route path="/aboutprofile/:id" element={<EditProfile />} />
+                </Routes>
             {/* <Routes>
                 <Route path="/" element={<About/>}/>
             </Routes> */}

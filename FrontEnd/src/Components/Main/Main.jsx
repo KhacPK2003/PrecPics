@@ -5,7 +5,7 @@ import React, { useState, useEffect } from 'react';
 function Main({ showvideo = false }) {
     const Type = showvideo ? 1 : 0;  // Sử dụng showvideo để xác định type
     const [data, setData] = useState([]);
-
+    const [change,setChange] = useState(false);
     useEffect(() => {
         // Gửi yêu cầu đến API
         fetch(`http://localhost:8080/public/api/contents/by-type?type=${Type}&page=1&size=10`)
@@ -13,7 +13,11 @@ function Main({ showvideo = false }) {
           .then(({ payload }) => {
             setData(payload);  // Cập nhật state với dữ liệu API
           })
-      }, [Type]); // Thêm Type vào dependency để gọi lại khi showvideo thay đổi
+      }, [Type,change]); // Thêm Type vào dependency để gọi lại khi showvideo thay đổi
+
+    const handleDataChange = () => {
+        setChange((prev) => !prev)
+    };
 
     return (
         <section id="gallery" className="gallery">
@@ -26,7 +30,7 @@ function Main({ showvideo = false }) {
                         ))
                         : // Nếu showvideo là false, hiển thị SectionImage
                         data.map((post) => (
-                            <SectionImage key={post.id} content={post} />
+                            <SectionImage key={post.id} content={post} onDataChange={handleDataChange}/>
                         ))
                     }
                 </div>

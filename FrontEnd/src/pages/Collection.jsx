@@ -1,72 +1,91 @@
-import React from 'react';
-import Navbar from "../Components/Navbar/Navbar";
-import SearchBar from "../Components/SearchBar/SearchBar";
-import SectionImage from '../Components/SectionImage/SectionImage';
-import Main from '../Components/Main/Main';
+import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
+import SectionImage from "../Components/SectionImage/SectionImage"; // Import SectionImage
+import SectionVideo from '../Components/SectionVideo/SectionVideo'; // Import SectionVideo
+
 const Collection = () => {
+  const { id } = useParams(); // Get id from URL
+  const [collection, setCollect] = useState(null); // State to hold the collection data
+  const [contents, setContents] = useState([]); // State to hold the content data
+  const [loading, setLoading] = useState(true); // Loading state
+  const [change , setChange] = useState(false);
+  useEffect(() => {
+    // console.log(changes);
+    // Fetch the collection based on the ID from the URL
+    fetch(`http://localhost:8080/public/api/collections/${id}`)
+      .then((response) => response.json())
+      .then(({ payload }) => {
+        setCollect(payload); // Set collection to state
+        // Fetch content for each item in the collection (using contentId from collection.inCols)
+        Promise.all(payload.inCols.map((item) => getContent(item.contentId))) // Using contentId from collection.inCols
+          .then((contentData) => {
+            setContents(contentData); // Set the fetched content data to state
+            setLoading(false); // Update loading state after data is fetched
+          })
+          .catch((error) => {
+            console.error("Error fetching content:", error);
+            setLoading(false);
+          });
+      })
+      .catch((error) => {
+        console.error("Error fetching collection:", error);
+        setLoading(false);
+      });
+  }, [id,change]); // Dependency array ensures this runs when the `id` changes
 
+  const handleDataChange = () => {
+    setChange((prev) => !prev)
+};
 
-    const imageUrls = [
-        'https://images.pexels.com/photos/1108099/pexels-photo-1108099.jpeg?auto=compress&cs=tinysrgb&w=600',
-        'https://images.pexels.com/photos/106399/pexels-photo-106399.jpeg?auto=compress&cs=tinysrgb&w=600',
-        'https://images.pexels.com/photos/145939/pexels-photo-145939.jpeg?auto=compress&cs=tinysrgb&w=600',
-        'https://images.pexels.com/photos/355465/pexels-photo-355465.jpeg?auto=compress&cs=tinysrgb&w=600',
-        'https://images.pexels.com/photos/1108099/pexels-photo-1108099.jpeg?auto=compress&cs=tinysrgb&w=600',
-        'https://images.pexels.com/photos/106399/pexels-photo-106399.jpeg?auto=compress&cs=tinysrgb&w=600',
-        'https://images.pexels.com/photos/145939/pexels-photo-145939.jpeg?auto=compress&cs=tinysrgb&w=600',
-        'https://images.pexels.com/photos/355465/pexels-photo-355465.jpeg?auto=compress&cs=tinysrgb&w=600',
-        'https://images.pexels.com/photos/1108099/pexels-photo-1108099.jpeg?auto=compress&cs=tinysrgb&w=600',
-        'https://images.pexels.com/photos/106399/pexels-photo-106399.jpeg?auto=compress&cs=tinysrgb&w=600',
-        'https://images.pexels.com/photos/145939/pexels-photo-145939.jpeg?auto=compress&cs=tinysrgb&w=600',
-        'https://images.pexels.com/photos/355465/pexels-photo-355465.jpeg?auto=compress&cs=tinysrgb&w=600',
-        'https://images.pexels.com/photos/1108099/pexels-photo-1108099.jpeg?auto=compress&cs=tinysrgb&w=600',
-        'https://images.pexels.com/photos/106399/pexels-photo-106399.jpeg?auto=compress&cs=tinysrgb&w=600',
-        'https://images.pexels.com/photos/145939/pexels-photo-145939.jpeg?auto=compress&cs=tinysrgb&w=600',
-        'https://images.pexels.com/photos/355465/pexels-photo-355465.jpeg?auto=compress&cs=tinysrgb&w=600',
-        // Thêm nhiều URL khác nếu bạn muốn
-    ];
-    return (
-        <div className='bg-white min-h-screen'>
-        <Navbar></Navbar>
-        <SearchBar></SearchBar>
-            {/* Phần trên - Tiêu đề */}
-            <div className="container mx-auto px-4 py-4 mt-[60px]">
-                <h1 className="text-center text-[70px] font-semibold">
-                    Bộ sưu tập của bạn
-                </h1>
-            </div>
+  const getContent = (contentId) => {
+    return fetch(`http://localhost:8080/public/api/contents/${contentId}`)
+      .then((response) => response.json())
+      .then(({ payload }) => payload);
+  };
 
-            {/* Phần dưới - Thông tin người dùng và số kết quả */}
-            <div className="container mx-auto px-4 py-4">
-                <div className="flex items-center justify-between">
-                    {/* Bên trái - Ảnh đại diện và tên người dùng */}
-                    <div className="flex items-center space-x-2">
-                        <div className="w-10 h-10 bg-green-700 text-white flex items-center justify-center rounded-full text-lg font-bold">
-                            P
-                        </div>
-                        <span className="text-2xl font-medium">Phạm Khắc</span>
-                    </div>
+  // Check if loading is still true
+  if (loading) {
+    return <div>Loading...</div>; // Show loading indicator while fetching data
+  }
 
-                    {/* Chính giữa - Khoảng trống linh động */}
-                    <div className="flex-grow"></div>
+  return (
+    <div className="bg-white min-h-screen">
+      <div className="container mx-auto px-4 py-4 mt-[60px]">
+        <h1 className="text-center text-[70px] font-semibold">
+          {collection?.name || 'Collection Name'}
+        </h1>
+      </div>
 
-                    {/* Bên phải - Số kết quả */}
-                    <span className="text-2xl">17 kết quả</span>
-                </div>
-            </div>
-            <div>
-            {/* <div className='grid grid-cols-4 gap-5 p-5' >     */}
-            {/* {imageUrls.map((url, index) => (
-                <div key={index} className='p-3 bg-white shadow-md rounded-lg'>
-                    <img src={url} alt='' className='w-full h-full object-cover rounded-lg' />
-                </div>
-            ))} */}
-            <Main></Main>
-                  
-    {/* </div> */}
-            </div>
+      <div className="container mx-auto px-4 py-4">
+        <div className="flex items-center justify-between">
+          <div className="flex-grow"></div>
+          <span className="text-2xl">{contents.length} kết quả</span>
         </div>
-    );
+      </div>
+
+      <section id="gallery" className="gallery">
+            <div className="w-full px-4">
+                <div className="flex flex-wrap justify-center">
+                {contents.length > 0 && contents.map((content, index) => {
+                    // Ensure content is not null or undefined
+                    if (!content){
+                        return (
+                            <div key={index} className="text-center text-lg text-gray-500">
+                                Không có ảnh
+                            </div>
+                        );
+                    }
+                    return content.type === true ? (
+                        <SectionImage key={index} content={content} onDataChange={handleDataChange}/>
+                    ) : content.type === "video" (
+                        <SectionVideo key={index} content={content} />
+                    )
+                    })}
+                </div>
+            </div>
+      </section>
+    </div>
+  );
 };
 
 export default Collection;

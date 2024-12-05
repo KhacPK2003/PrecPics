@@ -11,6 +11,7 @@ const CardUser = ({id, imageUrl2, }) => {
     const [imageUrl , setImage] = useState(null);
     const [isFollowing, setIsFollowing] = useState(false);  // Trạng thái theo dõi
     useEffect(() =>{
+      if(userId === null) return;
       fetch(`http://localhost:8080/public/api/users/${userId}`)
           .then((response) => response.json())
           .then(({ payload }) => {
@@ -44,6 +45,9 @@ const CardUser = ({id, imageUrl2, }) => {
         navigate(`/about/${id}`);
     }
     const handleFollow = async () => {
+      if(userId === null){
+         navigate(`/login`);
+      }
       let url = `http://localhost:8080/public/api/users/${id}/follow`;
       if(isFollowing){
           url = `http://localhost:8080/public/api/users/${id}/unfollow/${userId}`;

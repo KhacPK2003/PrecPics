@@ -75,7 +75,7 @@
         public ResponseEntity<?> uploadContent(Authentication authentication, MultipartFile file, ContentDTO contentDTO)
                 throws Exception {
             User user = getAuthenticatedUser(authentication);
-
+//            System.out.println("Thong tin " + user);
             if (file.isEmpty()) {
                 return ResponseProperties.createResponse(400, "Error : File is empty", null);
             }
@@ -106,7 +106,7 @@
             content.setDescription(contentDTO.getDescription());
             content.setType(isImage);
             content.setDateUpload(BigInteger.valueOf(new Date().getTime()));
-            content.setUser(user);
+            content.setUserId(user.getId());
             contentService.create(content);
             List<String> tagNames = List.of(contentDTO.getTags().split(","));
             tagNames.forEach(tagName -> {
@@ -117,10 +117,10 @@
                 }
             });
 
-            Content result = contentService.findById(Content.class, content.getId())
-                    .orElseThrow(ChangeSetPersister.NotFoundException::new);
+//            Content result = contentService.findById(Content.class, content.getId())
+//                    .orElseThrow(ChangeSetPersister.NotFoundException::new);
 
-            return ResponseProperties.createResponse(200, "Success", result);
+            return ResponseProperties.createResponse(200, "Success", content);
         }
         @Transactional("masterTransactionManager")
         public ResponseEntity<?> deleteContent(Authentication authentication, String id)

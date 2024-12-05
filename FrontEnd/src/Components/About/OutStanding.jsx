@@ -4,13 +4,17 @@ import { useParams } from 'react-router-dom';
 const OutStanding = () => {
     const {id} = useParams();
     const [user,setUser] = useState([]);
+    const [change,setChange] = useState(false);
+    const handleDataChange = () => {
+        setChange((prev) => !prev)
+    };
     useEffect(() => {
         fetch(`http://localhost:8080/public/api/users/${id}`)
           .then((response) => response.json())  // Chuyển đổi response thành JSON
           .then(({ payload }) => {
                 setUser(payload);
           })
-    }, []);
+    }, [change,id]);
     return (
             <>
                { (!user.contents ? 
@@ -39,7 +43,7 @@ const OutStanding = () => {
                         </div>
                     </div>) :
                     (
-                        <ShowAll user = {user}/>
+                        <ShowAll user = {user} onDataChange = {handleDataChange}/>
                     )
                 )}
             </>

@@ -1,7 +1,7 @@
-import React from 'react';
+import React , {useState} from 'react';
 import SectionImage from "../SectionImage/SectionImage";
 import SectionVideo from "../SectionVideo/SectionVideo";
-function ShowAll({user}){
+function ShowAll({user,onDataChange}){
     const images = user.contents.filter(post => post.type === true); // type 1 is for images
     const videos = user.contents.filter(post => post.type === false); // other types are videos
     // const contents = user.contents.map((post) => {
@@ -18,7 +18,7 @@ function ShowAll({user}){
                 <div className="w-full px-4">
                     <div className="flex flex-wrap justify-center">
                             {images.map((post, index) => (
-                                <SectionImage key={index} content={post} />
+                                <SectionImage key={index} content={post} onDataChange={onDataChange}/>
                             ))}
                             {/* {videos.map((post, index) => (
                                 <SectionVideo key={index} content={post} />

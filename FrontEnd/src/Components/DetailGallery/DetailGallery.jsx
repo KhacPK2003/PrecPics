@@ -8,7 +8,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from 'react-router-dom';
 
-function DetailGallery({ content }) {
+function DetailGallery({ content ,onDataChange  }) {
     const userId = JSON.parse(localStorage.getItem('userID'));
     const [CollectLiked , setCollectLiked] = useState(null);
     const [isFavorite, setIsFavorite] = useState(false);
@@ -22,7 +22,6 @@ function DetailGallery({ content }) {
         id: info.id // Thêm id bình luận
     }))); // Lưu trữ mảng comments trong state
     const navigate = useNavigate();
-    const [countHeart, setCountHeart] = useState(content.likeds);
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
             if (currentUser) {
@@ -64,7 +63,7 @@ function DetailGallery({ content }) {
     const removeContentCollection = async(ID) =>{
         if(token === null) return;
         try {
-            const collectionId = 8;
+            const collectionId = ID;
             const response = await fetch(`http://localhost:8080/public/api/collections/${collectionId}/contents/${content.id}`, {
               method: 'DELETE',
               headers: {
@@ -83,8 +82,22 @@ function DetailGallery({ content }) {
             }
     }
 
+    const IsLiked = async(id) =>{
+        try {
+            const response = await fetch(`http://localhost:8080/public/api/collections/${id}`);
+            if(response.ok){
+                const collectionData = await response.json();
+                // console.log(typeof )
+                const match = collectionData.payload.inCols.find(item => item.contentId === content.id);
+                setIsFavorite(match);
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    }
+
     const toggleFavorite = () => {
-        if (token === null) {
+        if (userId === null) {
             navigate('Login');
             return;
         }
@@ -96,7 +109,8 @@ function DetailGallery({ content }) {
         }
         setIsFavorite((prev) => !prev);
     };
-    const createLikedCollection = async () => {
+
+    const createLikedCollection = async (CollectName) => {
         if(token === null) return;
         try {
           const response = await fetch('http://localhost:8080/public/api/collections', {
@@ -105,12 +119,12 @@ function DetailGallery({ content }) {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${token}`,
             },
-            body: "Liked", // You can customize the name as needed
+            body: CollectName, // You can customize the name as needed
           });
     
           if (response.ok) {
             const data = await response.json();
-            setCollectLiked(data);
+            setCollectLiked(data.payload);
           } else {
             throw new Error('Failed to create the collection');
           }
@@ -121,6 +135,7 @@ function DetailGallery({ content }) {
     };
     
     useEffect(() => {
+        if(userId === null) return;
         fetch(`http://localhost:8080/public/api/users/${userId}`)
             .then((response) => response.json())
             .then(({ payload }) => {
@@ -131,23 +146,23 @@ function DetailGallery({ content }) {
                     );
                     if (likedCollection) {
                       setCollectLiked(likedCollection);
+                      IsLiked(likedCollection.id);
                     } else {
-                        createLikedCollection();
+                        createLikedCollection("Liked");
                     }
                   }
             });
     }, [userId,token]);
     
-    useEffect(() => {
-        if (isFavorite) {
-            setCountHeart((prev) => prev + 1);
-        } else {
-            setCountHeart((prev) => Math.max(prev - 1, 0));
-        }
-    }, [isFavorite]);
-
     const handlePost = async (e) => {
-        console.log(inputValue);
+        if(userId === null){
+            navigate('Login');
+            return;
+        }
+        if (token === null) {
+            return;
+        }
+        // console.log(inputValue);
         e.preventDefault();
         const toastId = toast.loading("Đang xử lý...");
         setIsLoading(true);
@@ -193,6 +208,7 @@ function DetailGallery({ content }) {
                         id: result.payload.id, // Thêm id của bình luận mới
                     },
                 ]);
+                onDataChange();
 
                 // Cập nhật toast khi POST thành công
                 toast.update(toastId, {
@@ -227,6 +243,13 @@ function DetailGallery({ content }) {
 
     // Hàm xử lý sửa bình luận
     const handleEditComment = async (commentId, editedContent) => {
+        if(userId === null){
+            navigate('Login');
+            return;
+        }
+        if (token === null) {
+            return;
+        }
         if (!editedContent.trim()) {
             toast.error("Bình luận đang rỗng! Xin hãy nhập!!");
             return; // If the comment is empty, do not update
@@ -248,6 +271,7 @@ function DetailGallery({ content }) {
                     prevComments.map((cmt) =>
                         (cmt.id === updatedComment.payload.id) ? { ...cmt, comment: updatedComment.payload.contentValue } : cmt
             ));
+            onDataChange();
                 // console.log(comments);
                 toast.success("Bình luận đã được sửa!");
             } else {
@@ -263,6 +287,14 @@ function DetailGallery({ content }) {
 
     // Hàm xử lý xóa bình luận
     const handleDeleteComment = async (commentId) => {
+        if(userId === null){
+            navigate('Login');
+            return;
+        }
+        if (token === null) {
+            navigate('Login');
+            return;
+        }
         try {
             const response = await fetch(`http://localhost:8080/public/api/comments/${commentId}`, {
                 method: 'DELETE',
@@ -275,6 +307,7 @@ function DetailGallery({ content }) {
                 setComments((prevComments) =>
                     prevComments.filter((comment) => comment.id !== commentId)
                 );
+                onDataChange();
                 toast.success("Bình luận đã được xóa!");
             } else {
                 toast.error("Lỗi khi xóa bình luận.");
@@ -288,9 +321,6 @@ function DetailGallery({ content }) {
     };
     const handleClick = ()=>{
         navigate(`/about/${content.user.id}`);
-    }
-    if(token === null){
-        return (<div>loading...</div>);
     }
     return (
         <div className="bg-popover dark:bg-card p-4 rounded-lg shadow-lg h-[calc(80vh-90px)] flex flex-col">
@@ -328,7 +358,6 @@ function DetailGallery({ content }) {
                             <AiOutlineHeart className="text-4xl text-gray-500 transition-colors duration-300" />
                         )}
                     </button>
-                    <span>{countHeart} lượt thích</span>
                 </div>
                 <div className="flex items-center space-x-2">
                     <FaComment className="text-xl text-gray-600" />
