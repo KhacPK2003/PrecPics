@@ -6,10 +6,11 @@ import Main from "../Components/Main/Main";
 import { useOutletContext } from 'react-router-dom';
 function MainBody(){
     const {showVideo} = useOutletContext();
+    // console.log(showVideo);
     return (
         <>
              <FilterMain/>
-             <SearchBar/>
+             {/* <SearchBar/> */}
             <Main showvideo = {showVideo}/>
         </>
     );

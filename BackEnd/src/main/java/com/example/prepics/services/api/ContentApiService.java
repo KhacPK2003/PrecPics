@@ -133,7 +133,6 @@
             try {
                 Content isExist = contentService.findById(Content.class, id)
                         .orElseThrow(ChangeSetPersister.NotFoundException::new);
-
                 Map<String, Object> fileUpload = cloudinaryService.deleteFile(id);
 
                 return ResponseProperties.createResponse(200, "Success", fileUpload);
@@ -212,13 +211,14 @@
             return ResponseProperties.createResponse(200, "Success", content);
         }
 
-        private byte[] getContentWithSize(Authentication authentication, Map<String, Object> model, boolean isImage)
+        private byte[] getContentWithSize(Authentication authentication, String id ,String W , String H, boolean isImage)
                 throws IOException, ChangeSetPersister.NotFoundException {
 
-            Content content = modelMapper.map(model.get("content"), Content.class);
+            Content content = contentService.findById(Content.class, id)
+                    .orElseThrow(() -> new RuntimeException("Content not found"));
 
-            int width = Integer.parseInt(model.get("width").toString());
-            int height = Integer.parseInt(model.get("height").toString());
+            int width = Integer.parseInt(W);
+            int height = Integer.parseInt(H);
 
             Optional<File> result = isImage
                     ? contentService.changeResolutionForImage(content.getDataUrl(), width, height)
@@ -239,22 +239,23 @@
         }
 
         @Transactional("slaveTransactionManager")
-        public byte[] getImageWithSize(Authentication authentication, Map<String, Object> model)
+        public byte[] getImageWithSize(Authentication authentication,String id ,String width , String height)
                 throws IOException, ChangeSetPersister.NotFoundException {
 
-            return getContentWithSize(authentication, model, true);
+            return getContentWithSize(authentication, id,width,height, true);
         }
 
         @Transactional("slaveTransactionManager")
-        public byte[] getVideoWithSize(Authentication authentication, Map<String, Object> model)
+        public byte[] getVideoWithSize(Authentication authentication, String id ,String width , String height)
                 throws IOException, ChangeSetPersister.NotFoundException {
 
-            return getContentWithSize(authentication, model, false);
+            return getContentWithSize(authentication,  id,width,height, false);
         }
 
         public ResponseEntity<?> doSearchWithFuzzy(Authentication authentication, String indexName, String fieldName, String approximates
                 , Integer page, Integer size) {
             List<String> tagNames = List.of(approximates.split(","));
+            System.out.println(tagNames);
             Set<String> tags = new HashSet<>();
 
             try {

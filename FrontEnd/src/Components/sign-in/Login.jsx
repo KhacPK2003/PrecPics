@@ -61,7 +61,7 @@ const SignInContainer = styled(Stack)(({ theme }) => ({
   },
 }));
 
-export default function SignIn(props) {
+export default function  SignIn(props) {
 
   const navigate = useNavigate();
 
@@ -91,6 +91,7 @@ export default function SignIn(props) {
         .then(response => response.json())
         .then(data => {
           localStorage.setItem('userID',JSON.stringify(data.payload.id));
+          localStorage.setItem('isAdmin',JSON.stringify(data.payload.isAdmin));
           console.log("Backend Response:", data)
           navigate("/");
         })

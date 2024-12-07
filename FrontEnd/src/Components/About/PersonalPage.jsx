@@ -31,6 +31,7 @@ const PersonalPage = () => {
         fetch(`http://localhost:8080/public/api/users/${id}`)
             .then((response) => response.json())
             .then(({ payload }) => {
+                // console.log(payload);
                     setUser(payload);
                 // Kiểm tra xem người dùng đã theo dõi chưa
             });
@@ -77,7 +78,6 @@ const PersonalPage = () => {
 
         }
     };
-
     return (
         <div>
             <div className="flex flex-col justify-center items-center">
@@ -109,17 +109,17 @@ const PersonalPage = () => {
                 <div className="h-full mt-10 flex justify-center ml-[110px]">
                     <a className="text-black text-2xl mr-6 flex flex-col items-center no-underline">
                         <p className="text-gray-600">Tổng số lượt thích</p>
-                        <h4 className="mt-3">0</h4>
+                        <h4 className="mt-3">{user.totalLikes}</h4>
                     </a>
 
                     <a className="h-full text-black text-2xl mr-6 flex flex-col items-center no-underline border-l border-black pl-6">
                         <p className="text-gray-600">Tổng số bài viết</p>
-                        <h4 className="mt-3">677,5 nghìn</h4>
+                        <h4 className="mt-3">{user.totalContents}</h4>
                     </a>
 
                     <a className="h-full text-black text-2xl mb-6 flex flex-col items-center no-underline border-l border-black pl-6">
-                        <p className="text-gray-600">Tổng số người theo dõi</p>
-                        <h4 className="mt-3">18,8 nghìn</h4>
+                        <p className="text-gray-600">Tổng bộ sưu tập</p>
+                        <h4 className="mt-3">{(!user.collections ? 0 : user.collections.length)}</h4>
                     </a>
                 </div>
             </div>

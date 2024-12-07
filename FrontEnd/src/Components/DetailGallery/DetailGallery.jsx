@@ -331,7 +331,7 @@ function DetailGallery({ content ,onDataChange  }) {
                 </div>
             </div>
             <p className="text-foreground mb-2">{content.description}</p>
-            <div className="text-muted-foreground text-sm mb-2"># show Tag</div>
+            <div className="text-muted-foreground text-sm mb-2">Tag: #{content.tags}</div>
             <h3 className="font-bold">Bình luận:</h3>
             <div className="mt-4 max-h-screen overflow-y-auto">
                 <div className="mt-2">

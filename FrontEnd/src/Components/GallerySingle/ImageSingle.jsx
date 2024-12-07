@@ -8,6 +8,7 @@ import DetailGallery from '../DetailGallery/DetailGallery';
 import { ToastContainer, toast } from 'react-toastify'; 
 import 'react-toastify/dist/ReactToastify.css'; 
 import { useNavigate } from 'react-router-dom';
+import DropdownButton from '../DropdownButton/DropdownButton';
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: '#fff',
@@ -251,6 +252,7 @@ function GallerySingle({ content , onDataChange }) {
       <Grid2 size={6}>
         <Item>
           <DetailGallery content={content} onDataChange = {onDataChange } />
+          <DropdownButton content = {content}/>
         </Item>
       </Grid2>
 

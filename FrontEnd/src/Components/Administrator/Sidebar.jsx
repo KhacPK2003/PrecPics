@@ -62,12 +62,12 @@ const Sidebar = () => {
       <hr className="sidebar-divider my-0" />
 
       {/* Nav Item - Dashboard */}
-      <div className="nav-item">
+      {/* <div className="nav-item">
         <Link className="nav-link" to="/">
           <i className="fas fa-fw fa-tachometer-alt"></i>
           <span>Bảng điều khiển</span>
         </Link>
-      </div>
+      </div> */}
 
       <hr className="sidebar-divider" />
 
@@ -159,7 +159,7 @@ const Sidebar = () => {
               className="flex items-center p-3 w-full text-left text-white rounded-t-lg focus:outline-none"
             >
               <i className="fas fa-fw fa-chart-area"></i>
-              <span className="ml-2">Quản lý phòng trưng bày</span>
+              <span className="ml-2">Quản lý các ảnh</span>
             </button>
             {isOpen4 && (
               <div className="bg-white text-white p-3 rounded-b-lg w-[90%] mx-auto">
@@ -185,13 +185,13 @@ const Sidebar = () => {
               className="flex items-center p-3 w-full text-left text-white rounded-t-lg focus:outline-none"
             >
               <i className="fa-solid fa-igloo"></i>
-              <span className="ml-2">Quản lý InCollection</span>
+              <span className="ml-2">Quản lý các video</span>
             </button>
             {isOpen5 && (
               <div className="bg-white text-white p-3 rounded-b-lg w-[90%] mx-auto">
                 <ul>
                   <li>
-                    <Link to="/incollectionmanager" className="text-lg no-underline font-serif text-black">
+                    <Link to="/videos" className="text-lg no-underline font-serif text-black">
                       Danh sách
                     </Link>
                   </li>

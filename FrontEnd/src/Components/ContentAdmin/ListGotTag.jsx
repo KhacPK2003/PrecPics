@@ -21,31 +21,13 @@ const ListGotTag = () => {
         <thead>
             <tr>
                 <th>Id</th>
-                <th>Id nhãn</th>
-                <th>Id gallery</th>
+                <th>Tên nhãn</th>
                 <th>Xóa</th>
                 <td></td>
             </tr>
                 </thead>
                 <tbody>
-                <tr>
-                    <th>1</th>
-                    <th>1</th>
-                    <th>1</th>
-                    <th><button type="submit" className="fa-solid fa-trash text-danger text-xl"></button></th>
-                </tr>
-                <tr>
-                    <th>2</th>
-                    <th>2</th>
-                    <th>2</th>
-                    <th><button type="submit" className="fa-solid fa-trash text-danger text-xl"></button></th>
-                </tr>
-                <tr>
-                    <th>3</th>
-                    <th>3</th>
-                    <th>3</th>
-                    <th><button type="submit" className="fa-solid fa-trash text-danger text-xl"></button></th>
-                </tr>
+                    
                 </tbody>
         </table>
         </div>

@@ -88,16 +88,16 @@ public class CollectionApiService {
         try {
             User user = getAuthenticatedUser(authentication);
 
-            Collection collection = collectionService.findById(Collection.class, collectionId)
-                    .orElseThrow(ChangeSetPersister.NotFoundException::new);
-
-            if (!collection.getUserId().equals(user.getId())) {
-                return ResponseProperties.createResponse(403, "Unauthorized", null);
-            }
-
-            if (collection.getName().equalsIgnoreCase("liked")) {
-                return ResponseProperties.createResponse(403, "Unauthorized", null);
-            }
+//            Collection collection = collectionService.findById(Collection.class, collectionId)
+//                    .orElseThrow(ChangeSetPersister.NotFoundException::new);
+//
+//            if (!collection.getUserId().equals(user.getId())) {
+//                return ResponseProperties.createResponse(403, "Unauthorized", null);
+//            }
+//
+//            if (collection.getName().equalsIgnoreCase("liked")) {
+//                return ResponseProperties.createResponse(403, "Unauthorized", null);
+//            }
 
             collectionService.delete(collectionId);
             return ResponseProperties.createResponse(200, "Success", null);

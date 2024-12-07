@@ -4,7 +4,7 @@ import { AiFillHeart, AiOutlineHeart } from 'react-icons/ai';
 import VideoSingle from '../GallerySingle/VideoSingle';
 import { Button, Dialog, DialogContent, DialogTitle } from '@mui/material';
 
-function SectionVideo(){
+function SectionVideo({content,onDataChange}){
     const [open, setOpen] = useState(false); // Trạng thái mở Dialog
     const [isHovered, setIsHovered] = useState(false); // Trạng thái di chuột vào video
   
@@ -47,7 +47,7 @@ function SectionVideo(){
                 <Dialog open={open} onClose={handleClose} maxWidth="lg" fullWidth >
                             <DialogTitle onClose={handleClose}>Video</DialogTitle>
                             <DialogContent dividers>
-                                <VideoSingle />
+                                <VideoSingle content={content} onDataChange = {onDataChange} />
                             </DialogContent>
                 </Dialog>
         </div>

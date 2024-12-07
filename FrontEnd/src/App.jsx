@@ -47,17 +47,18 @@ function App(){
                     <Route path="/SignUp" element={<SignUp />} />
                     <Route path="/aboutnotification/:id" element={<EditNotification />} />
                     <Route path="/aboutprofile/:id" element={<EditProfile />} />
+                    <Route path="/dashboard" element={<Index/>}/>
+                    <Route path="/usermanager" element={<UserManager/>}/>
+                    <Route path="/collectionmanager" element={<CollectionManager/>}/>
+                    <Route path="/gottagmanager" element={<GotTagManager/>}/>
+                    <Route path="/gallerymanager" element={<GalleryManager/>}/>
+                    <Route path="/videos" element={<InCollectionManager/>}/>
                 </Routes>
             {/* <Routes>
                 <Route path="/" element={<About/>}/>
             </Routes> */}
             {/* <Routes>
                 <Route path="/" element={<Index/>}/>
-                <Route path="/usermanager" element={<UserManager/>}/>
-                <Route path="/collectionmanager" element={<CollectionManager/>}/>
-                <Route path="/gottagmanager" element={<GotTagManager/>}/>
-                <Route path="/gallerymanager" element={<GalleryManager/>}/>
-                <Route path="/incollectionmanager" element={<InCollectionManager/>}/>
             </Routes> */}
         </>
       )
