@@ -108,7 +108,7 @@ public class UserApi {
      * @return Map: Trả về kết quả xóa người dùng thành công.
      * @throws ChangeSetPersister.NotFoundException: Nếu không tìm thấy người dùng.
      */
-    @com.example.prepics.annotations.User
+    @Admin
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable String id) throws ChangeSetPersister.NotFoundException {
         return userApiService.delete(id);

@@ -136,7 +136,7 @@ public class UserApiService {
         return ResponseProperties.createResponse(200, "Success", currentUser);
     }
 
-
+    @Transactional("masterTransactionManager")
     public ResponseEntity<?> delete(String id) throws ChangeSetPersister.NotFoundException {
         User result = userService.findById(User.class, id).orElseThrow(ChangeSetPersister.NotFoundException::new);
 

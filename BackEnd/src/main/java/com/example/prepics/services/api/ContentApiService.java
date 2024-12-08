@@ -134,11 +134,15 @@
                 Content isExist = contentService.findById(Content.class, id)
                         .orElseThrow(ChangeSetPersister.NotFoundException::new);
 
-                Map<String, Object> fileUpload = cloudinaryService.deleteFile(id);
+                Map<String, Object> fileUpload = cloudinaryService.deleteFile(isExist.getId());
 
-                return ResponseProperties.createResponse(200, "Success", fileUpload);
+                contentService.delete(isExist.getId());
+
+                return ResponseProperties.createResponse(200, "Success", true);
             } catch (ChangeSetPersister.NotFoundException e) {
                 return ResponseProperties.createResponse(400, "Error : Content does not exist", null);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
             }
         }
         @Transactional("masterTransactionManager")

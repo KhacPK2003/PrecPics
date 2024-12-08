@@ -6,6 +6,7 @@ import com.example.prepics.annotations.User;
 import com.example.prepics.dto.ContentDTO;
 import com.example.prepics.services.api.ContentApiService;
 import com.example.prepics.services.entity.ContentService;
+import com.example.prepics.services.entity.TagService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.crossstore.ChangeSetPersister;
@@ -33,6 +34,8 @@ public class ContentApi {
 
     @Autowired
     ContentApiService contentApiService;
+    @Autowired
+    private TagService tagService;
 
     /**
      * Upload content (image/video)
@@ -72,7 +75,7 @@ public class ContentApi {
      * @throws IOException: Nếu có lỗi khi thao tác với file.
      * @throws ChangeSetPersister.NotFoundException: Nếu không tìm thấy nội dung.
      */
-    @User
+//    @User
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<?> deleteContent(
             Authentication authentication,

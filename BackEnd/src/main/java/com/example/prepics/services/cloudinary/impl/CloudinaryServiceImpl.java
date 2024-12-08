@@ -51,7 +51,7 @@ public class CloudinaryServiceImpl implements CloudinaryService {
     }
 
     @Override
-    public Map<String, Object> deleteFile(String publicId) throws IOException {
+    public Map<String, Object> deleteFile(String publicId) throws Exception {
         return cloudinary.uploader().destroy(publicId, ObjectUtils.emptyMap());
     }
 }
