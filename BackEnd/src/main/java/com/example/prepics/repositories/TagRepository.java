@@ -25,6 +25,14 @@ public class TagRepository implements CRUDInterface<Tag, Long> {
                 .createQuery("SELECT a FROM Tag a", Tag.class).getResultList());
     }
 
+    @Transactional("masterTransactionManager")
+    public Optional<List<Tag>> findAll(Class<Tag> clazz, int page, int size) throws ChangeSetPersister.NotFoundException {
+        return Optional.ofNullable(masterEntityManager
+                .createQuery("SELECT a FROM Tag a", Tag.class).setMaxResults(size)
+                .setFirstResult((page - 1) * size)
+                .getResultList());
+    }
+
     @Override
     @Transactional("slaveTransactionManager")
     public Optional<Tag> findById(Class<Tag> clazz, Long id) throws ChangeSetPersister.NotFoundException {

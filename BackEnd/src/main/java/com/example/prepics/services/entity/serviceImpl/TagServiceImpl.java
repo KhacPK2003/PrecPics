@@ -44,6 +44,11 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
+    public Optional<List<Tag>> findAll(Class<Tag> clazz, int page, int size) throws ChangeSetPersister.NotFoundException {
+        return tagRepository.findAll(clazz, page, size);
+    }
+
+    @Override
     public Optional<Tag> findById(Class<Tag> clazz, Long aLong) throws ChangeSetPersister.NotFoundException {
         return tagRepository.findById(clazz, aLong);
     }

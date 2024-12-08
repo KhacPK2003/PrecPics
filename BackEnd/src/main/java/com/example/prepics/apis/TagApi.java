@@ -1,5 +1,6 @@
 package com.example.prepics.apis;
 
+import com.example.prepics.annotations.Admin;
 import com.example.prepics.annotations.User;
 import com.example.prepics.entity.Tag;
 import com.example.prepics.services.api.TagApiService;
@@ -71,7 +72,7 @@ public class TagApi {
      * @return ResponseEntity: Trả về phản hồi cho việc xóa thẻ.
      * @throws ChangeSetPersister.NotFoundException: Nếu không tìm thấy thẻ hoặc người dùng.
      */
-    @User
+    @Admin
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteTag(Authentication authentication, @PathVariable Long id) {
         return tagApiService.deleteTag(authentication, id);

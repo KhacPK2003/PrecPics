@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -90,6 +91,20 @@ public class TagApiService {
             return ResponseProperties.createResponse(200, "Success", tag);
         } catch (ChangeSetPersister.NotFoundException e) {
             return ResponseProperties.createResponse(404, e.getMessage(), null);
+        } catch (RuntimeException e) {
+            return ResponseProperties.createResponse(400, e.getMessage(), null);
+        }
+    }
+
+    public ResponseEntity<?> findAllTags(int page, int size) throws ChangeSetPersister.NotFoundException {
+        try {
+            List<Tag> result = tagService.findAll(Tag.class, page, size)
+                    .orElseThrow(ChangeSetPersister.NotFoundException::new);
+            return ResponseProperties.createResponse(200, "Success", result);
+        } catch (ChangeSetPersister.NotFoundException e) {
+            return ResponseProperties.createResponse(404, e.getMessage(), null);
+        } catch (RuntimeException e) {
+            return ResponseProperties.createResponse(400, e.getMessage(), null);
         }
     }
 }
