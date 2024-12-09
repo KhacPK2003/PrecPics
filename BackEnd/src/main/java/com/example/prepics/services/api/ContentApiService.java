@@ -13,16 +13,25 @@
     import com.example.prepics.services.elasticsearch.ElasticSearchService;
     import com.example.prepics.services.elasticsearch.TagESDocumentService;
     import com.example.prepics.services.entity.*;
+    import com.github.kokorin.jaffree.ffmpeg.FFmpeg;
+    import com.github.kokorin.jaffree.ffmpeg.FFmpegResult;
+    import com.github.kokorin.jaffree.ffmpeg.UrlInput;
+    import com.github.kokorin.jaffree.ffmpeg.UrlOutput;
     import org.modelmapper.ModelMapper;
     import org.springframework.beans.factory.annotation.Autowired;
     import org.springframework.data.crossstore.ChangeSetPersister;
-    import org.springframework.http.ResponseEntity;
+    import org.springframework.http.*;
+    import org.springframework.mock.web.MockMultipartFile;
     import org.springframework.security.core.Authentication;
     import org.springframework.stereotype.Service;
     import org.springframework.transaction.annotation.Transactional;
+    import org.springframework.util.LinkedMultiValueMap;
+    import org.springframework.util.MultiValueMap;
+    import org.springframework.web.client.RestTemplate;
     import org.springframework.web.multipart.MultipartFile;
 
     import java.io.File;
+    import java.io.FileInputStream;
     import java.io.IOException;
 
     import java.math.BigInteger;
@@ -76,14 +85,26 @@
                 throws Exception {
             try {
                 User user = getAuthenticatedUser(authentication);
+                boolean isImage = contentDTO.getType() == 0;
 
                 if (file.isEmpty()) {
                     return ResponseProperties.createResponse(400, "Error : File is empty", null);
                 }
+
+                String label = isImage ? classifyImageWithFlaskAPI(file) : classifyVideoWithFFmpeg(file);
+
+                if (label == null) {
+                    return ResponseProperties.createResponse(400, "Error: Unable to classify image", null);
+                }
+
+                if (label.equals("nsfw")) {
+                    return ResponseProperties.createResponse(400,
+                                    "Error: Content is classified as NSFW and cannot be uploaded", null);
+                }
+
                 // Lưu tệp tạm thời
                 byte[] fileBytes = file.getBytes();
 
-                boolean isImage = contentDTO.getType() == 0;
                 String hashData = isImage
                         ? contentService.calculateImageHash(file)
                         : contentService.calculateVideoHash(file);
@@ -126,6 +147,163 @@
                 return ResponseProperties.createResponse(400, e.getMessage(), null);
             }
         }
+
+        private String classifyImageWithFlaskAPI(MultipartFile file) {
+            try {
+                RestTemplate restTemplate = new RestTemplate();
+
+                // Tạo HttpHeaders và thiết lập Content-Type là multipart/form-data
+                HttpHeaders headers = new HttpHeaders();
+                headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+
+                // Tạo fileMap để thêm Content-Disposition vào request
+                MultiValueMap<String, String> fileMap = new LinkedMultiValueMap<>();
+                ContentDisposition contentDisposition = ContentDisposition
+                        .builder("form-data")
+                        .name("file")
+                        .filename(file.getOriginalFilename())
+                        .build();
+                fileMap.add(HttpHeaders.CONTENT_DISPOSITION, contentDisposition.toString());
+
+                // Chuyển đổi MultipartFile thành byte[]
+                byte[] fileBytes = file.getBytes();
+
+                // Tạo HttpEntity chứa byte[] và metadata trong fileMap
+                HttpEntity<byte[]> fileEntity = new HttpEntity<>(fileBytes, fileMap);
+
+                // Tạo body request chứa fileEntity
+                MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
+                body.add("file", fileEntity);
+
+                // Tạo HttpEntity chứa body và headers
+                HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
+
+                // URL của Flask API
+                String flaskApiUrl = "http://localhost:5000/classify";
+
+                // Gửi yêu cầu POST đến Flask API
+                ResponseEntity<Map> response = restTemplate.exchange(
+                        flaskApiUrl,
+                        HttpMethod.POST,
+                        requestEntity,
+                        Map.class
+                );
+
+                // Xử lý phản hồi
+                if (response.getStatusCode().is2xxSuccessful()) {
+                    Map<String, Object> responseBody = response.getBody();
+                    return responseBody != null ? (String) responseBody.get("label") : null;
+                } else {
+                    return null;
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                return null;
+            }
+        }
+
+        // Method to classify image using Flask API with File input
+        private String classifyImageWithFlaskAPI(File frame) {
+            try {
+                RestTemplate restTemplate = new RestTemplate();
+
+                // Tạo HttpHeaders và thiết lập Content-Type là multipart/form-data
+                HttpHeaders headers = new HttpHeaders();
+                headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+
+                // Tạo fileMap để thêm Content-Disposition vào request
+                MultiValueMap<String, String> fileMap = new LinkedMultiValueMap<>();
+                ContentDisposition contentDisposition = ContentDisposition
+                        .builder("form-data")
+                        .name("file")
+                        .filename(frame.getName())
+                        .build();
+                fileMap.add(HttpHeaders.CONTENT_DISPOSITION, contentDisposition.toString());
+
+                // Chuyển đổi File thành byte[]
+                byte[] frameBytes = Files.readAllBytes(frame.toPath());
+
+                // Tạo HttpEntity chứa byte[] và metadata trong fileMap
+                HttpEntity<byte[]> fileEntity = new HttpEntity<>(frameBytes, fileMap);
+
+                // Tạo body request chứa fileEntity
+                MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
+                body.add("file", fileEntity);
+
+                // Tạo HttpEntity chứa body và headers
+                HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
+
+                // URL của Flask API
+                String flaskApiUrl = "http://localhost:5000/classify";
+
+                // Gửi yêu cầu POST đến Flask API
+                ResponseEntity<Map> response = restTemplate.exchange(
+                        flaskApiUrl,
+                        HttpMethod.POST,
+                        requestEntity,
+                        Map.class
+                );
+
+                // Xử lý phản hồi
+                if (response.getStatusCode().is2xxSuccessful()) {
+                    Map<String, Object> responseBody = response.getBody();
+                    return responseBody != null ? (String) responseBody.get("label") : null;
+                } else {
+                    return null;
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                return null;
+            }
+        }
+
+        // Method to classify video by extracting frames using FFmpeg
+        private String classifyVideoWithFFmpeg(MultipartFile file) {
+            try {
+                // Save video file temporarily
+                File tempFile = File.createTempFile("video_", ".mp4");
+                file.transferTo(tempFile);
+
+                // Set up output directory for extracted frames
+                File outputDir = new File(System.getProperty("java.io.tmpdir"), "frames");
+                outputDir.mkdirs();
+
+                // Execute FFmpeg command to extract frames at 6 fps
+                FFmpegResult result = FFmpeg.atPath()
+                        .addInput(UrlInput.fromUrl(tempFile.getAbsolutePath()))
+                        .addArgument("-an") // Disable audio
+                        .addArguments("-vf", "fps=6") // Extract 6 frames per second
+                        .addOutput(UrlOutput.toUrl(outputDir.getAbsolutePath() + "/frame_%04d.png"))
+                        .execute();
+
+                // If FFmpeg extraction is successful, classify each frame
+                if (result.hashCode() == 0) {
+                    File[] frames = outputDir.listFiles((dir, name) -> name.endsWith(".png"));
+                    for (File frame : frames) {
+                        // Send each extracted frame to Flask API for classification
+                        String label = classifyImageWithFlaskAPI(frame);
+                        if ("nsfw".equals(label)) {
+                            // Delete frames after classification to free up space
+                            for (File f : frames) {
+                                f.delete();
+                            }
+                            return "nsfw"; // Reject video if any frame is NSFW
+                        }
+                    }
+                }
+
+                // Clean up extracted frames
+                for (File frame : outputDir.listFiles()) {
+                    frame.delete();
+                }
+
+                return "normal"; // If no frame is classified as "nsfw", accept the video
+            } catch (IOException e) {
+                e.printStackTrace();
+                return null; // Error during video processing
+            }
+        }
+
         @Transactional("masterTransactionManager")
         public ResponseEntity<?> deleteContent(Authentication authentication, String id)
                 throws IOException, ChangeSetPersister.NotFoundException {
@@ -157,7 +335,11 @@
                 if (!isExist.getUserId().equals(user.getId())) {
 
                     return ResponseProperties
-                            .createResponse(403, "Error : User does not own this content", null);
+                            .createResponse(
+                                    403,
+                                    "Error : User does not own this content",
+                                    null
+                            );
                 }
 
                 List<String> tagNames = List.of(tags.split(","));
@@ -169,7 +351,11 @@
                     }
                 });
             } catch (ChangeSetPersister.NotFoundException e) {
-                return ResponseProperties.createResponse(403, "Error : User does not own this content", null);
+                return ResponseProperties.createResponse(
+                        403,
+                        "Error : User does not own this content",
+                        null
+                );
             }
 
             return ResponseProperties.createResponse(200, "Success", true);
@@ -198,7 +384,8 @@
             return populateLikedContent(authentication, contents);
         }
 
-        public ResponseEntity<?> findContentById(Authentication authentication, String id) throws ChangeSetPersister.NotFoundException {
+        public ResponseEntity<?> findContentById(Authentication authentication, String id)
+                throws ChangeSetPersister.NotFoundException {
             Content content = contentService.findById(Content.class, id)
                     .orElseThrow(() -> new RuntimeException("Content not found"));
 
@@ -256,8 +443,8 @@
             return getContentWithSize(authentication, model, false);
         }
 
-        public ResponseEntity<?> doSearchWithFuzzy(Authentication authentication, String indexName, String fieldName, String approximates
-                , Integer page, Integer size) {
+        public ResponseEntity<?> doSearchWithFuzzy(Authentication authentication, String indexName, String fieldName,
+                                                   String approximates, Integer page, Integer size) {
             List<String> tagNames = List.of(approximates.split(","));
             Set<String> tags = new HashSet<>();
 
@@ -315,7 +502,8 @@
             }
         }
 
-        private ResponseEntity<?> populateLikedContent(Authentication authentication, List<Content> contents) throws ChangeSetPersister.NotFoundException {
+        private ResponseEntity<?> populateLikedContent(Authentication authentication, List<Content> contents)
+                throws ChangeSetPersister.NotFoundException {
             if (authentication != null) {
                 User user = getAuthenticatedUser(authentication);
                 Optional<Collection> collection = collectionService.getUserCollectionByName(user.getId(), "liked");

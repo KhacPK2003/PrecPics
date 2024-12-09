@@ -153,8 +153,6 @@ public class ContentServiceImpl implements ContentService {
         BigInteger value1 = new BigInteger(hash1, 16);
         BigInteger value2 = new BigInteger(hash2, 16);
 
-        System.out.println("value1: " + value1);
-        System.out.println("value2: " + value2);
         // Tính XOR giữa hai giá trị
         BigInteger xor = value1.xor(value2);
 
