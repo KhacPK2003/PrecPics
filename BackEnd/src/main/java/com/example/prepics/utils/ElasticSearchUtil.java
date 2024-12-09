@@ -15,6 +15,6 @@ public class ElasticSearchUtil {
 
     public static MatchQuery createFuzzyQuery(String fieldName, String approximate){
         return QueryBuilders.match().field(fieldName).query(approximate)
-                .operator(Operator.And).fuzziness("auto").build();
+                .operator(Operator.Or).fuzziness("auto").build();
     }
 }
