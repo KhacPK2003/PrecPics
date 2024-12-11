@@ -4,7 +4,6 @@ import com.example.prepics.entity.Content;
 import com.example.prepics.exception.DuplicateFileException;
 import com.example.prepics.interfaces.CRUDInterface;
 import org.springframework.data.crossstore.ChangeSetPersister;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
@@ -22,12 +21,13 @@ public interface ContentService extends CRUDInterface<Content, String> {
 
     Optional<File> changeResolutionForVideo(String url, int width, int height) throws IOException;
 
-    String calculateImageHash(MultipartFile imagePath) throws Exception;
+    String calculateImageHash(File imagePath) throws Exception;
 
-    String calculateVideoHash(MultipartFile imagePath) throws Exception;
+    String calculateVideoHash(File imagePath) throws Exception;
 
     boolean isExistImageData(String dataByte) throws ChangeSetPersister.NotFoundException;
 
     boolean isExistVideoData(String dataByte) throws DuplicateFileException, ChangeSetPersister.NotFoundException;
 
+    boolean isDuplicateData(boolean isImage, String hashData) throws ChangeSetPersister.NotFoundException;
 }

@@ -12,7 +12,6 @@ import jakarta.persistence.EntityExistsException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
 import java.math.BigInteger;
@@ -86,7 +85,7 @@ public class ContentServiceImpl implements ContentService {
     }
 
     @Override
-    public Optional<File> changeResolutionForImage(String contentUrl, int width, int height) throws IOException {
+    public Optional<File> changeResolutionForImage(String contentUrl, int width, int height) {
         String tempDir = System.getProperty("java.io.tmpdir");
         String pathToDst = tempDir + "/output.jpg";
 
@@ -104,7 +103,7 @@ public class ContentServiceImpl implements ContentService {
     }
 
     @Override
-    public Optional<File> changeResolutionForVideo(String contentUrl, int width, int height) throws IOException {
+    public Optional<File> changeResolutionForVideo(String contentUrl, int width, int height) {
         String tempDir = System.getProperty("java.io.tmpdir");
         String pathToDst = tempDir + "/output.mp4";
 
@@ -126,12 +125,12 @@ public class ContentServiceImpl implements ContentService {
     }
 
     @Override
-    public String calculateImageHash(MultipartFile imagePath) throws Exception {
+    public String calculateImageHash(File imagePath) throws Exception {
         return PerceptualHash.calculateImagePHash(imagePath);
     }
 
     @Override
-    public String calculateVideoHash(MultipartFile imagePath) throws Exception {
+    public String calculateVideoHash(File imagePath) throws Exception {
         return PerceptualHash.processVideo(imagePath);
     }
 
@@ -183,5 +182,11 @@ public class ContentServiceImpl implements ContentService {
         return contents.stream()
                 .map(Content::getDataByte)
                 .anyMatch(existingData -> compareVideos(dataByte, existingData) > 70);
+    }
+
+    @Override
+    public boolean isDuplicateData(boolean isImage, String hashData) throws ChangeSetPersister.NotFoundException {
+        return isImage ? isExistImageData(hashData) :
+                    isExistVideoData(hashData);
     }
 }

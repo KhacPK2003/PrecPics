@@ -13,7 +13,7 @@ public interface CloudinaryService {
 
     Map<String, Object> uploadFile(File file) throws IOException;
 
-    Map<String, Object> uploadVideo(MultipartFile file) throws IOException;
+    Map<String, Object> uploadVideo(File file) throws IOException;
 
     Map<String, Object> uploadVideo(byte[] file) throws IOException;
 

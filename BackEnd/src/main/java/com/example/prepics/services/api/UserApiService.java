@@ -1,6 +1,5 @@
 package com.example.prepics.services.api;
 
-import com.cloudinary.api.exceptions.NotFound;
 import com.example.prepics.dto.UserStatisticsDTO;
 import com.example.prepics.entity.Followees;
 import com.example.prepics.entity.Followers;

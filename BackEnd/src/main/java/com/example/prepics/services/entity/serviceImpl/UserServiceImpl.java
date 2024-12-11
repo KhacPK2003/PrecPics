@@ -19,12 +19,12 @@ public class UserServiceImpl implements UserService  {
     private UserRepository userRepository;
 
     @Override
-    public Optional<User> findByEmail(Class<User> clazz, String email) throws ChangeSetPersister.NotFoundException {
+    public Optional<User> findByEmail(Class<User> clazz, String email){
         return userRepository.findByEmail(email);
     }
 
     @Override
-    public Optional<UserStatisticsDTO> getUserStatistics(String userId) throws ChangeSetPersister.NotFoundException {
+    public Optional<UserStatisticsDTO> getUserStatistics(String userId){
         return userRepository.getUserStatistics(userId);
     }
 

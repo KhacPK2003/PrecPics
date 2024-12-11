@@ -43,7 +43,8 @@ public class InColsServiceImpl implements InColsService {
     }
 
     @Override
-    public Optional<InCols> findByContentIdAndCollectionId(String contentId, Long collectionId) throws ChangeSetPersister.NotFoundException {
+    public Optional<InCols> findByContentIdAndCollectionId(String contentId, Long collectionId)
+            throws ChangeSetPersister.NotFoundException {
         return inColsRepository.findByContentIdAndCollectionId(contentId, collectionId);
     }
 }

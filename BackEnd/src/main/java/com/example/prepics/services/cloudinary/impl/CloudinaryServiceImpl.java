@@ -30,8 +30,8 @@ public class CloudinaryServiceImpl implements CloudinaryService {
     }
 
     @Override
-    public Map<String, Object> uploadVideo(MultipartFile file) throws IOException {
-        return cloudinary.uploader().upload(file.getBytes(),
+    public Map<String, Object> uploadVideo(File file) throws IOException {
+        return cloudinary.uploader().upload(Files.readAllBytes(file.toPath()),
                 ObjectUtils.asMap(
                         "resource_type", "video"
                 ));

@@ -96,15 +96,12 @@ public class PerceptualHash {
         return hash.toString();
     }
 
-    public static String processVideo(MultipartFile file) throws Exception {
-        // Lưu tệp tạm thời
-        File tempFile = File.createTempFile("video", ".mp4");
-        file.transferTo(tempFile);
+    public static String processVideo(File file) throws Exception {
 
         try {
             // Trích xuất khung hình từ video và tính toán pHash
             StringBuilder combinedHash = new StringBuilder();
-            List<String> framePaths = extractFrames(tempFile.getAbsolutePath());
+            List<String> framePaths = extractFrames(file.getAbsolutePath());
             for (String framePath : framePaths) {
                     combinedHash.append(framePath);
             }
@@ -119,7 +116,6 @@ public class PerceptualHash {
 
     public static List<String> extractFrames(String videoPath) throws Exception {
         String outputDir = System.getProperty("java.io.tmpdir") + "frame_%03d.jpg";
-
         FFmpeg.atPath()
                 .addInput(UrlInput.fromUrl(videoPath))
                 .addArgument("-an")

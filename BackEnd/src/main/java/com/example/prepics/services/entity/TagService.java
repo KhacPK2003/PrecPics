@@ -14,5 +14,5 @@ public interface TagService extends CRUDInterface<Tag, Long> {
 
     Optional<Tag> create(String tagName) throws EntityExistsException, ChangeSetPersister.NotFoundException;
 
-    public Optional<List<Tag>> findAll(Class<Tag> clazz, int page, int size) throws ChangeSetPersister.NotFoundException;
+    Optional<List<Tag>> findAll(Class<Tag> clazz, int page, int size) throws ChangeSetPersister.NotFoundException;
 }
