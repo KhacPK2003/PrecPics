@@ -2,14 +2,21 @@ package com.example.prepics.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
+import java.io.Serial;
+import java.io.Serializable;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.io.Serial;
-import java.io.Serializable;
 
 @Entity
 @Getter
@@ -19,36 +26,36 @@ import java.io.Serializable;
 @Table(name = "followers", schema = "public")
 public class Followers implements Serializable {
 
-    @Serial
-    private static final long serialVersionUID = 112345657L;
+  @Serial
+  private static final long serialVersionUID = 112345657L;
 
-    @Id
-    @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+  @Id
+  @Column(name = "id")
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
 
-    @Column(name = "follower_id")
-    private String followerId;
+  @Column(name = "follower_id")
+  private String followerId;
 
-    @Column(name = "user_id")
-    private String userId;
+  @Column(name = "user_id")
+  private String userId;
 
 
-    @ManyToOne
-    @JoinColumn(name = "follower_id", insertable=false, updatable=false)
-    @JsonIgnoreProperties(
-            value = {
-                    "applications",
-                    "contents",
-                    "collections",
-                    "followers",
-                    "followees"
-            }
-    )
-    private User follower;
+  @ManyToOne
+  @JoinColumn(name = "follower_id", insertable = false, updatable = false)
+  @JsonIgnoreProperties(
+      value = {
+          "applications",
+          "contents",
+          "collections",
+          "followers",
+          "followees"
+      }
+  )
+  private User follower;
 
-    @OneToOne
-    @JoinColumn(name = "user_id", insertable=false, updatable=false)
-    @JsonIgnore
-    private User user;
+  @OneToOne
+  @JoinColumn(name = "user_id", insertable = false, updatable = false)
+  @JsonIgnore
+  private User user;
 }

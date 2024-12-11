@@ -1,12 +1,12 @@
 package com.example.prepics.config;
 
+import com.example.prepics.filters.SecurityFilter;
+import com.example.prepics.models.SecurityProperties;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-
-import com.example.prepics.filters.SecurityFilter;
-import com.example.prepics.models.SecurityProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -24,72 +24,70 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 @Configuration
 @EnableMethodSecurity(securedEnabled = true, jsr250Enabled = true, prePostEnabled = true)
 public class ApplicationSecurity {
 
-    @Autowired
-    private ObjectMapper objectMapper;
+  @Autowired
+  private ObjectMapper objectMapper;
 
-    @Autowired
-    private SecurityProperties restSecProps;
+  @Autowired
+  private SecurityProperties restSecProps;
 
-    @Autowired
-    private SecurityFilter tokenAuthenticationFilter;
+  @Autowired
+  private SecurityFilter tokenAuthenticationFilter;
 
-    @Bean
-    public AuthenticationEntryPoint restAuthenticationEntryPoint() {
-        return (request, response, e) -> {
-            Map<String, Object> errorObject = new HashMap<>();
-            int errorCode = 401;
-            errorObject.put("message", "Unauthorized access of protected resource, invalid credentials");
-            errorObject.put("error", HttpStatus.UNAUTHORIZED);
-            errorObject.put("code", errorCode);
-            errorObject.put("timestamp", new Timestamp(new Date().getTime()));
-            response.setContentType("application/json;charset=UTF-8");
-            response.setStatus(errorCode);
-            response.getWriter().write(objectMapper.writeValueAsString(errorObject));
-        };
-    }
+  @Bean
+  public AuthenticationEntryPoint restAuthenticationEntryPoint() {
+    return (request, response, e) -> {
+      Map<String, Object> errorObject = new HashMap<>();
+      int errorCode = 401;
+      errorObject.put("message", "Unauthorized access of protected resource, invalid credentials");
+      errorObject.put("error", HttpStatus.UNAUTHORIZED);
+      errorObject.put("code", errorCode);
+      errorObject.put("timestamp", new Timestamp(new Date().getTime()));
+      response.setContentType("application/json;charset=UTF-8");
+      response.setStatus(errorCode);
+      response.getWriter().write(objectMapper.writeValueAsString(errorObject));
+    };
+  }
 
-    @Bean
-    public CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(restSecProps.getAllowedOrigins());
-        configuration.setAllowedMethods(restSecProps.getAllowedMethods());
-        configuration.setAllowedHeaders(restSecProps.getAllowedHeaders());
-        configuration.setAllowCredentials(restSecProps.isAllowCredentials());
-        configuration.setExposedHeaders(restSecProps.getExposedHeaders());
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
-        return source;
-    }
+  @Bean
+  public CorsConfigurationSource corsConfigurationSource() {
+    CorsConfiguration configuration = new CorsConfiguration();
+    configuration.setAllowedOrigins(restSecProps.getAllowedOrigins());
+    configuration.setAllowedMethods(restSecProps.getAllowedMethods());
+    configuration.setAllowedHeaders(restSecProps.getAllowedHeaders());
+    configuration.setAllowCredentials(restSecProps.isAllowCredentials());
+    configuration.setExposedHeaders(restSecProps.getExposedHeaders());
+    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+    source.registerCorsConfiguration("/**", configuration);
+    return source;
+  }
 
-    @Bean
-    public CorsFilter corsFilter() {
-        return new CorsFilter(corsConfigurationSource());
-    }
+  @Bean
+  public CorsFilter corsFilter() {
+    return new CorsFilter(corsConfigurationSource());
+  }
 
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.csrf(AbstractHttpConfigurer::disable)
-                .formLogin(AbstractHttpConfigurer::disable)
-                .httpBasic(AbstractHttpConfigurer::disable)
-                .exceptionHandling(exceptionHandling ->
-                        exceptionHandling.authenticationEntryPoint(restAuthenticationEntryPoint())
-                )
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(restSecProps.getAllowedPublicApis().toArray(String[]::new)).permitAll()
-                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                        .anyRequest().authenticated()
-                )
-                .addFilterBefore(tokenAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
-                .sessionManagement(session ->
-                        session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                );
+  @Bean
+  public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    http.csrf(AbstractHttpConfigurer::disable)
+        .formLogin(AbstractHttpConfigurer::disable)
+        .httpBasic(AbstractHttpConfigurer::disable)
+        .exceptionHandling(exceptionHandling ->
+            exceptionHandling.authenticationEntryPoint(restAuthenticationEntryPoint())
+        )
+        .authorizeHttpRequests(auth -> auth
+            .requestMatchers(restSecProps.getAllowedPublicApis().toArray(String[]::new)).permitAll()
+            .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+            .anyRequest().authenticated()
+        )
+        .addFilterBefore(tokenAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+        .sessionManagement(session ->
+            session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+        );
 
-        return http.build();
-    }
+    return http.build();
+  }
 }

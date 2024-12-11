@@ -6,10 +6,10 @@ import lombok.Data;
 
 @Data
 @Builder
-public class GlobalRuntimeException extends RuntimeException{
+public class GlobalRuntimeException extends RuntimeException {
 
-    private Integer statusCode;
+  private Integer statusCode;
 
-    private String causeMessage;
+  private String causeMessage;
 
 }

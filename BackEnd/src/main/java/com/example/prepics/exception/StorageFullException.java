@@ -6,7 +6,8 @@ import lombok.Data;
 @Data
 @Builder
 public class StorageFullException extends RuntimeException {
-    private Integer statusCode;
 
-    private String causeMessage;
+  private Integer statusCode;
+
+  private String causeMessage;
 }

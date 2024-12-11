@@ -6,17 +6,18 @@ import lombok.Data;
 @Data
 @Builder
 public class DuplicateFileException extends RuntimeException {
-    private Integer statusCode;
 
-    private String causeMessage;
+  private Integer statusCode;
 
-    public DuplicateFileException() {
-        super();
-    }
+  private String causeMessage;
 
-    public DuplicateFileException(Integer statusCode, String causeMessage) {
-        super(causeMessage);
-        this.statusCode = statusCode;
-        this.causeMessage = causeMessage;
-    }
+  public DuplicateFileException() {
+    super();
+  }
+
+  public DuplicateFileException(Integer statusCode, String causeMessage) {
+    super(causeMessage);
+    this.statusCode = statusCode;
+    this.causeMessage = causeMessage;
+  }
 }

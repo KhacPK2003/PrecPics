@@ -17,6 +17,7 @@ import java.io.*;
 import java.math.BigInteger;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class ContentServiceImpl implements ContentService {
@@ -87,7 +88,7 @@ public class ContentServiceImpl implements ContentService {
     @Override
     public Optional<File> changeResolutionForImage(String contentUrl, int width, int height) {
         String tempDir = System.getProperty("java.io.tmpdir");
-        String pathToDst = tempDir + "/output.jpg";
+        String pathToDst = tempDir + "/"+ UUID.randomUUID() +".jpg";
 
         FFmpeg.atPath()
                 .addInput(UrlInput.fromUrl(contentUrl))
@@ -105,7 +106,7 @@ public class ContentServiceImpl implements ContentService {
     @Override
     public Optional<File> changeResolutionForVideo(String contentUrl, int width, int height) {
         String tempDir = System.getProperty("java.io.tmpdir");
-        String pathToDst = tempDir + "/output.mp4";
+        String pathToDst = tempDir + "/"+ UUID.randomUUID() +".mp4";
 
         FFmpeg.atPath()
                 .addInput(

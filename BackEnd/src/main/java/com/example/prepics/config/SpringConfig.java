@@ -8,13 +8,14 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class SpringConfig {
-    @Bean
-    ModelMapper modelMapper() {
-        return new ModelMapper();
-    }
 
-    @Bean
-    public ObjectMapper objectMapper() {
-        return new ObjectMapper().disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
-    }
+  @Bean
+  ModelMapper modelMapper() {
+    return new ModelMapper();
+  }
+
+  @Bean
+  public ObjectMapper objectMapper() {
+    return new ObjectMapper().disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
+  }
 }

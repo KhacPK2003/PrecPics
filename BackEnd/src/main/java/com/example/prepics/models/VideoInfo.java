@@ -4,8 +4,9 @@ import lombok.Data;
 
 @Data
 public class VideoInfo {
-    int width;
-    int height;
-    long bitrate;
-    double duration;
+
+  int width;
+  int height;
+  long bitrate;
+  double duration;
 }

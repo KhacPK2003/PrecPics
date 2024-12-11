@@ -8,8 +8,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserStatisticsDTO {
-    private int totalContents;
-    private int totalFollowers;
-    private int totalFollowing;
-    private int totalLikes;
+
+  private int totalContents;
+  private int totalFollowers;
+  private int totalFollowing;
+  private int totalLikes;
 }
