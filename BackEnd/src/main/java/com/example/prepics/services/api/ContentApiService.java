@@ -3,6 +3,7 @@ package com.example.prepics.services.api;
 import co.elastic.clients.elasticsearch.core.SearchResponse;
 import co.elastic.clients.elasticsearch.core.search.Hit;
 import com.example.prepics.dto.ContentDTO;
+import com.example.prepics.dto.ContentResize;
 import com.example.prepics.entity.Collection;
 import com.example.prepics.entity.Content;
 import com.example.prepics.entity.InCols;
@@ -310,42 +311,38 @@ public class ContentApiService {
     return ResponseProperties.createResponse(200, "Success", content);
   }
 
-  private byte[] getContentWithSize(Authentication authentication, Map<String, Object> model,
+  private byte[] getContentWithSize(Authentication authentication, ContentResize model,
       boolean isImage)
       throws IOException, ChangeSetPersister.NotFoundException {
 
-    Content content = modelMapper.map(model.get("content"), Content.class);
+    Content content = contentService.findById(Content.class, String.valueOf(model.getContent()))
+        .orElseThrow(ChangeSetPersister.NotFoundException::new);
 
-    int width = Integer.parseInt(model.get("width").toString());
-    int height = Integer.parseInt(model.get("height").toString());
+    int width = model.getWidth();
+    int height = model.getHeight();
 
-    Optional<File> result = isImage
-        ? contentService.changeResolutionForImage(content.getDataUrl(), width, height)
-        : contentService.changeResolutionForVideo(content.getDataUrl(), width, height);
+    File result = isImage
+        ? contentService.changeResolutionForImage(content.getDataUrl(), width, height).get()
+        : contentService.changeResolutionForVideo(content.getDataUrl(), width, height).get();
 
-    content.setDownloads(content.getDownloads() + 1);
-    contentService.update(content);
-
-    return result.map(file -> {
-      try {
-        byte[] data = Files.readAllBytes(file.toPath());
-        file.deleteOnExit();
-        return data;
-      } catch (IOException e) {
-        throw new RuntimeException("Failed to read file", e);
-      }
-    }).orElse(null);
+    try {
+      byte[] data = Files.readAllBytes(result.toPath());
+      result.deleteOnExit();
+      return data;
+    } catch (IOException e) {
+      throw new RuntimeException("Failed to read file", e);
+    }
   }
 
   @Transactional("slaveTransactionManager")
-  public byte[] getImageWithSize(Authentication authentication, Map<String, Object> model)
+  public byte[] getImageWithSize(Authentication authentication, ContentResize model)
       throws IOException, ChangeSetPersister.NotFoundException {
 
     return getContentWithSize(authentication, model, true);
   }
 
   @Transactional("slaveTransactionManager")
-  public byte[] getVideoWithSize(Authentication authentication, Map<String, Object> model)
+  public byte[] getVideoWithSize(Authentication authentication, ContentResize model)
       throws IOException, ChangeSetPersister.NotFoundException {
 
     return getContentWithSize(authentication, model, false);

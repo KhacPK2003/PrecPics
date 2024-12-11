@@ -7,6 +7,7 @@ import com.example.prepics.annotations.Admin;
 import com.example.prepics.annotations.Guest;
 import com.example.prepics.annotations.User;
 import com.example.prepics.dto.ContentDTO;
+import com.example.prepics.dto.ContentResize;
 import com.example.prepics.services.api.ContentApiService;
 import com.example.prepics.services.entity.ContentService;
 import com.example.prepics.services.entity.TagService;
@@ -190,7 +191,7 @@ public class ContentApi {
   @User
   @GetMapping(value = "/image/resize", produces = MediaType.IMAGE_JPEG_VALUE)
   public ResponseEntity<byte[]> getImageWithSize(Authentication authentication,
-      @RequestBody Map<String, Object> model)
+      @RequestBody ContentResize model)
       throws IOException, ChangeSetPersister.NotFoundException {
 
     // Gọi service để lấy ảnh đã thay đổi kích thước
@@ -223,7 +224,7 @@ public class ContentApi {
   @User
   @GetMapping(value = "/video/resize", produces = "video/mp4")
   public ResponseEntity<byte[]> getVideoWithSize(Authentication authentication,
-      @RequestBody Map<String, Object> model)
+      @RequestBody ContentResize model)
       throws IOException, ChangeSetPersister.NotFoundException {
 
     // Gọi service để lấy video đã thay đổi kích thước

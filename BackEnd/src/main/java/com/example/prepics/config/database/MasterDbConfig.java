@@ -42,6 +42,7 @@ public class MasterDbConfig {
     dataSource.setMaximumPoolSize(20);
     dataSource.setConnectionTimeout(30000); // Set timeout to 300000ms or 5 minutes
     dataSource.setIdleTimeout(120000);
+    dataSource.setReadOnly(false);
     return dataSource;
   }
 

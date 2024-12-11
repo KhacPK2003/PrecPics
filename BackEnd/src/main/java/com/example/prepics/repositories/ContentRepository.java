@@ -45,7 +45,7 @@ public class ContentRepository implements CRUDInterface<Content, String> {
   }
 
   @Override
-  @Transactional("masterTransactionManager")
+  @Transactional(value = "masterTransactionManager")
   public Optional<Content> update(Content entity) {
     return Optional.ofNullable(masterEntityManager.merge(entity));
   }
