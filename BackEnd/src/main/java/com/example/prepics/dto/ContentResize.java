@@ -7,6 +7,5 @@ public class ContentResize {
 
   private int width;
   private int height;
-
   private String content;
 }

@@ -325,6 +325,9 @@ public class ContentApiService {
         ? contentService.changeResolutionForImage(content.getDataUrl(), width, height).get()
         : contentService.changeResolutionForVideo(content.getDataUrl(), width, height).get();
 
+    content.setDownloads(content.getDownloads() + 1);
+    contentService.update(content);
+
     try {
       byte[] data = Files.readAllBytes(result.toPath());
       result.deleteOnExit();
@@ -334,14 +337,12 @@ public class ContentApiService {
     }
   }
 
-  @Transactional("slaveTransactionManager")
   public byte[] getImageWithSize(Authentication authentication, ContentResize model)
       throws IOException, ChangeSetPersister.NotFoundException {
 
     return getContentWithSize(authentication, model, true);
   }
 
-  @Transactional("slaveTransactionManager")
   public byte[] getVideoWithSize(Authentication authentication, ContentResize model)
       throws IOException, ChangeSetPersister.NotFoundException {
 
