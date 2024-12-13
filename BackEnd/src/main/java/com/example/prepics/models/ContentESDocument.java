@@ -1,10 +1,12 @@
 package com.example.prepics.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import lombok.*;
-import org.springframework.data.elasticsearch.annotations.Document;
-
 import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.springframework.data.elasticsearch.annotations.Document;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -14,17 +16,17 @@ import java.util.Objects;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ContentESDocument {
 
-    String id;
+  String id;
 
-    String tags;
+  String tags;
 
-    boolean type;
+  boolean type;
 
-    @Override
-    public boolean equals(Object o) {
-        return o instanceof ContentESDocument c &&
-                Objects.equals(id, c.id) &&
-                Objects.equals(tags, c.tags) &&
-                type == c.type;
-    }
+  @Override
+  public boolean equals(Object o) {
+    return o instanceof ContentESDocument c &&
+        Objects.equals(id, c.id) &&
+        Objects.equals(tags, c.tags) &&
+        type == c.type;
+  }
 }

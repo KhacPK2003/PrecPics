@@ -15,19 +15,19 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class ElasticSearchConfig {
 
-    @Value("${elasticsearch.url}")
-    private String host;
+  @Value("${elasticsearch.url}")
+  private String host;
 
-    @Bean
-    ElasticsearchClient configElasticsearchClient(){
-        RestClient restClient = RestClient.builder(
-                HttpHost.create(host)).setDefaultHeaders(new Header[]{
-                new BasicHeader("Content-type", "application/json")
-        }).build();
+  @Bean
+  ElasticsearchClient configElasticsearchClient() {
+    RestClient restClient = RestClient.builder(
+        HttpHost.create(host)).setDefaultHeaders(new Header[]{
+        new BasicHeader("Content-type", "application/json")
+    }).build();
 
-        ElasticsearchTransport transport = new RestClientTransport(
-                restClient, new JacksonJsonpMapper());
+    ElasticsearchTransport transport = new RestClientTransport(
+        restClient, new JacksonJsonpMapper());
 
-        return new ElasticsearchClient(transport);
-    }
+    return new ElasticsearchClient(transport);
+  }
 }

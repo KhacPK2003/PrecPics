@@ -12,12 +12,12 @@ import jakarta.persistence.EntityExistsException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
 import java.math.BigInteger;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class ContentServiceImpl implements ContentService {
@@ -86,9 +86,9 @@ public class ContentServiceImpl implements ContentService {
     }
 
     @Override
-    public Optional<File> changeResolutionForImage(String contentUrl, int width, int height) throws IOException {
+    public Optional<File> changeResolutionForImage(String contentUrl, int width, int height) {
         String tempDir = System.getProperty("java.io.tmpdir");
-        String pathToDst = tempDir + "/output.jpg";
+        String pathToDst = tempDir + "/"+ UUID.randomUUID() +".jpg";
 
         FFmpeg.atPath()
                 .addInput(UrlInput.fromUrl(contentUrl))
@@ -104,9 +104,9 @@ public class ContentServiceImpl implements ContentService {
     }
 
     @Override
-    public Optional<File> changeResolutionForVideo(String contentUrl, int width, int height) throws IOException {
+    public Optional<File> changeResolutionForVideo(String contentUrl, int width, int height) {
         String tempDir = System.getProperty("java.io.tmpdir");
-        String pathToDst = tempDir + "/output.mp4";
+        String pathToDst = tempDir + "/"+ UUID.randomUUID() +".mp4";
 
         FFmpeg.atPath()
                 .addInput(
@@ -126,12 +126,12 @@ public class ContentServiceImpl implements ContentService {
     }
 
     @Override
-    public String calculateImageHash(MultipartFile imagePath) throws Exception {
+    public String calculateImageHash(File imagePath) throws Exception {
         return PerceptualHash.calculateImagePHash(imagePath);
     }
 
     @Override
-    public String calculateVideoHash(MultipartFile imagePath) throws Exception {
+    public String calculateVideoHash(File imagePath) throws Exception {
         return PerceptualHash.processVideo(imagePath);
     }
 
@@ -153,8 +153,6 @@ public class ContentServiceImpl implements ContentService {
         BigInteger value1 = new BigInteger(hash1, 16);
         BigInteger value2 = new BigInteger(hash2, 16);
 
-        System.out.println("value1: " + value1);
-        System.out.println("value2: " + value2);
         // Tính XOR giữa hai giá trị
         BigInteger xor = value1.xor(value2);
 
@@ -185,5 +183,11 @@ public class ContentServiceImpl implements ContentService {
         return contents.stream()
                 .map(Content::getDataByte)
                 .anyMatch(existingData -> compareVideos(dataByte, existingData) > 70);
+    }
+
+    @Override
+    public boolean isDuplicateData(boolean isImage, String hashData) throws ChangeSetPersister.NotFoundException {
+        return isImage ? isExistImageData(hashData) :
+                    isExistVideoData(hashData);
     }
 }

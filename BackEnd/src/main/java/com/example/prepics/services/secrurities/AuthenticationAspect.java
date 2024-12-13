@@ -16,42 +16,44 @@ import org.springframework.stereotype.Component;
 @Aspect
 public class AuthenticationAspect {
 
-    @Autowired
-    private UserService userService;
+  @Autowired
+  private UserService userService;
 
-    @Pointcut("@annotation(com.example.prepics.annotations.User)")
-    public void userCheck() {}
+  @Pointcut("@annotation(com.example.prepics.annotations.User)")
+  public void userCheck() {
+  }
 
-    @Pointcut("@annotation(com.example.prepics.annotations.Admin)")
-    public void adminCheck() {}
+  @Pointcut("@annotation(com.example.prepics.annotations.Admin)")
+  public void adminCheck() {
+  }
 
-    @Around("userCheck()")
-    public Object validateUser(ProceedingJoinPoint joinPoint) throws Throwable {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication == null || !(authentication.getPrincipal() instanceof User userDecode)) {
-            throw new RuntimeException("Unauthorized");
-        }
-
-        User user = userService.findByEmail(User.class, userDecode.getEmail())
-                .orElseThrow(ChangeSetPersister.NotFoundException::new);
-
-        return joinPoint.proceed();
+  @Around("userCheck()")
+  public Object validateUser(ProceedingJoinPoint joinPoint) throws Throwable {
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    if (authentication == null || !(authentication.getPrincipal() instanceof User userDecode)) {
+      throw new RuntimeException("Unauthorized");
     }
 
-    @Around("adminCheck()")
-    public Object validateAdmin(ProceedingJoinPoint joinPoint) throws Throwable {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication == null || !(authentication.getPrincipal() instanceof User userDecode)) {
-            throw new RuntimeException("Unauthorized");
-        }
+    User user = userService.findByEmail(User.class, userDecode.getEmail())
+        .orElseThrow(ChangeSetPersister.NotFoundException::new);
 
-        User user = userService.findByEmail(User.class, userDecode.getEmail())
-                .orElseThrow(ChangeSetPersister.NotFoundException::new);
+    return joinPoint.proceed();
+  }
 
-        if (!user.getIsAdmin()) {
-            throw new RuntimeException("Unauthorized access");
-        }
-
-        return joinPoint.proceed();
+  @Around("adminCheck()")
+  public Object validateAdmin(ProceedingJoinPoint joinPoint) throws Throwable {
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    if (authentication == null || !(authentication.getPrincipal() instanceof User userDecode)) {
+      throw new RuntimeException("Unauthorized");
     }
+
+    User user = userService.findByEmail(User.class, userDecode.getEmail())
+        .orElseThrow(ChangeSetPersister.NotFoundException::new);
+
+    if (!user.getIsAdmin()) {
+      throw new RuntimeException("Unauthorized access");
+    }
+
+    return joinPoint.proceed();
+  }
 }

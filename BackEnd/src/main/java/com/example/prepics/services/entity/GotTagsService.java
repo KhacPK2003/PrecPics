@@ -7,5 +7,6 @@ import org.springframework.data.crossstore.ChangeSetPersister;
 
 public interface GotTagsService extends CRUDInterface<GotTags, Long> {
 
-    boolean addTagByName(String contentId, String tagName) throws ChangeSetPersister.NotFoundException;
+  boolean addTagByName(String contentId, String tagName)
+      throws ChangeSetPersister.NotFoundException;
 }

@@ -10,5 +10,5 @@ import java.util.Optional;
 public interface UserService extends CRUDInterface<User, String> {
     Optional<User> findByEmail(Class<User> clazz, String email) throws ChangeSetPersister.NotFoundException;
 
-    public Optional<UserStatisticsDTO> getUserStatistics(String userId) throws ChangeSetPersister.NotFoundException;
+    Optional<UserStatisticsDTO> getUserStatistics(String userId) throws ChangeSetPersister.NotFoundException;
 }
