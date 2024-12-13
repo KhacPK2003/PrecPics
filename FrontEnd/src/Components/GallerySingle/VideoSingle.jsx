@@ -191,7 +191,7 @@ function VideoSingle({ content, onDataChange }) {
         <Item>
           <VideoContainer>
             <ReactPlayer 
-              url={content?.dataUrl || '/233037_small.mp4'} // Dynamically use video URL
+              url={content.dataUrl} // Dynamically use video URL
               controls={true} 
               width="100%" 
               height="100%" 

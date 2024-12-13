@@ -94,4 +94,9 @@ public class TagApi {
   public ResponseEntity<?> getTag(@PathVariable Long id) {
     return tagApiService.getTag(id);
   }
+
+  @GetMapping
+  public ResponseEntity<?>getAll(Authentication authentication) throws ChangeSetPersister.NotFoundException {
+    return tagApiService.findAllTags(1,10);
+  }
 }

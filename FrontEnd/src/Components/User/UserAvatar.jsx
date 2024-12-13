@@ -15,7 +15,7 @@ function UserAvatar({ User, Logout }) {
     const [anchorElUser, setAnchorElUser] = React.useState(null);
     const navigate = useNavigate();
     const isAdmin = JSON.parse(localStorage.getItem('isAdmin'));
-    console.log(isAdmin);
+    console.log(`Admin:` + isAdmin);
     const handleOpenUserMenu = (event) => {
         setAnchorElUser(event.currentTarget);
     };
