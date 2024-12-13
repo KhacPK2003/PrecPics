@@ -118,10 +118,10 @@
                     }
                 });
 
-                Content result = contentService.findById(Content.class, content.getId())
-                        .orElseThrow(ChangeSetPersister.NotFoundException::new);
+//                Content result = contentService.findById(Content.class, content.getId())
+//                        .orElseThrow(ChangeSetPersister.NotFoundException::new);
 
-                return ResponseProperties.createResponse(200, "Success", result);
+                return ResponseProperties.createResponse(200, "Success", content);
             } catch (ChangeSetPersister.NotFoundException e) {
                 return ResponseProperties.createResponse(400, e.getMessage(), null);
             }

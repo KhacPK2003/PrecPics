@@ -15,9 +15,10 @@ const OutStanding = () => {
                 setUser(payload);
           })
     }, [change,id]);
+    console.log(user.contents);
     return (
             <>
-               { (!user.contents ? 
+               { ((!user.contents || user.contents.length === 0) ? 
                 ( <div className='bg-white min-h-screen'>
                         <div className='justify-center flex'>
                             <div className='w-full max-w-[830px]  bg-[#f7f7f7] rounded-[20px]'>

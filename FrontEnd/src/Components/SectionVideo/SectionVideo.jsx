@@ -37,7 +37,7 @@ function SectionVideo({content,onDataChange}){
                        style={{ cursor: 'pointer', width: '100%', position: 'relative' }}
                 >
                     <ReactPlayer 
-                        url="/233037_small.mp4" 
+                        url={content.dataUrl} 
                         playing={isHovered} // Phát video khi di chuột vào
                         controls={false} // Tắt controls nếu không cần
                         width="100%" 
