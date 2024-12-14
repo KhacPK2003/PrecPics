@@ -182,7 +182,7 @@ public class ContentApi {
    * chiều cao.
    *
    * @param authentication: Thông tin người dùng đã đăng nhập.
-   * @param model:          Map chứa thông tin cần thiết để thay đổi kích thước ảnh, bao gồm: -
+   * @param height:          Map chứa thông tin cần thiết để thay đổi kích thước ảnh, bao gồm: -
    *                        "content": Thông tin của nội dung ảnh (Content) cần thay đổi kích thước.
    *                        - "width": Chiều rộng mới của ảnh. - "height": Chiều cao mới của ảnh.
    * @return ResponseEntity<byte [ ]>: Dữ liệu ảnh đã thay đổi kích thước dưới dạng mảng byte, trả
@@ -190,17 +190,18 @@ public class ContentApi {
    */
   @User
   @GetMapping(value = "/image/resize", produces = MediaType.IMAGE_JPEG_VALUE)
-  public ResponseEntity<byte[]> getImageWithSize(Authentication authentication,
-      @RequestBody ContentResize model)
-      throws IOException, ChangeSetPersister.NotFoundException {
+  public ResponseEntity<byte[]> getImageWithSize(
+          Authentication authentication,
+          @RequestParam String content,
+          @RequestParam String width,
+          @RequestParam String height) throws IOException, ChangeSetPersister.NotFoundException {
 
     // Gọi service để lấy ảnh đã thay đổi kích thước
-    byte[] image = contentApiService.getImageWithSize(authentication, model);
+    byte[] image = contentApiService.getImageWithSize(authentication, content, width, height);
 
     // Kiểm tra xem ảnh có tồn tại hay không
     if (image == null) {
-      return ResponseEntity.status(HttpStatus.NOT_FOUND)
-          .body(null);  // Trả về lỗi 404 nếu không tìm thấy ảnh
+      return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);  // Trả về lỗi 404 nếu không tìm thấy ảnh
     }
 
     // Trả về dữ liệu ảnh với định dạng image/jpeg
@@ -214,7 +215,7 @@ public class ContentApi {
    * chiều cao.
    *
    * @param authentication: Thông tin người dùng đã đăng nhập.
-   * @param model:          Map chứa thông tin cần thiết để thay đổi kích thước video, bao gồm: -
+   * @param height:          Map chứa thông tin cần thiết để thay đổi kích thước video, bao gồm: -
    *                        "content": Thông tin của nội dung video (Content) cần thay đổi kích
    *                        thước. - "width": Chiều rộng mới của video. - "height": Chiều cao mới
    *                        của video.
@@ -223,17 +224,18 @@ public class ContentApi {
    */
   @User
   @GetMapping(value = "/video/resize", produces = "video/mp4")
-  public ResponseEntity<byte[]> getVideoWithSize(Authentication authentication,
-      @RequestBody ContentResize model)
-      throws IOException, ChangeSetPersister.NotFoundException {
+  public ResponseEntity<byte[]> getVideoWithSize(
+          Authentication authentication,
+          @RequestParam String content,
+          @RequestParam String width,
+          @RequestParam String height) throws IOException, ChangeSetPersister.NotFoundException {
 
     // Gọi service để lấy video đã thay đổi kích thước
-    byte[] video = contentApiService.getVideoWithSize(authentication, model);
+    byte[] video = contentApiService.getVideoWithSize(authentication, content,width,height);
 
     // Kiểm tra xem video có tồn tại hay không
     if (video == null) {
-      return ResponseEntity.status(HttpStatus.NOT_FOUND)
-          .body(null);  // Trả về lỗi 404 nếu không tìm thấy video
+      return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);  // Trả về lỗi 404 nếu không tìm thấy video
     }
 
     // Trả về dữ liệu video với định dạng video/mp4

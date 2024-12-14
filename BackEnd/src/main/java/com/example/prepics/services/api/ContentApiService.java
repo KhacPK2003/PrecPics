@@ -106,7 +106,7 @@ public class ContentApiService {
 
       String label =
           isImage ? classifyImageWithFlaskAPI(tempFile) : classifyVideoWithFFmpeg(tempFile);
-
+      System.out.println(label);
       if (label != null && label.equals("nsfw")) {
         return ResponseProperties.createResponse(400,
             "Error: Content is classified as NSFW and cannot be uploaded", null);
@@ -311,42 +311,46 @@ public class ContentApiService {
     return ResponseProperties.createResponse(200, "Success", content);
   }
 
-  private byte[] getContentWithSize(Authentication authentication, ContentResize model,
-      boolean isImage)
-      throws IOException, ChangeSetPersister.NotFoundException {
+  private byte[] getContentWithSize(Authentication authentication, String id ,String W , String H, boolean isImage)
+          throws IOException, ChangeSetPersister.NotFoundException {
 
-    Content content = contentService.findById(Content.class, String.valueOf(model.getContent()))
-        .orElseThrow(ChangeSetPersister.NotFoundException::new);
+    Content content = contentService.findById(Content.class, id)
+            .orElseThrow(() -> new RuntimeException("Content not found"));
 
-    int width = model.getWidth();
-    int height = model.getHeight();
+    int width = Integer.parseInt(W);
+    int height = Integer.parseInt(H);
 
-    File result = isImage
-        ? contentService.changeResolutionForImage(content.getDataUrl(), width, height).get()
-        : contentService.changeResolutionForVideo(content.getDataUrl(), width, height).get();
+    Optional<File> result = isImage
+            ? contentService.changeResolutionForImage(content.getDataUrl(), width, height)
+            : contentService.changeResolutionForVideo(content.getDataUrl(), width, height);
 
     content.setDownloads(content.getDownloads() + 1);
     contentService.update(content);
 
-    try {
-      byte[] data = Files.readAllBytes(result.toPath());
-      result.deleteOnExit();
-      return data;
-    } catch (IOException e) {
-      throw new RuntimeException("Failed to read file", e);
-    }
+    return result.map(file -> {
+      try {
+        byte[] data = Files.readAllBytes(file.toPath());
+        file.deleteOnExit();
+        return data;
+      } catch (IOException e) {
+        throw new RuntimeException("Failed to read file", e);
+      }
+    }).orElse(null);
   }
 
-  public byte[] getImageWithSize(Authentication authentication, ContentResize model)
-      throws IOException, ChangeSetPersister.NotFoundException {
 
-    return getContentWithSize(authentication, model, true);
+  @Transactional("slaveTransactionManager")
+  public byte[] getImageWithSize(Authentication authentication,String id ,String width , String height)
+          throws IOException, ChangeSetPersister.NotFoundException {
+
+    return getContentWithSize(authentication, id,width,height, true);
   }
 
-  public byte[] getVideoWithSize(Authentication authentication, ContentResize model)
-      throws IOException, ChangeSetPersister.NotFoundException {
+  @Transactional("slaveTransactionManager")
+  public byte[] getVideoWithSize(Authentication authentication, String id ,String width , String height)
+          throws IOException, ChangeSetPersister.NotFoundException {
 
-    return getContentWithSize(authentication, model, false);
+    return getContentWithSize(authentication,  id,width,height, false);
   }
 
   public ResponseEntity<?> doSearchWithFuzzy(Authentication authentication, String indexName,

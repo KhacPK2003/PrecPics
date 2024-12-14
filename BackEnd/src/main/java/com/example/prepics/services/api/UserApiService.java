@@ -36,20 +36,19 @@ public class UserApiService {
     try {
       User userDecode = (User) authentication.getPrincipal();
       User user = userService.findByEmail(User.class, userDecode.getEmail())
-          .orElseGet(() -> {
-            try {
-              return userService.create(userDecode)
-                  .orElseThrow(() -> new RuntimeException("Failed to create user"));
-            } catch (ChangeSetPersister.NotFoundException e) {
-              throw new RuntimeException(e);
-            }
-          });
+              .orElseGet(() -> {
+                try {
+                  return userService.create(userDecode)
+                          .orElseThrow(() -> new RuntimeException("Failed to create user"));
+                } catch (ChangeSetPersister.NotFoundException e) {
+                  throw new RuntimeException(e);
+                }
+              });
       return ResponseProperties.createResponse(200, "Success", user);
     } catch (Exception e) {
       return ResponseProperties.createResponse(500, "Internal Server Error", e.getMessage());
     }
   }
-
   public ResponseEntity<?> findAll(Authentication authentication) {
     try {
       User userDecode = (User) authentication.getPrincipal();

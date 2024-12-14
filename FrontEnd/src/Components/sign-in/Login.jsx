@@ -61,7 +61,7 @@ const SignInContainer = styled(Stack)(({ theme }) => ({
   },
 }));
 
-export default function SignIn(props) {
+export default function  SignIn(props) {
 
   const navigate = useNavigate();
 
@@ -88,17 +88,17 @@ export default function SignIn(props) {
           'Authorization': `Bearer ${idToken}`,
         },
       })
-          .then(response => response.json())
-          .then(data => {
-            localStorage.clear();
-            console.log(">>>>>>>>>>>>"+data.payload);
-            localStorage.setItem('userID',JSON.stringify(data.payload.id));
-            localStorage.setItem('isAdmin',JSON.stringify((data.payload.isAdmin)));
-            console.log("Backend Response:", data)
-            navigate("/");
-          })
-          .catch(error => console.error("Error:", error));
-
+        .then(response => response.json())
+        .then(data => {
+          localStorage.clear();
+          console.log(data.payload);
+          localStorage.setItem('userID',JSON.stringify(data.payload.id));
+          localStorage.setItem('isAdmin',JSON.stringify((data.payload.isAdmin)));
+          console.log("Backend Response:", data)
+          navigate("/");
+        })
+        .catch(error => console.error("Error:", error));
+        
 
     } catch (error) {
       console.error("Login failed", error);

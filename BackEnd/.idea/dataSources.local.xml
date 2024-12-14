@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="dataSourceStorageLocal" created-in="IU-243.22562.145">
-    <data-source name="postgres@localhost" uuid="96320d57-5a97-4fbb-8d2d-5aa964d2f744">
-      <database-info product="PostgreSQL" version="17.0" jdbc-version="4.2" driver-name="PostgreSQL JDBC Driver" driver-version="42.7.3" dbms="POSTGRES" exact-version="17.0" exact-driver-version="42.7">
+  <component name="dataSourceStorageLocal" created-in="DB-243.22562.115">
+    <data-source name="postgres@localhost" uuid="5cf62713-e9c6-4132-a87a-907cc63d4c23">
+      <database-info product="PostgreSQL" version="17.2" jdbc-version="4.2" driver-name="PostgreSQL JDBC Driver" driver-version="42.7.3" dbms="POSTGRES" exact-version="17.2" exact-driver-version="42.7">
         <identifier-quote-string>&quot;</identifier-quote-string>
       </database-info>
       <case-sensitivity plain-identifiers="lower" quoted-identifiers="exact" />
@@ -15,15 +15,6 @@
           </node>
         </introspection-scope>
       </schema-mapping>
-    </data-source>
-    <data-source name="postgres@localhost [2]" uuid="b318db63-4c8f-4f2b-a52a-3c66281796ba">
-      <database-info product="PostgreSQL" version="17.0" jdbc-version="4.2" driver-name="PostgreSQL JDBC Driver" driver-version="42.7.3" dbms="POSTGRES" exact-version="17.0" exact-driver-version="42.7">
-        <identifier-quote-string>&quot;</identifier-quote-string>
-      </database-info>
-      <case-sensitivity plain-identifiers="lower" quoted-identifiers="exact" />
-      <secret-storage>master_key</secret-storage>
-      <user-name>postgres</user-name>
-      <schema-mapping />
     </data-source>
   </component>
 </project>
