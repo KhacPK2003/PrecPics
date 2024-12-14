@@ -92,6 +92,11 @@
       <version>${netty.version}</version> <!-- Đảm bảo version phù hợp -->
       <classifier>osx-aarch_64</classifier> <!-- Nếu bạn sử dụng chip ARM (Apple Silicon) -->
     </dependency>
+    <dependency>
+      <groupId>com.zaxxer</groupId>
+      <artifactId>HikariCP</artifactId>
+      <version>5.0.1</version>
+    </dependency>
   </dependencies>
   <build>
     <plugins>

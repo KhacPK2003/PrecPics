@@ -25,7 +25,6 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
     entityManagerFactoryRef = "masterEntityManagerFactory",
     transactionManagerRef = "masterTransactionManager"
 )
-@EnableConfigurationProperties(JpaProperties.class)
 public class MasterDbConfig {
 
   @Bean
@@ -39,10 +38,8 @@ public class MasterDbConfig {
   DataSource masterDataSource() {
     HikariDataSource dataSource = masterDataSourceProperties().initializeDataSourceBuilder()
         .type(HikariDataSource.class).build();
-    dataSource.setMaximumPoolSize(20);
-    dataSource.setConnectionTimeout(30000); // Set timeout to 300000ms or 5 minutes
-    dataSource.setIdleTimeout(120000);
-    dataSource.setReadOnly(false);
+    dataSource.setMaximumPoolSize(30);
+    dataSource.setConnectionTimeout(10000);
     return dataSource;
   }
 
@@ -61,5 +58,4 @@ public class MasterDbConfig {
     return new JpaTransactionManager(
         Objects.requireNonNull(masterEntityManagerFactory.getObject()));
   }
-
 }

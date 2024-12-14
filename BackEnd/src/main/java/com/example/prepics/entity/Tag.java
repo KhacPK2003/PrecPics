@@ -17,6 +17,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.BatchSize;
 
 @Entity
 @Getter
@@ -37,13 +38,8 @@ public class Tag implements Serializable {
   @Column(name = "name")
   private String name;
 
-  @OneToMany(mappedBy = "tagId", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-  @JsonIgnoreProperties(
-      value = {
-          "applications",
-          "tag",
-          "content"
-      }
-  )
+  @OneToMany(mappedBy = "tagId", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  @BatchSize(size = 10)  // Tải tối đa 10 đối tượng trong một lần
+  @JsonIgnoreProperties(value = {"applications", "tag", "content"})
   private Set<GotTags> gotTags;
 }

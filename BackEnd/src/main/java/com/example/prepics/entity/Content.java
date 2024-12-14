@@ -1,5 +1,6 @@
 package com.example.prepics.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -95,20 +96,20 @@ public class Content implements Serializable {
   Set<InCols> inCols;
 
   @OneToMany(mappedBy = "contentId", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-  @JsonIgnoreProperties(
-      value = {
-          "applications",
-          "content",
-          "tag"
-      }
-  )
+//  @JsonIgnoreProperties(
+//      value = {
+//          "applications",
+//          "content",
+//          "tag"
+//      }
+//  )
+  @JsonIgnore
   Set<GotTags> gotTags;
 
   @OneToMany(mappedBy = "contentId", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
   @JsonIgnoreProperties(
       value = {
           "applications",
-//          "user"
       }
   )
   Set<Comment> comments;

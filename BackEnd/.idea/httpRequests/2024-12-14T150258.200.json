@@ -1,0 +1,76 @@
+{
+  "statusCode": 200,
+  "message": "Success",
+  "payload": {
+    "id": "ro3n6tgcoemzqqyp0pxy",
+    "name": "gallery-13.jpg",
+    "assetId": "f249b019eb38b25b3820f11b94793ad0",
+    "description": "Suối",
+    "dateUpload": 1734154576216,
+    "likeds": 0,
+    "downloads": 0,
+    "views": 0,
+    "width": 1920,
+    "height": 1440,
+    "dataUrl": "http://res.cloudinary.com/drw51zabb/image/upload/v1734154565/ro3n6tgcoemzqqyp0pxy.jpg",
+    "dataByte": "111100000010111010110100100101011101001111001010101010011000010",
+    "type": true,
+    "tags": "Thien nhien",
+    "userId": "FFGOgaEadPS9mfbooazgKPOkYs53",
+    "inCols": [],
+    "gotTags": [
+      {
+        "id": 8,
+        "contentId": "ro3n6tgcoemzqqyp0pxy",
+        "tagId": 7
+      }
+    ],
+    "comments": [
+      {
+        "id": 4,
+        "contentValue": "aa",
+        "dateCreate": 1734155782978,
+        "userId": "FFGOgaEadPS9mfbooazgKPOkYs53",
+        "contentId": "ro3n6tgcoemzqqyp0pxy",
+        "user": {
+          "id": "FFGOgaEadPS9mfbooazgKPOkYs53",
+          "userName": "ppamkhac",
+          "avatarUrl": "https://lh3.googleusercontent.com/a/ACg8ocJlOxxPU3TB5pcQDmEN8pmhAo7YWh4QsGUrmMufB6VugcijGg=s96-c",
+          "fullName": "ppam khac",
+          "email": "ppamkhac@gmail.com",
+          "description": null,
+          "address": null,
+          "websiteUrl": null,
+          "twitterUrl": null,
+          "instagramUrl": null,
+          "isActive": true,
+          "isAdmin": true,
+          "totalContents": 0,
+          "totalFollowers": 0,
+          "totalFollowing": 0,
+          "totalLikes": 0
+        }
+      }
+    ],
+    "user": {
+      "id": "FFGOgaEadPS9mfbooazgKPOkYs53",
+      "userName": "ppamkhac",
+      "avatarUrl": "https://lh3.googleusercontent.com/a/ACg8ocJlOxxPU3TB5pcQDmEN8pmhAo7YWh4QsGUrmMufB6VugcijGg=s96-c",
+      "fullName": "ppam khac",
+      "email": "ppamkhac@gmail.com",
+      "description": null,
+      "address": null,
+      "websiteUrl": null,
+      "twitterUrl": null,
+      "instagramUrl": null,
+      "isActive": true,
+      "isAdmin": true,
+      "totalContents": 0,
+      "totalFollowers": 0,
+      "totalFollowing": 0,
+      "totalLikes": 0
+    },
+    "liked": false,
+    "public": true
+  }
+}

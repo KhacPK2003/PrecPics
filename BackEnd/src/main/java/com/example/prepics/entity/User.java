@@ -20,6 +20,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.hibernate.annotations.BatchSize;
 
 @Entity
 @AllArgsConstructor
@@ -95,43 +96,19 @@ public class User implements Serializable {
   private int totalLikes;
 
   @OneToMany(mappedBy = "userId", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-  @JsonIgnoreProperties(
-      value = {
-          "applications",
-          "inCols",
-          "user"
-      }
-  )
+  @JsonIgnoreProperties(value = {"applications", "inCols", "user"})
   private Set<Collection> collections;
 
   @OneToMany(mappedBy = "userId", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-  @JsonIgnoreProperties(
-      value = {
-          "applications",
-          "inCols",
-          "gotTags",
-          "user"
-      }
-  )
+  @BatchSize(size = 10)
+  @JsonIgnoreProperties(value = {"applications", "inCols", "gotTags", "user"})
   private Set<Content> contents;
 
   @OneToMany(mappedBy = "userId", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-  @JsonIgnoreProperties(
-      value = {
-          "applications",
-          "user"
-      }
-  )
+  @JsonIgnoreProperties(value = {"applications", "user"})
   private Set<Followees> followees;
 
   @OneToMany(mappedBy = "userId", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-  @JsonIgnoreProperties(
-      value = {
-          "applications",
-          "user"
-      }
-  )
+  @JsonIgnoreProperties(value = {"applications", "user"})
   private Set<Followers> followers;
 }
-
-

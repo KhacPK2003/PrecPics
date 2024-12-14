@@ -38,10 +38,9 @@ public class SlaveDbConfig {
   public DataSource slaveDataSource() {
     HikariDataSource dataSource = slaveDataSourceProperties().initializeDataSourceBuilder()
         .type(HikariDataSource.class).build();
-    dataSource.setMaximumPoolSize(20);
-    dataSource.setConnectionTimeout(30000); // Set timeout to 300000ms or 5 minutes
-    dataSource.setIdleTimeout(120000);
-    dataSource.setReadOnly(true);
+    dataSource.setMaximumPoolSize(30);
+    dataSource.setConnectionTimeout(10000);
+    dataSource.setReadOnly(true); // Slave chỉ đọc
     return dataSource;
   }
 
@@ -63,9 +62,7 @@ public class SlaveDbConfig {
 
   @Bean(name = "slaveTransactionManager")
   public PlatformTransactionManager slaveTransactionManager(
-      final @Qualifier("slaveEntityManagerFactory")
-      LocalContainerEntityManagerFactoryBean slaveEntityManagerFactory) {
+      final @Qualifier("slaveEntityManagerFactory") LocalContainerEntityManagerFactoryBean slaveEntityManagerFactory) {
     return new JpaTransactionManager(Objects.requireNonNull(slaveEntityManagerFactory.getObject()));
   }
-
 }

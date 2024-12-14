@@ -37,7 +37,8 @@ public class InCols implements Serializable {
   @Column(name = "content_id")
   private String contentId;
 
-  @ManyToOne(fetch = FetchType.EAGER)
+  // Thay đổi FetchType thành LAZY để tối ưu hiệu suất
+  @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "content_id", insertable = false, updatable = false)
   @JsonIgnoreProperties(
       value = {
@@ -52,7 +53,8 @@ public class InCols implements Serializable {
   @Column(name = "collection_id")
   private Long collectionId;
 
-  @ManyToOne(fetch = FetchType.EAGER)
+  // Thay đổi FetchType thành LAZY để tối ưu hiệu suất
+  @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "collection_id", insertable = false, updatable = false)
   @JsonIgnoreProperties(
       value = {

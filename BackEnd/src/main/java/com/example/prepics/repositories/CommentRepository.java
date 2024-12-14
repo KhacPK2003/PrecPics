@@ -31,7 +31,6 @@ public class CommentRepository implements CRUDInterface<Comment, Long> {
   }
 
   @Override
-  @Transactional("slaveTransactionManager")
   public Optional<Comment> findById(Class<Comment> clazz, Long id)
       throws ChangeSetPersister.NotFoundException {
     return Optional.ofNullable(slaveEntityManager.find(clazz, id));
@@ -44,7 +43,7 @@ public class CommentRepository implements CRUDInterface<Comment, Long> {
     entity.setUser(user);
     masterEntityManager.persist(entity);
     masterEntityManager.flush();
-    return Optional.ofNullable(masterEntityManager.find(Comment.class, entity.getId()));
+    return Optional.of(entity);
   }
 
   @Override

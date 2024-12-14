@@ -36,28 +36,16 @@ public class GotTags implements Serializable {
   @Column(name = "content_id")
   private String contentId;
 
-  @ManyToOne(fetch = FetchType.EAGER)
+  @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "content_id", insertable = false, updatable = false)
-  @JsonIgnoreProperties(
-      value = {
-          "applications",
-          "inCols",
-          "gotTags",
-          "user"
-      }
-  )
+  @JsonIgnoreProperties(value = {"applications", "inCols", "gotTags", "user"})
   private Content content;
 
   @Column(name = "tag_id")
   private Long tagId;
 
-  @ManyToOne(fetch = FetchType.EAGER)
+  @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "tag_id", insertable = false, updatable = false)
-  @JsonIgnoreProperties(
-      value = {
-          "applications",
-          "gotTags",
-      }
-  )
+  @JsonIgnoreProperties(value = {"applications", "gotTags"})
   private Tag tag;
 }
