@@ -41,7 +41,7 @@ public class Followees implements Serializable {
   @Column(name = "user_id")
   private String userId;
 
-  @ManyToOne(fetch = FetchType.LAZY)
+  @ManyToOne(fetch = FetchType.EAGER)
   @JoinColumn(name = "followee_id", insertable = false, updatable = false)
   @JsonIgnoreProperties(value = {"applications", "contents", "collections", "followers",
       "followees"})
