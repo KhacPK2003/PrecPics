@@ -58,7 +58,6 @@ public class SecurityFilter extends OncePerRequestFilter {
     } else {
       filterChain.doFilter(request, response);
     }
-//        filterChain.doFilter(request, response);
   }
 
   private boolean isGuestEndpoint(HttpServletRequest request) {

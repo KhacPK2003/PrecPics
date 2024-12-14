@@ -53,7 +53,6 @@ public class Comment implements Serializable {
           "applications",
           "contents",
           "collections",
-          "user",
           "followers",
           "followees"
       }

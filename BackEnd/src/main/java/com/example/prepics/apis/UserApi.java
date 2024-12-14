@@ -36,7 +36,6 @@ public class UserApi {
    * @return Map: Trả về kết quả đăng nhập, bao gồm thông tin người dùng.
    * @throws ChangeSetPersister.NotFoundException: Nếu không tìm thấy người dùng.
    */
-  @Guest
   @PostMapping("/login")
   public ResponseEntity<?> loginUserWithGoogle(Authentication authentication)
       throws ChangeSetPersister.NotFoundException {
