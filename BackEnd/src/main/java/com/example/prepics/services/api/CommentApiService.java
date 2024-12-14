@@ -40,6 +40,8 @@ public class CommentApiService {
       commentModel.setDateCreate(BigInteger.valueOf(new Date().getTime()));
       Comment savedComment = commentService.create(commentModel)
           .orElseThrow(() -> new RuntimeException("Error creating comment"));
+//      Comment result = commentService.findById(Comment.class, savedComment.getId()).orElseThrow(null);
+
       return ResponseProperties.createResponse(200, "Success", savedComment);
     } catch (ChangeSetPersister.NotFoundException e) {
       return ResponseProperties.createResponse(404, e.getMessage(), null);

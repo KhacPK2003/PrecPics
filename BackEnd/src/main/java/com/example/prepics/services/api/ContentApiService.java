@@ -104,13 +104,13 @@ public class ContentApiService {
       File tempFile = File.createTempFile(UUID.randomUUID().toString(), ".tmp");
       file.transferTo(tempFile);
 
-//      String label =
-//          isImage ? classifyImageWithFlaskAPI(tempFile) : classifyVideoWithFFmpeg(tempFile);
-//      System.out.println(label);
-//      if (label != null && label.equals("nsfw")) {
-//        return ResponseProperties.createResponse(400,
-//            "Error: Content is classified as NSFW and cannot be uploaded", null);
-//      }
+      String label =
+          isImage ? classifyImageWithFlaskAPI(tempFile) : classifyVideoWithFFmpeg(tempFile);
+      System.out.println(label);
+      if (label != null && label.equals("nsfw")) {
+        return ResponseProperties.createResponse(400,
+            "Error: Content is classified as NSFW and cannot be uploaded", null);
+      }
 
       String hashData = isImage
           ? contentService.calculateImageHash(tempFile)

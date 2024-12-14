@@ -108,7 +108,7 @@ public class Content implements Serializable {
   @JsonIgnoreProperties(
       value = {
           "applications",
-          "user"
+//          "user"
       }
   )
   Set<Comment> comments;

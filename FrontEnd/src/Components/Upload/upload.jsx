@@ -146,7 +146,7 @@ function Upload() {
             } else {
                 const errorData = await response.json();
                 toast.update(toastId, {
-                    render: `Tải lên thất bại!`,
+                    render: `Hình ảnh không phù hợp`,
                     type: "error",
                     isLoading: false,
                     autoClose: 5000,

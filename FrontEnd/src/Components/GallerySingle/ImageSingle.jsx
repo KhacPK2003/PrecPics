@@ -110,7 +110,7 @@ function GallerySingle({ content , onDataChange }) {
   };
 
   const createCollection = useCallback(async (CollectName) => {
-    if (!token || !CollectName) return;
+    if (!token || !CollectName.trim()) return;
 
     try {
       const response = await fetch('http://localhost:8080/public/api/collections', {
@@ -119,7 +119,7 @@ function GallerySingle({ content , onDataChange }) {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`,
         },
-        body: JSON.stringify({ name: CollectName }),
+        body: CollectName,
       });
 
       if (response.ok) {

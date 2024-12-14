@@ -1,6 +1,7 @@
 package com.example.prepics.repositories;
 
 import com.example.prepics.entity.Comment;
+import com.example.prepics.entity.User;
 import com.example.prepics.interfaces.CRUDInterface;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -39,7 +40,10 @@ public class CommentRepository implements CRUDInterface<Comment, Long> {
   @Override
   @Transactional("masterTransactionManager")
   public Optional<Comment> create(Comment entity) {
+    User user = masterEntityManager.find(User.class, entity.getUserId());
+    entity.setUser(user);
     masterEntityManager.persist(entity);
+    masterEntityManager.flush();
     return Optional.ofNullable(entity);
   }
 
