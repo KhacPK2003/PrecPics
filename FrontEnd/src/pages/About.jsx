@@ -15,7 +15,7 @@ const About = () => {
         <div className='bg-white min-h-screen'>
             <PersonalPage/>
             <div className='flex justify-center mt-[100px] mr-[900px]'>
-                    <Button props ='Mục nổi bật'  textcolor='text-white' bgcolor='bg-black'  onClick={() => navigate(`/about/${id}`)}></Button>
+                    <Button props ='Mục nổi bật'   onClick={() => navigate(`/about/${id}`)}></Button>
                     <Button props ='Bộ sưu tập '  onClick={() => navigate(`/about/${id}/aboutcollection`)}></Button>   
                     <Button props ='Số liệu thống kê ' onClick={() => navigate(`/about/${id}/aboutdata`)} ></Button>
                     <Button props ='Người theo dõi ' onClick={() => navigate(`/about/${id}/aboutfollower`)}></Button>

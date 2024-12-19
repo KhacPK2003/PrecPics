@@ -91,16 +91,17 @@ public class CollectionApiService {
       Collection collection = collectionService.findById(Collection.class, collectionId)
           .orElseThrow(ChangeSetPersister.NotFoundException::new);
 
-      if (!collection.getUserId().equals(user.getId())) {
-        return ResponseProperties.createResponse(403, "Unauthorized", null);
-      }
-
       if (collection.getName().equalsIgnoreCase("liked")) {
         return ResponseProperties.createResponse(403, "Unauthorized", null);
       }
 
-      collectionService.delete(collectionId);
-      return ResponseProperties.createResponse(200, "Success", null);
+      if (collection.getUserId().equals(user.getId()) || user.getIsAdmin()) {
+        collectionService.delete(collectionId);
+        return ResponseProperties.createResponse(200, "Success", null);
+      }
+
+      return ResponseProperties.createResponse(403, "Unauthorized", null);
+
     } catch (ChangeSetPersister.NotFoundException e) {
       return ResponseProperties.createResponse(404, e.getMessage(), null);
     } catch (RuntimeException e) {
@@ -171,11 +172,11 @@ public class CollectionApiService {
       InCols inCols = inColsService.findByContentIdAndCollectionId(contentId, collectionId)
           .orElseThrow(ChangeSetPersister.NotFoundException::new);
 
-      inColsService.delete(inCols.getId());
       if (collection.getName().equalsIgnoreCase("liked")) {
-        content.setLikeds(content.getLikeds() + 1);
+        content.setLikeds(content.getLikeds() - 1);
         contentService.update(content);
       }
+      inColsService.delete(inCols.getId());
       return ResponseProperties.createResponse(200, "Success", null);
     } catch (ChangeSetPersister.NotFoundException e) {
       return ResponseProperties.createResponse(404, e.getMessage(), null);

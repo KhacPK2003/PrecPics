@@ -1,11 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState , useEffect } from 'react';
 import { Menu, MenuItem, IconButton } from '@mui/material';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { Link , useParams} from 'react-router-dom'; // Import Link from react-router-dom
-const ImageACollection = ({ collectionId, collectionName , userId}) => {
+
+
+const ImageACollection = ({ collectionId, collectionName , userId , handleDelete}) => {
   const [anchorEl, setAnchorEl] = useState(null);
- 
-  // Mở menu
+
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -16,11 +17,10 @@ const ImageACollection = ({ collectionId, collectionName , userId}) => {
   };
 
   // Xử lý hành động xóa
-  const handleDelete = () => {
-    if (window.confirm(`Are you sure you want to delete the collection "${collectionName}"?`)) {
-      handleClose();  // Đóng menu sau khi xóa
-    }
+  const handleChange = () => {
+    handleDelete(collectionName , collectionId);
   };
+
 
   return (
     <div className="relative w-80 h-80 rounded-lg overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300">
@@ -51,7 +51,7 @@ const ImageACollection = ({ collectionId, collectionName , userId}) => {
           open={Boolean(anchorEl)}
           onClose={handleClose}
         >
-          <MenuItem onClick={handleDelete}>Delete</MenuItem>
+          <MenuItem onClick={handleChange}>Delete</MenuItem>
         </Menu>
       </div>
     </div>

@@ -14,7 +14,7 @@ import { useNavigate } from 'react-router-dom';
 const pages = [
     { name: 'Trang chủ', path: '/' },
     { name: 'Upload', path: '/Upload' },
-    { name: 'Liên hệ', path: '/Contact' },
+    { name: 'Liên hệ', path: '/' },
     { name : 'Video' , path: '/'},
     { name : 'Ảnh' , path: '/'},
 ];
@@ -60,7 +60,7 @@ function Navbar({UserInfo , onClickVideo , handleLogOut , isLogin}){
                         variant="h6"
                         noWrap
                         component="a"
-                        href="#app-bar-with-responsive-menu"
+                        href="/"
                         sx={{
                         mr: 2,
                         display: { xs: 'none', md: 'flex' },

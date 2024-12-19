@@ -6,11 +6,124 @@
   <component name="ChangeListManager">
     <list default="true" id="110deddb-bae3-4587-87d5-696e4597a928" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/../BackEnd/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../BackEnd/.idea/dataSources.local.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../BackEnd/src/main/java/com/example/prepics/entity/Followees.java" beforeDir="false" afterPath="$PROJECT_DIR$/../BackEnd/src/main/java/com/example/prepics/entity/Followees.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../BackEnd/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/../BackEnd/src/main/resources/application.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../BackEnd/target/classes/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/../BackEnd/target/classes/application.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../BackEnd/.idea/dataSources.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../BackEnd/.idea/dataSources.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../BackEnd/.idea/dataSources/5cf62713-e9c6-4132-a87a-907cc63d4c23.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../BackEnd/.idea/dataSources/5cf62713-e9c6-4132-a87a-907cc63d4c23.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../BackEnd/.idea/dataSources/5cf62713-e9c6-4132-a87a-907cc63d4c23/storage_v2/_src_/database/postgres.edMnLQ/schema/public.abK9xQ.meta" beforeDir="false" afterPath="$PROJECT_DIR$/../BackEnd/.idea/dataSources/5cf62713-e9c6-4132-a87a-907cc63d4c23/storage_v2/_src_/database/postgres.edMnLQ/schema/public.abK9xQ.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../BackEnd/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../BackEnd/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../BackEnd/src/main/java/com/example/prepics/apis/UserApi.java" beforeDir="false" afterPath="$PROJECT_DIR$/../BackEnd/src/main/java/com/example/prepics/apis/UserApi.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../BackEnd/src/main/java/com/example/prepics/entity/Followers.java" beforeDir="false" afterPath="$PROJECT_DIR$/../BackEnd/src/main/java/com/example/prepics/entity/Followers.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../BackEnd/src/main/java/com/example/prepics/entity/GotTags.java" beforeDir="false" afterPath="$PROJECT_DIR$/../BackEnd/src/main/java/com/example/prepics/entity/GotTags.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../BackEnd/src/main/java/com/example/prepics/entity/Tag.java" beforeDir="false" afterPath="$PROJECT_DIR$/../BackEnd/src/main/java/com/example/prepics/entity/Tag.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../BackEnd/src/main/java/com/example/prepics/services/api/CollectionApiService.java" beforeDir="false" afterPath="$PROJECT_DIR$/../BackEnd/src/main/java/com/example/prepics/services/api/CollectionApiService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../BackEnd/src/main/java/com/example/prepics/services/api/ContentApiService.java" beforeDir="false" afterPath="$PROJECT_DIR$/../BackEnd/src/main/java/com/example/prepics/services/api/ContentApiService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../BackEnd/src/main/java/com/example/prepics/services/api/UserApiService.java" beforeDir="false" afterPath="$PROJECT_DIR$/../BackEnd/src/main/java/com/example/prepics/services/api/UserApiService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/BackendApplication.class" beforeDir="false" afterPath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/BackendApplication.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/annotations/Admin.class" beforeDir="false" afterPath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/annotations/Admin.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/annotations/Guest.class" beforeDir="false" afterPath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/annotations/Guest.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/annotations/User.class" beforeDir="false" afterPath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/annotations/User.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/apis/CollectionApi.class" beforeDir="false" afterPath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/apis/CollectionApi.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/apis/CommentApi.class" beforeDir="false" afterPath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/apis/CommentApi.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/apis/ContentApi.class" beforeDir="false" afterPath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/apis/ContentApi.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/apis/TagApi.class" beforeDir="false" afterPath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/apis/TagApi.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/apis/UserApi.class" beforeDir="false" afterPath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/apis/UserApi.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/config/ApplicationSecurity.class" beforeDir="false" afterPath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/config/ApplicationSecurity.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/config/CloudinaryConfig.class" beforeDir="false" afterPath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/config/CloudinaryConfig.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/config/ElasticSearchConfig.class" beforeDir="false" afterPath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/config/ElasticSearchConfig.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/config/ErrorGlobalHandlerConfig.class" beforeDir="false" afterPath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/config/ErrorGlobalHandlerConfig.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/config/FirebaseConfig.class" beforeDir="false" afterPath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/config/FirebaseConfig.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/config/PerceptualHash.class" beforeDir="false" afterPath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/config/PerceptualHash.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/config/SpringConfig.class" beforeDir="false" afterPath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/config/SpringConfig.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/config/database/MasterDbConfig.class" beforeDir="false" afterPath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/config/database/MasterDbConfig.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/config/database/SlaveDbConfig.class" beforeDir="false" afterPath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/config/database/SlaveDbConfig.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/dto/ContentDTO.class" beforeDir="false" afterPath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/dto/ContentDTO.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/dto/ContentResize.class" beforeDir="false" afterPath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/dto/ContentResize.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/dto/UserStatisticsDTO.class" beforeDir="false" afterPath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/dto/UserStatisticsDTO.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/entity/Collection.class" beforeDir="false" afterPath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/entity/Collection.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/entity/Comment.class" beforeDir="false" afterPath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/entity/Comment.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/entity/Content.class" beforeDir="false" afterPath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/entity/Content.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/entity/Followees.class" beforeDir="false" afterPath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/entity/Followees.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/entity/Followers.class" beforeDir="false" afterPath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/entity/Followers.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/entity/GotTags.class" beforeDir="false" afterPath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/entity/GotTags.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/entity/InCols.class" beforeDir="false" afterPath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/entity/InCols.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/entity/Tag.class" beforeDir="false" afterPath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/entity/Tag.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/entity/User$UserBuilder.class" beforeDir="false" afterPath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/entity/User$UserBuilder.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/entity/User.class" beforeDir="false" afterPath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/entity/User.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/exception/DuplicateFileException$DuplicateFileExceptionBuilder.class" beforeDir="false" afterPath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/exception/DuplicateFileException$DuplicateFileExceptionBuilder.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/exception/DuplicateFileException.class" beforeDir="false" afterPath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/exception/DuplicateFileException.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/exception/FileTypeNotAllowedException$FileTypeNotAllowedExceptionBuilder.class" beforeDir="false" afterPath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/exception/FileTypeNotAllowedException$FileTypeNotAllowedExceptionBuilder.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/exception/FileTypeNotAllowedException.class" beforeDir="false" afterPath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/exception/FileTypeNotAllowedException.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/exception/GlobalRuntimeException$GlobalRuntimeExceptionBuilder.class" beforeDir="false" afterPath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/exception/GlobalRuntimeException$GlobalRuntimeExceptionBuilder.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/exception/GlobalRuntimeException.class" beforeDir="false" afterPath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/exception/GlobalRuntimeException.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/exception/StorageFullException$StorageFullExceptionBuilder.class" beforeDir="false" afterPath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/exception/StorageFullException$StorageFullExceptionBuilder.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/exception/StorageFullException.class" beforeDir="false" afterPath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/exception/StorageFullException.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/filters/SecurityFilter.class" beforeDir="false" afterPath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/filters/SecurityFilter.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/interfaces/CRUDInterface.class" beforeDir="false" afterPath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/interfaces/CRUDInterface.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/models/ContentESDocument.class" beforeDir="false" afterPath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/models/ContentESDocument.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/models/CookieProperties.class" beforeDir="false" afterPath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/models/CookieProperties.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/models/CredentialFirebase$CredentialType.class" beforeDir="false" afterPath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/models/CredentialFirebase$CredentialType.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/models/CredentialFirebase.class" beforeDir="false" afterPath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/models/CredentialFirebase.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/models/FirebaseProperties.class" beforeDir="false" afterPath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/models/FirebaseProperties.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/models/ResponseProperties.class" beforeDir="false" afterPath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/models/ResponseProperties.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/models/SecurityProperties.class" beforeDir="false" afterPath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/models/SecurityProperties.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/models/TagESDocument.class" beforeDir="false" afterPath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/models/TagESDocument.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/models/VideoInfo.class" beforeDir="false" afterPath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/models/VideoInfo.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/repositories/CollectionRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/repositories/CollectionRepository.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/repositories/CommentRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/repositories/CommentRepository.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/repositories/ContentRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/repositories/ContentRepository.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/repositories/FolloweeRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/repositories/FolloweeRepository.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/repositories/FollowerRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/repositories/FollowerRepository.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/repositories/GotTagsRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/repositories/GotTagsRepository.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/repositories/InColsRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/repositories/InColsRepository.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/repositories/TagRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/repositories/TagRepository.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/repositories/UserRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/repositories/UserRepository.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/repositories/elasticsearch/TagESRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/repositories/elasticsearch/TagESRepository.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/services/api/CollectionApiService.class" beforeDir="false" afterPath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/services/api/CollectionApiService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/services/api/CommentApiService.class" beforeDir="false" afterPath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/services/api/CommentApiService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/services/api/ContentApiService.class" beforeDir="false" afterPath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/services/api/ContentApiService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/services/api/TagApiService.class" beforeDir="false" afterPath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/services/api/TagApiService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/services/api/UserApiService.class" beforeDir="false" afterPath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/services/api/UserApiService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/services/cloudinary/CloudinaryService.class" beforeDir="false" afterPath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/services/cloudinary/CloudinaryService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/services/cloudinary/impl/CloudinaryServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/services/cloudinary/impl/CloudinaryServiceImpl.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/services/elasticsearch/ElasticSearchService.class" beforeDir="false" afterPath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/services/elasticsearch/ElasticSearchService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/services/elasticsearch/TagESDocumentService.class" beforeDir="false" afterPath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/services/elasticsearch/TagESDocumentService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/services/elasticsearch/implementations/TagESDocumentServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/services/elasticsearch/implementations/TagESDocumentServiceImpl.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/services/entity/CollectionService.class" beforeDir="false" afterPath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/services/entity/CollectionService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/services/entity/CommentService.class" beforeDir="false" afterPath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/services/entity/CommentService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/services/entity/ContentService.class" beforeDir="false" afterPath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/services/entity/ContentService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/services/entity/FolloweeService.class" beforeDir="false" afterPath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/services/entity/FolloweeService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/services/entity/FollowerService.class" beforeDir="false" afterPath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/services/entity/FollowerService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/services/entity/GotTagsService.class" beforeDir="false" afterPath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/services/entity/GotTagsService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/services/entity/InColsService.class" beforeDir="false" afterPath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/services/entity/InColsService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/services/entity/TagService.class" beforeDir="false" afterPath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/services/entity/TagService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/services/entity/UserService.class" beforeDir="false" afterPath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/services/entity/UserService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/services/entity/serviceImpl/CollectionServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/services/entity/serviceImpl/CollectionServiceImpl.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/services/entity/serviceImpl/CommentServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/services/entity/serviceImpl/CommentServiceImpl.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/services/entity/serviceImpl/ContentServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/services/entity/serviceImpl/ContentServiceImpl.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/services/entity/serviceImpl/FolloweeServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/services/entity/serviceImpl/FolloweeServiceImpl.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/services/entity/serviceImpl/FollowerServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/services/entity/serviceImpl/FollowerServiceImpl.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/services/entity/serviceImpl/GotTagsServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/services/entity/serviceImpl/GotTagsServiceImpl.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/services/entity/serviceImpl/InColsServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/services/entity/serviceImpl/InColsServiceImpl.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/services/entity/serviceImpl/TagServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/services/entity/serviceImpl/TagServiceImpl.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/services/entity/serviceImpl/UserServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/services/entity/serviceImpl/UserServiceImpl.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/services/secrurities/AuthenticationAspect.class" beforeDir="false" afterPath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/services/secrurities/AuthenticationAspect.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/services/secrurities/SecurityService.class" beforeDir="false" afterPath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/services/secrurities/SecurityService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/utils/CookieUtil.class" beforeDir="false" afterPath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/utils/CookieUtil.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/utils/ElasticSearchUtil.class" beforeDir="false" afterPath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/utils/ElasticSearchUtil.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/utils/ResponseBodyServer$ResponseBodyServerBuilder.class" beforeDir="false" afterPath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/utils/ResponseBodyServer$ResponseBodyServerBuilder.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/utils/ResponseBodyServer.class" beforeDir="false" afterPath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/utils/ResponseBodyServer.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CheckContentNSLW.iml" beforeDir="false" afterPath="$PROJECT_DIR$/CheckContentNSLW.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FrontEnd/src/Components/About/ImageACollection.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../FrontEnd/src/Components/About/ImageACollection.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FrontEnd/src/Components/Administrator/Topbar.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../FrontEnd/src/Components/Administrator/Topbar.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FrontEnd/src/Components/ContentAdmin/ListGotTag.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../FrontEnd/src/Components/ContentAdmin/ListGotTag.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FrontEnd/src/Components/DropdownButton/DropdownButton.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../FrontEnd/src/Components/DropdownButton/DropdownButton.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FrontEnd/src/Components/Footer/Footer.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../FrontEnd/src/Components/Footer/Footer.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FrontEnd/src/Components/Navbar/Navbar.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../FrontEnd/src/Components/Navbar/Navbar.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FrontEnd/src/Components/Upload/upload.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../FrontEnd/src/Components/Upload/upload.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FrontEnd/src/pages/About.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../FrontEnd/src/pages/About.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FrontEnd/src/pages/AboutCollection.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../FrontEnd/src/pages/AboutCollection.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FrontEnd/src/pages/Collection.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../FrontEnd/src/pages/Collection.jsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -20,18 +133,18 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
   </component>
-  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
-  "lastFilter": {
-    "state": "OPEN",
-    "assignee": "cuuthiennn"
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;cuuthiennn&quot;
   }
-}]]></component>
-  <component name="GithubPullRequestsUISettings"><![CDATA[{
-  "selectedUrlAndAccountId": {
-    "url": "https://github.com/cuuthiennn/PrePics_DACN.git",
-    "accountId": "64ee76c4-4069-4707-a91d-adf2dda7be6f"
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/cuuthiennn/PrePics_DACN.git&quot;,
+    &quot;accountId&quot;: &quot;64ee76c4-4069-4707-a91d-adf2dda7be6f&quot;
   }
-}]]></component>
+}</component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 8
 }</component>
@@ -40,30 +153,30 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Python.app.executor": "Run",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "thien-v2",
-    "ignore.virus.scanning.warn.message": "true",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "D:/DACN/New1111/PrePics_DACN/CheckContentNSLW",
-    "node.js.detected.package.eslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "project.structure.last.edited": "Project",
-    "project.structure.proportion": "0.15",
-    "project.structure.side.proportion": "0.2",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Python.app.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;thien-v2&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;D:/DACN/New/PrePics_DACN/CheckContentNSLW&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;editor.preferences.tabs&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RunManager">
     <configuration name="app" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="CheckContentNSLW" />
-      <option name="ENV_FILES" value="" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
       <envs>
@@ -112,8 +225,5 @@
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
-  </component>
-  <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/CheckContentNSLW$app.coverage" NAME="app Coverage Results" MODIFIED="1734163629408" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>

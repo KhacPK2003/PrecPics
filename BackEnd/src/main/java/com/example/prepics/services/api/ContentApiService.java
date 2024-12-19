@@ -339,14 +339,13 @@ public class ContentApiService {
   }
 
 
-  @Transactional("slaveTransactionManager")
   public byte[] getImageWithSize(Authentication authentication,String id ,String width , String height)
           throws IOException, ChangeSetPersister.NotFoundException {
 
     return getContentWithSize(authentication, id,width,height, true);
   }
 
-  @Transactional("slaveTransactionManager")
+
   public byte[] getVideoWithSize(Authentication authentication, String id ,String width , String height)
           throws IOException, ChangeSetPersister.NotFoundException {
 

@@ -3,10 +3,11 @@ import { auth } from '../../firebaseconfig';
 import { onAuthStateChanged } from 'firebase/auth';
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
+import Button from '@mui/material/Button';
+import { Link } from 'react-router-dom';
 const inputClasses = 'border border-zinc-300 rounded-lg p-2 w-full';
 const labelClasses = 'block text-sm font-medium text-zinc-700';
-const buttonClasses = 'bg-blue-500 text-primary-foreground hover:bg-primary/80 rounded-lg p-2 w-full';
+const buttonClasses = 'bg-blue-500 text-primary-foreground hover:bg-primary/80 rounded-lg p-2 w-full text-white';
 
 function Upload() {
     const [title, setTitle] = useState('');
@@ -243,6 +244,15 @@ function Upload() {
                     <button type="submit" className={buttonClasses} disabled={isLoading}>
                         {isLoading ? 'Đang tải lên...' : 'Tải lên'}
                     </button>
+                    <Button 
+                        variant="contained"
+                        color="primary"
+                        className={`${buttonClasses} mt-4`}
+                        component={Link}
+                        to="/"
+                    >
+                        Quay lại Trang chủ
+                    </Button>
                 </div>
                 <ToastContainer
                     position="bottom-left"
