@@ -4,7 +4,7 @@ import { auth } from '../../firebaseconfig';
 import { onAuthStateChanged } from 'firebase/auth'; 
 import 'react-toastify/dist/ReactToastify.css';
 
-const DropdownButton = ({ content }) => {
+const DropdownButton = ({ content , type }) => {
     const [imageUrl, setImageUrl] = useState(null);
     const [width, setWidth] = useState('');
     const [token, setToken] = useState(null);
@@ -27,7 +27,7 @@ const DropdownButton = ({ content }) => {
 
     const handleSizeChange = async (width, height) => {
         try {
-            const url = new URL('http://localhost:8080/public/api/contents/image/resize');
+            const url = new URL(`http://localhost:8080/public/api/contents/${type}/resize`);
             url.searchParams.append('content', content.id);  // Thêm tham số content vào query string
             url.searchParams.append('width', width);          // Thêm tham số width vào query string
             url.searchParams.append('height', height);        // Thêm tham số height vào query string
@@ -50,9 +50,11 @@ const DropdownButton = ({ content }) => {
             setImageUrl(imageObjectUrl);  // Cập nhật URL ảnh đã thay đổi kích thước
             const link = document.createElement('a');
             link.href = imageObjectUrl;
-            link.download = `resized_image_${width}x${height}.jpg`;
+            if(type === 'image') link.download = `resized_image_${width}x${height}.jpg`;
+            else link.download = `resized_image_${width}x${height}.mp4`;
             document.body.appendChild(link);
             link.click();
+            link.remove();
             toast.success("Tải thành công!!");
         } catch (error) {
             toast.error("Tải thất bại!!.");

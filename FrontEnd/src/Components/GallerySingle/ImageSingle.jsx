@@ -252,7 +252,7 @@ function GallerySingle({ content , onDataChange }) {
       <Grid2 size={6}>
         <Item>
           <DetailGallery content={content} onDataChange = {onDataChange } />
-          <DropdownButton content = {content}/>
+          <DropdownButton content = {content} type={"image"}/>
         </Item>
       </Grid2>
 

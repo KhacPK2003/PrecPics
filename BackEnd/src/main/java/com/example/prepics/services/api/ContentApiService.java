@@ -110,7 +110,7 @@ public class ContentApiService {
           isImage ? classifyImageWithFlaskAPI(tempFile) : classifyVideoWithFFmpeg(tempFile);
       System.out.println(label);
       if (label != null && label.equals("nsfw")) {
-        return ResponseProperties.createResponse(400,
+        return ResponseProperties.createResponse(401,
             "Error: Content is classified as NSFW and cannot be uploaded", null);
       }
 

@@ -12,9 +12,13 @@ const FormAbout = ({ user }) => {
     const [description, setDescription] = useState(user.description || '');  // Default to empty string if undefined
     const [insta, setInsta] = useState(user.instagramUrl || '');  // Default to empty string if undefined
     const [twitter, setTwitter] = useState(user.twitterUrl || '');  // Default to empty string if undefined
-    const [file, setFile] = useState(user.avatarUrl || null);
+    const [avatarUrl , setAvatarUrl] = useState(user.avatarUrl);
+    const [file, setFile] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
     const [token, setToken] = useState(null);
+
+
+
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
@@ -55,11 +59,23 @@ const FormAbout = ({ user }) => {
             fullName: user.fullName,
             email: user.email,
             description: description,
-            avatarUrl: file === null ? user.avatarUrl : file,
+            avatarUrl: user.avatarUrl,
             twitterUrl: twitter,
             instagramUrl: insta,
+            isActive : user.isActive,
+            isAdmin : user.isAdmin
         };
-
+        const formData = new FormData();
+        formData.append(
+            "entity",
+            new Blob([JSON.stringify(requestData)], { type: "application/json" })
+        );
+        if (file) {
+            formData.append('file', file);
+        } else {
+            // Nếu file là null, bạn có thể thêm một Blob rỗng hoặc không thêm gì cả
+            formData.append('file', new Blob([])); // Hoặc chỉ bỏ qua dòng này nếu không muốn gửi file.
+        }
         const toastId = toast.loading("Đang xử lý...");
         setIsLoading(true);
 
@@ -71,10 +87,9 @@ const FormAbout = ({ user }) => {
             const response = await fetch(`http://localhost:8080/public/api/users/${user.id}`, {
                 method: 'PUT',
                 headers: {
-                    'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`,
                 },
-                body: JSON.stringify(requestData),
+                body: formData,
             });
 
             if (response.ok) {
@@ -86,7 +101,7 @@ const FormAbout = ({ user }) => {
                     isLoading: false,
                     autoClose: 5000,
                 });
-
+                setAvatarUrl(result.payload.avatarUrl);
                 setFile(result.payload.avatarUrl);
                 setDescription(result.payload.description);
                 setInsta(result.payload.instagramUrl);
@@ -118,7 +133,7 @@ const FormAbout = ({ user }) => {
     return (
         <>
             <div className="flex items-center justify-center space-x-4 mb-8">
-                <Avatar url={file}></Avatar>
+                <Avatar url={avatarUrl}></Avatar>
                 <button
                     className="px-4 py-2 bg-[#379d7d] text-white rounded-md"
                     onClick={() => document.getElementById('file-input').click()}
@@ -228,11 +243,11 @@ const FormAbout = ({ user }) => {
 
                 <div className="space-y-4">
                     {/* Nút "Xóa tài khoản và toàn bộ dữ liệu" */}
-                    <button
+                    {/* <button
                         className="mt-4 bg-red-500 text-white font-bold py-2 px-6 rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 active:bg-red-800 transition duration-300 ease-in-out"
                     >
                         Xóa tài khoản và toàn bộ dữ liệu
-                    </button>
+                    </button> */}
 
                     {/* Nút "Lưu hồ sơ" */}
                     <button className="w-full bg-[#379d7d] text-white p-2 rounded" disabled={isLoading} onClick={handleSubmit}>

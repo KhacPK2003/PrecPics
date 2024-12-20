@@ -146,8 +146,11 @@ function Upload() {
                 setPreview(null);
             } else {
                 const errorData = await response.json();
+                console.log(errorData);
+                let warning = `Nội dung không phù hợp`;
+                if(errorData.statusCode === 409) warning = `Video/Ảnh có thể đã tồn tại!!`;
                 toast.update(toastId, {
-                    render: `Hình ảnh không phù hợp`,
+                    render: warning,
                     type: "error",
                     isLoading: false,
                     autoClose: 5000,

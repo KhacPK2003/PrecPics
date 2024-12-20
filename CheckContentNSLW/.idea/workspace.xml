@@ -5,6 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="110deddb-bae3-4587-87d5-696e4597a928" name="Changes" comment="">
+<<<<<<< HEAD
       <change beforePath="$PROJECT_DIR$/../BackEnd/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../BackEnd/.idea/dataSources.local.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../BackEnd/src/main/java/com/example/prepics/apis/UserApi.java" beforeDir="false" afterPath="$PROJECT_DIR$/../BackEnd/src/main/java/com/example/prepics/apis/UserApi.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../BackEnd/src/main/java/com/example/prepics/services/api/CollectionApiService.java" beforeDir="false" afterPath="$PROJECT_DIR$/../BackEnd/src/main/java/com/example/prepics/services/api/CollectionApiService.java" afterDir="false" />
@@ -16,6 +17,14 @@
       <change beforePath="$PROJECT_DIR$/../FrontEnd/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/../FrontEnd/index.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../FrontEnd/src/Components/sign-in/Login.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../FrontEnd/src/Components/sign-in/Login.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../FrontEnd/src/Components/sign-up/SignUp.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../FrontEnd/src/Components/sign-up/SignUp.jsx" afterDir="false" />
+=======
+      <change beforePath="$PROJECT_DIR$/../BackEnd/src/main/java/com/example/prepics/repositories/UserRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/../BackEnd/src/main/java/com/example/prepics/repositories/UserRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/repositories/UserRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/repositories/UserRepository.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FrontEnd/src/Components/DropdownButton/DropdownButton.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../FrontEnd/src/Components/DropdownButton/DropdownButton.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FrontEnd/src/Components/GallerySingle/ImageSingle.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../FrontEnd/src/Components/GallerySingle/ImageSingle.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FrontEnd/src/Components/GallerySingle/VideoSingle.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../FrontEnd/src/Components/GallerySingle/VideoSingle.jsx" afterDir="false" />
+>>>>>>> 982f1af (hom qua push thieu)
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -45,6 +54,7 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
+<<<<<<< HEAD
   <component name="PropertiesComponent">{
   &quot;keyToString&quot;: {
     &quot;Python.app.executor&quot;: &quot;Run&quot;,
@@ -63,8 +73,29 @@
     &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
     &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+=======
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Python.app.executor": "Run",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "thien-v2",
+    "ignore.virus.scanning.warn.message": "true",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "D:/DACN/New/PrePics_DACN/CheckContentNSLW",
+    "node.js.detected.package.eslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "project.structure.last.edited": "Project",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.2",
+    "settings.editor.selected.configurable": "editor.preferences.tabs",
+    "vue.rearranger.settings.migration": "true"
+>>>>>>> 982f1af (hom qua push thieu)
   }
-}</component>
+}]]></component>
   <component name="RunManager">
     <configuration name="app" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="CheckContentNSLW" />

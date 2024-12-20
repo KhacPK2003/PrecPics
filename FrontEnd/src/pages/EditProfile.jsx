@@ -9,6 +9,7 @@ const EditProfile = () => {
     const [activeTab, setActiveTab] = useState('Hồ sơ');
     const [user, setUser] = useState(null);  // Change to null to handle loading state
     const [isLoading, setIsLoading] = useState(true);  // Add loading state
+ 
 
     useEffect(() => {
         // Fetch user data from the API
