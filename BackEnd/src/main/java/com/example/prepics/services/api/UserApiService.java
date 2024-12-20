@@ -1,10 +1,12 @@
 package com.example.prepics.services.api;
 
 import com.example.prepics.dto.UserStatisticsDTO;
+import com.example.prepics.entity.Collection;
 import com.example.prepics.entity.Followees;
 import com.example.prepics.entity.Followers;
 import com.example.prepics.entity.User;
 import com.example.prepics.models.ResponseProperties;
+import com.example.prepics.services.entity.CollectionService;
 import com.example.prepics.services.entity.FolloweeService;
 import com.example.prepics.services.entity.FollowerService;
 import com.example.prepics.services.entity.UserService;
@@ -12,6 +14,7 @@ import java.util.List;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.crossstore.ChangeSetPersister;
+import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
@@ -32,6 +35,9 @@ public class UserApiService {
   @Autowired
   private FolloweeService followeeService;
 
+  @Autowired
+  private CollectionService collectionService;
+
   public ResponseEntity<?> loginUserWithGoogle(Authentication authentication) {
     try {
       User userDecode = (User) authentication.getPrincipal();
@@ -42,6 +48,16 @@ public class UserApiService {
                   .orElseThrow(() -> new RuntimeException("Failed to create user"));
             } catch (ChangeSetPersister.NotFoundException e) {
               throw new RuntimeException(e);
+            } finally {
+              Collection collection = new Collection();
+              collection.setName("Liked");
+              collection.setUserId(userDecode.getId());
+              try {
+                Collection result = collectionService.create(collection)
+                    .orElseThrow(RuntimeException::new);
+              } catch (NotFoundException e) {
+                throw new RuntimeException(e);
+              }
             }
           });
       return ResponseProperties.createResponse(200, "Success", user);

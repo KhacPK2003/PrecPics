@@ -33,7 +33,7 @@ public class UserRepository implements CRUDInterface<User, String> {
   @Transactional("slaveTransactionManager")
   public Optional<User> findById(Class<User> clazz, String id)
       throws ChangeSetPersister.NotFoundException {
-    return Optional.ofNullable(slaveEntityManager.find(clazz, id));
+    return Optional.ofNullable(masterEntityManager.find(clazz, id));
   }
 
   @Override

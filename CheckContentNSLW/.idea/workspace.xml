@@ -5,11 +5,22 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="110deddb-bae3-4587-87d5-696e4597a928" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/../BackEnd/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../BackEnd/.idea/dataSources.local.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../BackEnd/src/main/java/com/example/prepics/repositories/FolloweeRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/../BackEnd/src/main/java/com/example/prepics/repositories/FolloweeRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../BackEnd/src/main/java/com/example/prepics/repositories/FollowerRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/../BackEnd/src/main/java/com/example/prepics/repositories/FollowerRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../BackEnd/src/main/java/com/example/prepics/repositories/UserRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/../BackEnd/src/main/java/com/example/prepics/repositories/UserRepository.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../BackEnd/src/main/java/com/example/prepics/services/api/UserApiService.java" beforeDir="false" afterPath="$PROJECT_DIR$/../BackEnd/src/main/java/com/example/prepics/services/api/UserApiService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/apis/ContentApi.class" beforeDir="false" afterPath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/apis/ContentApi.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/apis/UserApi.class" beforeDir="false" afterPath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/apis/UserApi.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/entity/Followers.class" beforeDir="false" afterPath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/entity/Followers.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/entity/GotTags.class" beforeDir="false" afterPath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/entity/GotTags.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/entity/Tag.class" beforeDir="false" afterPath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/entity/Tag.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/repositories/FolloweeRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/repositories/FolloweeRepository.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/repositories/FollowerRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/repositories/FollowerRepository.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/repositories/UserRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/repositories/UserRepository.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/services/api/CollectionApiService.class" beforeDir="false" afterPath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/services/api/CollectionApiService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/services/api/ContentApiService.class" beforeDir="false" afterPath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/services/api/ContentApiService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/services/api/UserApiService.class" beforeDir="false" afterPath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/services/api/UserApiService.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FrontEnd/src/Components/GallerySingle/VideoSingle.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../FrontEnd/src/Components/GallerySingle/VideoSingle.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FrontEnd/src/Components/SectionVideo/SectionVideo.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../FrontEnd/src/Components/SectionVideo/SectionVideo.jsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -116,6 +127,6 @@
     <option name="version" value="3" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/CheckContentNSLW$app.coverage" NAME="app Coverage Results" MODIFIED="1734661435091" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/CheckContentNSLW$app.coverage" NAME="app Coverage Results" MODIFIED="1734679715109" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>

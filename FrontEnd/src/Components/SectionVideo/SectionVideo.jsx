@@ -1,9 +1,9 @@
 import ReactPlayer from 'react-player';
-import React ,{useState , useEffect} from 'react';
-import { AiFillHeart, AiOutlineHeart } from 'react-icons/ai';
+import {useState } from 'react';
 import VideoSingle from '../GallerySingle/VideoSingle';
-import { Button, Dialog, DialogContent, DialogTitle } from '@mui/material';
+import { Dialog, DialogContent, DialogTitle } from '@mui/material';
 
+// eslint-disable-next-line react/prop-types
 function SectionVideo({content,onDataChange}){
     const [open, setOpen] = useState(false); // Trạng thái mở Dialog
     const [isHovered, setIsHovered] = useState(false); // Trạng thái di chuột vào video
@@ -37,7 +37,8 @@ function SectionVideo({content,onDataChange}){
                        style={{ cursor: 'pointer', width: '100%', position: 'relative' }}
                 >
                     <ReactPlayer 
-                        url={content.dataUrl} 
+                         // eslint-disable-next-line react/prop-types
+                        url={content.dataUrl}
                         playing={isHovered} // Phát video khi di chuột vào
                         controls={false} // Tắt controls nếu không cần
                         width="100%" 
