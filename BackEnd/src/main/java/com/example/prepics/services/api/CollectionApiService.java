@@ -9,6 +9,8 @@ import com.example.prepics.services.entity.CollectionService;
 import com.example.prepics.services.entity.ContentService;
 import com.example.prepics.services.entity.InColsService;
 import com.example.prepics.services.entity.UserService;
+import java.math.BigInteger;
+import java.util.Date;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.crossstore.ChangeSetPersister;
@@ -52,6 +54,7 @@ public class CollectionApiService {
       Collection collection = new Collection();
       collection.setName(collectionName);
       collection.setUserId(user.getId());
+      collection.setDateCreate(BigInteger.valueOf(new Date().getTime()));
       Collection result = collectionService.create(collection)
           .orElseThrow(() -> new RuntimeException("Error creating collection"));
       return ResponseProperties.createResponse(200, "Success", result);

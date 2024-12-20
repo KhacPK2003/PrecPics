@@ -16,8 +16,8 @@ import { styled } from '@mui/material/styles';
 import ForgotPassword from '../sign-in/ForgotPassword';
 import { GoogleIcon, FacebookIcon, SitemarkIcon } from '../sign-in/CustomIcons';
 import { auth, googleProvider, signInWithPopup } from '../../firebaseconfig';
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import AdbIcon from '@mui/icons-material/Adb';
-import axios from "axios";
 const Card = styled(MuiCard)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
@@ -64,7 +64,8 @@ const SignInContainer = styled(Stack)(({ theme }) => ({
 export default function  SignIn(props) {
 
   const navigate = useNavigate();
-
+  const [email, setEmail] = React.useState('');
+  const [password, setPassword] = React.useState('');
   const [emailError, setEmailError] = React.useState(false);
   const [emailErrorMessage, setEmailErrorMessage] = React.useState('');
   const [passwordError, setPasswordError] = React.useState(false);
@@ -126,13 +127,10 @@ export default function  SignIn(props) {
     });
   };
 
-  const validateInputs = () => {
-    const email = document.getElementById('email');
-    const password = document.getElementById('password');
+  const validateInputs = async () => {
+    var isValid = true;
 
-    let isValid = true;
-
-    if (!email.value || !/\S+@\S+\.\S+/.test(email.value)) {
+    if (email == null || !/\S+@\S+\.\S+/.test(email)) {
       setEmailError(true);
       setEmailErrorMessage('Please enter a valid email address.');
       isValid = false;
@@ -141,7 +139,7 @@ export default function  SignIn(props) {
       setEmailErrorMessage('');
     }
 
-    if (!password.value || password.value.length < 6) {
+    if (password == null || password.length < 6) {
       setPasswordError(true);
       setPasswordErrorMessage('Password must be at least 6 characters long.');
       isValid = false;
@@ -149,8 +147,36 @@ export default function  SignIn(props) {
       setPasswordError(false);
       setPasswordErrorMessage('');
     }
+      if (isValid) {
+        try {
+          const auth = await getAuth();
+          var result = signInWithEmailAndPassword(auth, email, password);
+          var user = (await result).user;
+          var idToken = await user.getIdToken();
 
-    return isValid;
+          console.log("User Info:", user);
+          console.log("ID Token:", idToken);
+          fetch('http://localhost:8080/public/api/users/login', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${idToken}`,
+            },
+          })
+              .then(response => response.json())
+              .then(data => {
+                localStorage.clear();
+                console.log(data.payload);
+                localStorage.setItem('userID',JSON.stringify(data.payload.id));
+                localStorage.setItem('isAdmin',JSON.stringify((data.payload.isAdmin)));
+                console.log("Backend Response:", data)
+                navigate("/");
+              })
+              .catch(error => console.error("Error:", error));
+        } catch (e) {
+          console.log(e);
+        }
+      }
   };
 
   return (
@@ -197,6 +223,7 @@ export default function  SignIn(props) {
                 variant="outlined"
                 color={emailError ? 'error' : 'primary'}
                 sx={{ ariaLabel: 'email' }}
+                onChange={(e) => setEmail(e.target.value)}
               />
             </FormControl>
             <FormControl>
@@ -225,6 +252,7 @@ export default function  SignIn(props) {
                 fullWidth
                 variant="outlined"
                 color={passwordError ? 'error' : 'primary'}
+                onChange={(e) => setPassword(e.target.value)}
               />
             </FormControl>
             <FormControlLabel
@@ -233,7 +261,7 @@ export default function  SignIn(props) {
             />
             <ForgotPassword open={open} handleClose={handleClose} />
             <Button
-              type="submit"
+              // type="submit"
               fullWidth
               variant="contained"
               onClick={validateInputs}
@@ -244,7 +272,7 @@ export default function  SignIn(props) {
               Bạn chưa có tài khoản ?{' '}
               <span>
                 <Link
-                  href="/material-ui/getting-started/templates/sign-in/"
+                  href={"/SignUp"}
                   variant="body2"
                   sx={{ alignSelf: 'center' }}
                 >

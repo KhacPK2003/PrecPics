@@ -6,11 +6,15 @@ import com.example.prepics.entity.Followees;
 import com.example.prepics.entity.Followers;
 import com.example.prepics.entity.User;
 import com.example.prepics.models.ResponseProperties;
+import com.example.prepics.services.cloudinary.CloudinaryService;
 import com.example.prepics.services.entity.CollectionService;
 import com.example.prepics.services.entity.FolloweeService;
 import com.example.prepics.services.entity.FollowerService;
 import com.example.prepics.services.entity.UserService;
+import java.math.BigInteger;
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.crossstore.ChangeSetPersister;
@@ -19,6 +23,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 public class UserApiService {
@@ -38,6 +43,9 @@ public class UserApiService {
   @Autowired
   private CollectionService collectionService;
 
+  @Autowired
+  private CloudinaryService cloudinaryService;
+
   public ResponseEntity<?> loginUserWithGoogle(Authentication authentication) {
     try {
       User userDecode = (User) authentication.getPrincipal();
@@ -51,6 +59,38 @@ public class UserApiService {
             } finally {
               Collection collection = new Collection();
               collection.setName("Liked");
+              collection.setDateCreate(BigInteger.valueOf(new Date().getTime()));
+              collection.setUserId(userDecode.getId());
+              try {
+                Collection result = collectionService.create(collection)
+                    .orElseThrow(RuntimeException::new);
+              } catch (NotFoundException e) {
+                throw new RuntimeException(e);
+              }
+            }
+          });
+      return ResponseProperties.createResponse(200, "Success", user);
+    } catch (Exception e) {
+      return ResponseProperties.createResponse(500, "Internal Server Error", e.getMessage());
+    }
+  }
+
+  public ResponseEntity<?> registerUserWithEmailAndPasswork(Authentication authentication,
+      String fullName) {
+    try {
+      User userDecode = (User) authentication.getPrincipal();
+      User user = userService.findByEmail(User.class, userDecode.getEmail())
+          .orElseGet(() -> {
+            try {
+              userDecode.setFullName(fullName);
+              return userService.create(userDecode)
+                  .orElseThrow(() -> new RuntimeException("Failed to create user"));
+            } catch (ChangeSetPersister.NotFoundException e) {
+              throw new RuntimeException(e);
+            } finally {
+              Collection collection = new Collection();
+              collection.setName("Liked");
+              collection.setDateCreate(BigInteger.valueOf(new Date().getTime()));
               collection.setUserId(userDecode.getId());
               try {
                 Collection result = collectionService.create(collection)
@@ -121,7 +161,7 @@ public class UserApiService {
     }
   }
 
-  public ResponseEntity<?> update(Authentication authentication, User entity) {
+  public ResponseEntity<?> update(Authentication authentication, User entity, MultipartFile file) {
     try {
       User userDecode = (User) authentication.getPrincipal();
       User currentUser = userService.findByEmail(User.class, userDecode.getEmail())
@@ -129,6 +169,12 @@ public class UserApiService {
 
       if (!currentUser.getId().equals(entity.getId())) {
         return ResponseProperties.createResponse(403, "Forbidden", null);
+      }
+
+      if (!file.isEmpty()) {
+        Map<String, Object> fileUpload = cloudinaryService.uploadFile(file);
+        String avatarUrl = fileUpload.get("url").toString();
+        entity.setAvatarUrl(avatarUrl);
       }
 
       modelMapper.map(entity, currentUser);

@@ -1,5 +1,8 @@
 package com.example.prepics.apis;
 
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+import static org.springframework.http.MediaType.MULTIPART_FORM_DATA_VALUE;
+
 import com.example.prepics.annotations.Admin;
 import com.example.prepics.annotations.Guest;
 import com.example.prepics.entity.User;
@@ -16,7 +19,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 @Slf4j
 @RestController
@@ -40,6 +46,12 @@ public class UserApi {
   public ResponseEntity<?> loginUserWithGoogle(Authentication authentication)
       throws ChangeSetPersister.NotFoundException {
     return userApiService.loginUserWithGoogle(authentication);
+  }
+
+  @PostMapping("/register")
+  public ResponseEntity<?> loginUserWithGoogle(Authentication authentication,
+      @RequestParam String fullName) {
+    return userApiService.registerUserWithEmailAndPasswork(authentication, fullName);
   }
 
   /**
@@ -88,12 +100,12 @@ public class UserApi {
    * @throws ChangeSetPersister.NotFoundException: Nếu không tìm thấy người dùng.
    */
   @com.example.prepics.annotations.User
-  @PutMapping("/{id}")
+  @PutMapping(value = "/{id}", consumes = {APPLICATION_JSON_VALUE, MULTIPART_FORM_DATA_VALUE})
   public ResponseEntity<?> update(Authentication authentication, @PathVariable String id,
-      @RequestBody User entity)
+      @RequestPart User entity, @RequestPart(required = false) MultipartFile file)
       throws ChangeSetPersister.NotFoundException {
     entity.setId(id);  // Đảm bảo ID đúng
-    return userApiService.update(authentication, entity);
+    return userApiService.update(authentication, entity, file);
   }
 
   /**

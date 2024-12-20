@@ -13,7 +13,9 @@ import Stack from '@mui/material/Stack';
 import MuiCard from '@mui/material/Card';
 import { styled } from '@mui/material/styles';
 import AdbIcon from '@mui/icons-material/Adb';
+import {getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword} from "firebase/auth";
 import { GoogleIcon, FacebookIcon, SitemarkIcon } from '../sign-up/CustomIcons';
+import {useNavigate} from "react-router-dom";
 
 
 const Card = styled(MuiCard)(({ theme }) => ({
@@ -60,6 +62,10 @@ const SignUpContainer = styled(Stack)(({ theme }) => ({
 }));
 
 export default function SignUp(props) {
+  const navigate = useNavigate();
+  const [name, setName] = React.useState('');
+  const [email, setEmail] = React.useState('');
+  const [password, setPassword] = React.useState('');
   const [emailError, setEmailError] = React.useState(false);
   const [emailErrorMessage, setEmailErrorMessage] = React.useState('');
   const [passwordError, setPasswordError] = React.useState(false);
@@ -67,14 +73,11 @@ export default function SignUp(props) {
   const [nameError, setNameError] = React.useState(false);
   const [nameErrorMessage, setNameErrorMessage] = React.useState('');
 
-  const validateInputs = () => {
-    const email = document.getElementById('email');
-    const password = document.getElementById('password');
-    const name = document.getElementById('name');
+  const validateInputs = async () => {
 
     let isValid = true;
 
-    if (!email.value || !/\S+@\S+\.\S+/.test(email.value)) {
+    if (email == null || !/\S+@\S+\.\S+/.test(email)) {
       setEmailError(true);
       setEmailErrorMessage('Please enter a valid email address.');
       isValid = false;
@@ -83,7 +86,7 @@ export default function SignUp(props) {
       setEmailErrorMessage('');
     }
 
-    if (!password.value || password.value.length < 6) {
+    if (password == null || password.length < 6) {
       setPasswordError(true);
       setPasswordErrorMessage('Password must be at least 6 characters long.');
       isValid = false;
@@ -92,7 +95,7 @@ export default function SignUp(props) {
       setPasswordErrorMessage('');
     }
 
-    if (!name.value || name.value.length < 1) {
+    if (name == null || name.length < 1) {
       setNameError(true);
       setNameErrorMessage('Name is required.');
       isValid = false;
@@ -101,7 +104,36 @@ export default function SignUp(props) {
       setNameErrorMessage('');
     }
 
-    return isValid;
+   if (isValid) {
+     try {
+       const auth = await getAuth();
+       var result = await createUserWithEmailAndPassword(auth, email, password);
+       var user = result.user;
+       var idToken = await user.getIdToken();
+
+       console.log("User Info:", user);
+       console.log("ID Token:", idToken);
+       fetch(`http://localhost:8080/public/api/users/register?fullName=${name}`, {
+         method: 'POST',
+         headers: {
+           // 'Content-Type': 'application/json',
+           'Authorization': `Bearer ${idToken}`,
+         },
+       })
+           .then(response => response.json())
+           .then(data => {
+             localStorage.clear();
+             console.log(data.payload);
+             localStorage.setItem('userID',JSON.stringify(data.payload.id));
+             localStorage.setItem('isAdmin',JSON.stringify((data.payload.isAdmin)));
+             console.log("Backend Response:", data)
+             navigate("/");
+           })
+           .catch(error => console.error("Error:", error));
+     } catch (e) {
+       console.log(e);
+     }
+   }
   };
 
   const handleSubmit = (event) => {
@@ -151,6 +183,7 @@ export default function SignUp(props) {
                 error={nameError}
                 helperText={nameErrorMessage}
                 color={nameError ? 'error' : 'primary'}
+                onChange={(e) => setName(e.target.value)}
               />
             </FormControl>
             <FormControl>
@@ -166,6 +199,7 @@ export default function SignUp(props) {
                 error={emailError}
                 helperText={emailErrorMessage}
                 color={passwordError ? 'error' : 'primary'}
+                onChange={(e) => setEmail(e.target.value)}
               />
             </FormControl>
             <FormControl>
@@ -182,10 +216,11 @@ export default function SignUp(props) {
                 error={passwordError}
                 helperText={passwordErrorMessage}
                 color={passwordError ? 'error' : 'primary'}
+                onChange={(e) => setPassword(e.target.value)}
               />
             </FormControl>
             <Button
-              type="submit"
+              // type="submit"
               fullWidth
               variant="contained"
               onClick={validateInputs}
@@ -196,7 +231,7 @@ export default function SignUp(props) {
                 Bạn đã có tài khoản?{' '}
               <span>
                 <Link
-                  href="/material-ui/getting-started/templates/sign-in/"
+                  href={"/Login"}
                   variant="body2"
                   sx={{ alignSelf: 'center' }}
                 >

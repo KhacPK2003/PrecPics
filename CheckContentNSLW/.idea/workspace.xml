@@ -5,22 +5,17 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="110deddb-bae3-4587-87d5-696e4597a928" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/../BackEnd/src/main/java/com/example/prepics/repositories/UserRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/../BackEnd/src/main/java/com/example/prepics/repositories/UserRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../BackEnd/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../BackEnd/.idea/dataSources.local.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../BackEnd/src/main/java/com/example/prepics/apis/UserApi.java" beforeDir="false" afterPath="$PROJECT_DIR$/../BackEnd/src/main/java/com/example/prepics/apis/UserApi.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../BackEnd/src/main/java/com/example/prepics/services/api/CollectionApiService.java" beforeDir="false" afterPath="$PROJECT_DIR$/../BackEnd/src/main/java/com/example/prepics/services/api/CollectionApiService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../BackEnd/src/main/java/com/example/prepics/services/api/UserApiService.java" beforeDir="false" afterPath="$PROJECT_DIR$/../BackEnd/src/main/java/com/example/prepics/services/api/UserApiService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/apis/ContentApi.class" beforeDir="false" afterPath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/apis/ContentApi.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/apis/UserApi.class" beforeDir="false" afterPath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/apis/UserApi.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/entity/Followers.class" beforeDir="false" afterPath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/entity/Followers.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/entity/GotTags.class" beforeDir="false" afterPath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/entity/GotTags.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/entity/Tag.class" beforeDir="false" afterPath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/entity/Tag.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/repositories/FolloweeRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/repositories/FolloweeRepository.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/repositories/FollowerRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/repositories/FollowerRepository.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/repositories/UserRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/repositories/UserRepository.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/services/api/CollectionApiService.class" beforeDir="false" afterPath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/services/api/CollectionApiService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/services/api/ContentApiService.class" beforeDir="false" afterPath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/services/api/ContentApiService.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/services/api/UserApiService.class" beforeDir="false" afterPath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/services/api/UserApiService.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FrontEnd/src/Components/GallerySingle/VideoSingle.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../FrontEnd/src/Components/GallerySingle/VideoSingle.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FrontEnd/src/Components/SectionVideo/SectionVideo.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../FrontEnd/src/Components/SectionVideo/SectionVideo.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FrontEnd/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/../FrontEnd/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FrontEnd/src/Components/sign-in/Login.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../FrontEnd/src/Components/sign-in/Login.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FrontEnd/src/Components/sign-up/SignUp.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../FrontEnd/src/Components/sign-up/SignUp.jsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

@@ -7,8 +7,28 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import OutlinedInput from '@mui/material/OutlinedInput';
+import { getAuth, sendPasswordResetEmail } from "firebase/auth";
+import {useNavigate} from "react-router-dom";
 
 function ForgotPassword({ open, handleClose }) {
+  const [email, setEmail] = React.useState('');
+  const navigate = useNavigate();
+
+  const  sendMail = async () => {
+    const auth = await getAuth();
+    sendPasswordResetEmail(auth, email)
+        .then(() => {
+          // Password reset email sent!
+          // ..
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          // ..
+        });
+    navigate('/');
+  }
+
   return (
     <Dialog
       open={open}
@@ -40,11 +60,14 @@ function ForgotPassword({ open, handleClose }) {
           placeholder="Email address"
           type="email"
           fullWidth
+          onChange={(e) => setEmail(e.target.value)}
         />
       </DialogContent>
       <DialogActions sx={{ pb: 3, px: 3 }}>
         <Button onClick={handleClose}>Cancel</Button>
-        <Button variant="contained" type="submit">
+        <Button variant="contained"
+                onClick={sendMail}
+        >
           Continue
         </Button>
       </DialogActions>
