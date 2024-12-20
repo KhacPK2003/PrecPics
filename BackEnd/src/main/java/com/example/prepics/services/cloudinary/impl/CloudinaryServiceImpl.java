@@ -1,6 +1,7 @@
 package com.example.prepics.services.cloudinary.impl;
 
 import com.cloudinary.Cloudinary;
+import com.cloudinary.Transformation;
 import com.cloudinary.utils.ObjectUtils;
 import com.example.prepics.services.cloudinary.CloudinaryService;
 import java.io.File;
@@ -54,4 +55,15 @@ public class CloudinaryServiceImpl implements CloudinaryService {
   public Map<String, Object> deleteFile(String publicId) throws Exception {
     return cloudinary.uploader().destroy(publicId, ObjectUtils.emptyMap());
   }
+
+  @Override
+  public String generateTransformedUrl(String publicId, int height, int width,
+      String resourceType) {
+    return cloudinary.url()
+        .resourceType(resourceType) // Chỉ định loại tài nguyên: "image" hoặc "video"
+        .transformation(new Transformation().height(height).width(width).crop("scale"))
+        .generate(publicId);
+  }
+
+
 }

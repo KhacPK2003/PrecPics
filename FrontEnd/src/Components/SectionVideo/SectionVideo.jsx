@@ -1,5 +1,5 @@
 import ReactPlayer from 'react-player';
-import React , {useState , useEffect} from 'react';
+import React ,{useState , useEffect} from 'react';
 import { AiFillHeart, AiOutlineHeart } from 'react-icons/ai';
 import VideoSingle from '../GallerySingle/VideoSingle';
 import { Button, Dialog, DialogContent, DialogTitle } from '@mui/material';
@@ -12,7 +12,7 @@ function SectionVideo({content,onDataChange}){
     const handleOpen = () => {
       setOpen(true);
     };
-  
+
     // Hàm đóng Dialog
     const handleClose = () => {
       setOpen(false);

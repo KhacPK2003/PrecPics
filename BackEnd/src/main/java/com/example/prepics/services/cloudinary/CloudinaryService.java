@@ -19,4 +19,6 @@ public interface CloudinaryService {
   Map<String, Object> getFileDetails(String assetId) throws Exception;
 
   Map<String, Object> deleteFile(String publicId) throws Exception;
+
+  public String generateTransformedUrl(String publicId, int height, int width, String resourceType);
 }

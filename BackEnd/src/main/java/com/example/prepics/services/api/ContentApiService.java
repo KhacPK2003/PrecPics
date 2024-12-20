@@ -3,7 +3,6 @@ package com.example.prepics.services.api;
 import co.elastic.clients.elasticsearch.core.SearchResponse;
 import co.elastic.clients.elasticsearch.core.search.Hit;
 import com.example.prepics.dto.ContentDTO;
-import com.example.prepics.dto.ContentResize;
 import com.example.prepics.entity.Collection;
 import com.example.prepics.entity.Content;
 import com.example.prepics.entity.InCols;
@@ -25,10 +24,12 @@ import com.github.kokorin.jaffree.ffmpeg.FFmpeg;
 import com.github.kokorin.jaffree.ffmpeg.FFmpegResult;
 import com.github.kokorin.jaffree.ffmpeg.UrlInput;
 import com.github.kokorin.jaffree.ffmpeg.UrlOutput;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.math.BigInteger;
-import java.nio.file.Files;
+import java.net.URL;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -41,6 +42,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.data.crossstore.ChangeSetPersister;
+import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -311,46 +313,39 @@ public class ContentApiService {
     return ResponseProperties.createResponse(200, "Success", content);
   }
 
-  private byte[] getContentWithSize(Authentication authentication, String id ,String W , String H, boolean isImage)
-          throws IOException, ChangeSetPersister.NotFoundException {
+  public byte[] getContentWithSizeUrl(String id, String W, String H, String type)
+      throws NotFoundException, IOException {
 
     Content content = contentService.findById(Content.class, id)
-            .orElseThrow(() -> new RuntimeException("Content not found"));
+        .orElseThrow(() -> new RuntimeException("Content not found"));
 
     int width = Integer.parseInt(W);
     int height = Integer.parseInt(H);
 
-    Optional<File> result = isImage
-            ? contentService.changeResolutionForImage(content.getDataUrl(), width, height)
-            : contentService.changeResolutionForVideo(content.getDataUrl(), width, height);
+    String url = cloudinaryService.generateTransformedUrl(content.getId(), height, width, type);
 
     content.setDownloads(content.getDownloads() + 1);
     contentService.update(content);
 
-    return result.map(file -> {
-      try {
-        byte[] data = Files.readAllBytes(file.toPath());
-        file.deleteOnExit();
-        return data;
-      } catch (IOException e) {
-        throw new RuntimeException("Failed to read file", e);
+    return downloadFileAsBytes(url);
+  }
+
+  private byte[] downloadFileAsBytes(String fileUrl) throws IOException {
+    URL url = new URL(fileUrl);
+    try (InputStream inputStream = url.openStream();
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream()) {
+
+      byte[] buffer = new byte[1024];
+      int bytesRead;
+
+      // Read data into buffer and write to ByteArrayOutputStream
+      while ((bytesRead = inputStream.read(buffer)) != -1) {
+        byteArrayOutputStream.write(buffer, 0, bytesRead);
       }
-    }).orElse(null);
-  }
 
-
-  @Transactional("slaveTransactionManager")
-  public byte[] getImageWithSize(Authentication authentication,String id ,String width , String height)
-          throws IOException, ChangeSetPersister.NotFoundException {
-
-    return getContentWithSize(authentication, id,width,height, true);
-  }
-
-  @Transactional("slaveTransactionManager")
-  public byte[] getVideoWithSize(Authentication authentication, String id ,String width , String height)
-          throws IOException, ChangeSetPersister.NotFoundException {
-
-    return getContentWithSize(authentication,  id,width,height, false);
+      // Return the byte array
+      return byteArrayOutputStream.toByteArray();
+    }
   }
 
   public ResponseEntity<?> doSearchWithFuzzy(Authentication authentication, String indexName,
