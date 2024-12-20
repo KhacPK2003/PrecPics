@@ -68,7 +68,7 @@ public class UserApi {
    * @return Map: Trả về thông tin của người dùng nếu tìm thấy.
    * @throws ChangeSetPersister.NotFoundException: Nếu không tìm thấy người dùng.
    */
-  @Guest
+//  @Guest
   @GetMapping("/{id}")
   public ResponseEntity<?> findById(@PathVariable String id)
       throws ChangeSetPersister.NotFoundException {

@@ -1,6 +1,7 @@
 import React from 'react';
 import Dashboard from '../ContentAdmin/Dashboard';
-
+import Button from '@mui/material/Button';
+import { Link } from 'react-router-dom';
 const Topbar = () => {
     return (
       <div>
@@ -65,6 +66,12 @@ const Topbar = () => {
             </form>
           </div>
         </li>
+        <div>
+        <Button className='mt-3 mr-2' variant="contained" component={Link} 
+        to="/">
+          HOME
+        </Button>
+        </div>
         {/* Nav Item - User Information */}
         <li className="nav-item dropdown no-arrow">
           <a

@@ -48,7 +48,11 @@ const DropdownButton = ({ content }) => {
             const imageBlob = await response.blob();
             const imageObjectUrl = URL.createObjectURL(imageBlob);
             setImageUrl(imageObjectUrl);  // Cập nhật URL ảnh đã thay đổi kích thước
-
+            const link = document.createElement('a');
+            link.href = imageObjectUrl;
+            link.download = `resized_image_${width}x${height}.jpg`;
+            document.body.appendChild(link);
+            link.click();
             toast.success("Tải thành công!!");
         } catch (error) {
             toast.error("Tải thất bại!!.");
@@ -108,7 +112,7 @@ const DropdownButton = ({ content }) => {
             </ul>
 
             {/* Display resized image */}
-            {imageUrl && <img src={imageUrl} alt="Resized" width="100%" />}
+            {/* {imageUrl && <img src={imageUrl} alt="Resized" width="100%" />} */}
             
             <ToastContainer
                 position="bottom-left"

@@ -149,12 +149,12 @@ public class UserApiService {
       User targetUser = userService.findById(User.class, userId)
           .orElseThrow(ChangeSetPersister.NotFoundException::new);
 
-      Followees followee = followeeService.findByUserIdAndFolloweeId(Followees.class, userId,
-              userDecode.getId())
+      Followees followee = followeeService.findByUserIdAndFolloweeId(Followees.class, userDecode.getId(),
+                      userId)
           .orElse(null);
 
       Followers follower = followerService.findByUserIdAndFollowerId(Followers.class,
-              userDecode.getId(), userId)
+              userId, userDecode.getId())
           .orElse(null);
 
       if (followee == null && follower == null) {

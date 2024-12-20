@@ -52,7 +52,7 @@ const ListGotTag = () => {
 
             });
 
-            if (response.ok) {
+            if (response.ok) { 
                 // Remove the deleted tag from the state
                 setTags(tags.filter(tag => tag.id !== id));
             } else {

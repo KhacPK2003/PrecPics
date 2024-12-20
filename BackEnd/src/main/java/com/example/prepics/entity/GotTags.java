@@ -1,5 +1,6 @@
 package com.example.prepics.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -38,7 +39,8 @@ public class GotTags implements Serializable {
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "content_id", insertable = false, updatable = false)
-  @JsonIgnoreProperties(value = {"applications", "inCols", "gotTags", "user"})
+//  @JsonIgnoreProperties(value = {"applications", "inCols", "gotTags", "user"})
+  @JsonIgnore
   private Content content;
 
   @Column(name = "tag_id")
@@ -46,6 +48,7 @@ public class GotTags implements Serializable {
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "tag_id", insertable = false, updatable = false)
-  @JsonIgnoreProperties(value = {"applications", "gotTags"})
+//  @JsonIgnoreProperties(value = {"applications", "gotTags"})
+  @JsonIgnore
   private Tag tag;
 }

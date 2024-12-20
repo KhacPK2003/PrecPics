@@ -77,8 +77,8 @@ const Collection = () => {
                     }
                     return content.type === true ? (
                         <SectionImage key={index} content={content} onDataChange={handleDataChange}/>
-                    ) : content.type === "video" (
-                        <SectionVideo key={index} content={content} />
+                    ) :  (
+                        <SectionVideo key={index} content={content} onDataChange={handleDataChange}/>
                     )
                     })}
                 </div>
