@@ -60,11 +60,11 @@ public class FolloweeRepository implements CRUDInterface<Followees, Long> {
 
 
   @Transactional("slaveTransactionManager")
-  public Optional<Followees> findByUserIdAndFolloweeId(Class<Followees> clazz, String userId,
+  public Optional<Followees> findByUserIdAndFolloweeId(Class<Followees> clazz, String followerId,
       String followeeId) {
-    String query = "SELECT a FROM Followees a WHERE a.userId = :userId and a.followeeId = :followeeId";
+    String query = "SELECT a FROM Followees a WHERE a.userId = :followerId and a.followeeId = :followeeId";
     return slaveEntityManager.createQuery(query, clazz)
-        .setParameter("userId", userId)
+        .setParameter("followerId", followerId)
         .setParameter("followeeId", followeeId)
         .getResultStream()
         .findFirst();

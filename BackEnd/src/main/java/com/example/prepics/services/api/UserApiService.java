@@ -36,19 +36,20 @@ public class UserApiService {
     try {
       User userDecode = (User) authentication.getPrincipal();
       User user = userService.findByEmail(User.class, userDecode.getEmail())
-              .orElseGet(() -> {
-                try {
-                  return userService.create(userDecode)
-                          .orElseThrow(() -> new RuntimeException("Failed to create user"));
-                } catch (ChangeSetPersister.NotFoundException e) {
-                  throw new RuntimeException(e);
-                }
-              });
+          .orElseGet(() -> {
+            try {
+              return userService.create(userDecode)
+                  .orElseThrow(() -> new RuntimeException("Failed to create user"));
+            } catch (ChangeSetPersister.NotFoundException e) {
+              throw new RuntimeException(e);
+            }
+          });
       return ResponseProperties.createResponse(200, "Success", user);
     } catch (Exception e) {
       return ResponseProperties.createResponse(500, "Internal Server Error", e.getMessage());
     }
   }
+
   public ResponseEntity<?> findAll(Authentication authentication) {
     try {
       User userDecode = (User) authentication.getPrincipal();
@@ -140,32 +141,30 @@ public class UserApiService {
     }
   }
 
-  public ResponseEntity<?> doFollowUser(Authentication authentication, String userId) {
+  public ResponseEntity<?> doFollowUser(Authentication authentication, String followeeId) {
     try {
       User userDecode = (User) authentication.getPrincipal();
       User currentUser = userService.findByEmail(User.class, userDecode.getEmail())
           .orElseThrow(ChangeSetPersister.NotFoundException::new);
 
-      User targetUser = userService.findById(User.class, userId)
+      User targetUser = userService.findById(User.class, followeeId)
           .orElseThrow(ChangeSetPersister.NotFoundException::new);
 
-      Followees followee = followeeService.findByUserIdAndFolloweeId(Followees.class, userDecode.getId(),
-                      userId)
-          .orElse(null);
+      Followees followee = followeeService.findByUserIdAndFolloweeId(Followees.class,
+          userDecode.getId(), followeeId).orElse(null);
 
       Followers follower = followerService.findByUserIdAndFollowerId(Followers.class,
-              userId, userDecode.getId())
-          .orElse(null);
+          followeeId, userDecode.getId()).orElse(null);
 
       if (followee == null && follower == null) {
         Followees followees = new Followees();
-        followees.setFolloweeId(userId);
+        followees.setFolloweeId(followeeId);
         followees.setUserId(userDecode.getId());
         followeeService.create(followees);
 
         Followers followers = new Followers();
         followers.setFollowerId(userDecode.getId());
-        followers.setUserId(userId);
+        followers.setUserId(followeeId);
         followerService.create(followers);
 
         return ResponseProperties.createResponse(200, "Success", true);

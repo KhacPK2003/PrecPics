@@ -5,18 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="110deddb-bae3-4587-87d5-696e4597a928" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/../BackEnd/src/main/java/com/example/prepics/apis/ContentApi.java" beforeDir="false" afterPath="$PROJECT_DIR$/../BackEnd/src/main/java/com/example/prepics/apis/ContentApi.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../BackEnd/src/main/java/com/example/prepics/services/api/ContentApiService.java" beforeDir="false" afterPath="$PROJECT_DIR$/../BackEnd/src/main/java/com/example/prepics/services/api/ContentApiService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../BackEnd/src/main/java/com/example/prepics/services/cloudinary/CloudinaryService.java" beforeDir="false" afterPath="$PROJECT_DIR$/../BackEnd/src/main/java/com/example/prepics/services/cloudinary/CloudinaryService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../BackEnd/src/main/java/com/example/prepics/services/cloudinary/impl/CloudinaryServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/../BackEnd/src/main/java/com/example/prepics/services/cloudinary/impl/CloudinaryServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../BackEnd/src/main/java/com/example/prepics/services/entity/serviceImpl/ContentServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/../BackEnd/src/main/java/com/example/prepics/services/entity/serviceImpl/ContentServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/apis/ContentApi.class" beforeDir="false" afterPath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/apis/ContentApi.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/services/api/ContentApiService.class" beforeDir="false" afterPath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/services/api/ContentApiService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/services/cloudinary/CloudinaryService.class" beforeDir="false" afterPath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/services/cloudinary/CloudinaryService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/services/cloudinary/impl/CloudinaryServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/services/cloudinary/impl/CloudinaryServiceImpl.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/services/entity/serviceImpl/ContentServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/../BackEnd/target/classes/com/example/prepics/services/entity/serviceImpl/ContentServiceImpl.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../BackEnd/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../BackEnd/.idea/dataSources.local.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../BackEnd/src/main/java/com/example/prepics/repositories/FolloweeRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/../BackEnd/src/main/java/com/example/prepics/repositories/FolloweeRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../BackEnd/src/main/java/com/example/prepics/repositories/FollowerRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/../BackEnd/src/main/java/com/example/prepics/repositories/FollowerRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../BackEnd/src/main/java/com/example/prepics/services/api/UserApiService.java" beforeDir="false" afterPath="$PROJECT_DIR$/../BackEnd/src/main/java/com/example/prepics/services/api/UserApiService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FrontEnd/src/Components/SectionVideo/SectionVideo.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../FrontEnd/src/Components/SectionVideo/SectionVideo.jsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
