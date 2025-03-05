@@ -20,9 +20,9 @@ function ShowAll({user,onDataChange}){
                             {images.map((post, index) => (
                                 <SectionImage key={index} content={post} onDataChange={onDataChange}/>
                             ))}
-                            {/* {videos.map((post, index) => (
-                                <SectionVideo key={index} content={post} />
-                        ))} */}
+                            {videos.map((post, index) => (
+                                <SectionVideo key={index} content={post} onDataChange={onDataChange}/>
+                        ))}
                     </div>
                 </div>
              </section>
